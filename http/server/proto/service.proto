@@ -1,0 +1,19 @@
+syntax= "proto3";
+package demo;
+option go_package = "github.com/go-masonry/mortar/http/server/proto/demopackage";
+import "google/api/annotations.proto";
+
+service Demo {
+  rpc Ping(PingRequest) returns (PongResponse) {
+    option (google.api.http) = {
+      get: "/v1/demo/ping"
+    };
+  }
+}
+
+message PingRequest{
+  string in = 1;
+}
+message PongResponse{
+  string out = 2;
+}
