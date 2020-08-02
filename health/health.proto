@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package mortar.health.v1;
+option go_package = ".;health";
+
+import "google/api/annotations.proto";
+message HealthCheckRequest {}
+message HealthCheckResponse {}
+
+service Health {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse){
+    option (google.api.http) = {
+      get: "/health"
+    };
+  }
+}

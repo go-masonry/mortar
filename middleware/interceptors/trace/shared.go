@@ -30,37 +30,20 @@ func addBodyToSpan(span opentracing.Span, name string, msg interface{}) {
 	}
 }
 
-func (d tracingDeps) extractIncomingCarrier(ctx context.Context) mdRW {
+func (d tracingDeps) extractIncomingCarrier(ctx context.Context) utils.MDTraceCarrier {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		md = metadata.New(nil)
 	}
-	return mdRW(md.Copy()) // make a copy since this map is not thread safe
+	return utils.MDTraceCarrier(md.Copy()) // make a copy since this map is not thread safe
 }
 
-func (d tracingDeps) extractOutgoingCarrier(ctx context.Context) mdRW {
+func (d tracingDeps) extractOutgoingCarrier(ctx context.Context) utils.MDTraceCarrier {
 	md, ok := metadata.FromOutgoingContext(ctx)
 	if !ok {
 		md = metadata.New(nil)
 	}
-	return mdRW(md.Copy()) // make a copy since this map is not thread safe
-}
-
-type mdRW metadata.MD
-
-func (md mdRW) Set(key, value string) {
-	metadata.MD(md).Set(key, value)
-}
-
-func (md mdRW) ForeachKey(handler func(key, value string) error) error {
-	for k, vv := range md {
-		for _, v := range vv {
-			if err := handler(k, v); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
+	return utils.MDTraceCarrier(md.Copy()) // make a copy since this map is not thread safe
 }
 
 var grpcTag = opentracing.Tag{Key: string(ext.Component), Value: "gRPC"}

@@ -2,13 +2,13 @@ package server
 
 import (
 	"context"
+	"github.com/go-masonry/mortar/health"
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	"github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/health/grpc_health_v1"
 	"net"
 	"net/http"
 	"testing"
@@ -104,17 +104,16 @@ func TestSettingCustomRESTServer(t *testing.T) {
 }
 
 func TestInternalHealthService(t *testing.T) {
-	service, err := Builder().ListenOn(":8888").RegisterGRPCAPIs(registerGrpcAPI).Build()
+	service, err := Builder().ListenOn(":8888").RegisterGRPCAPIs(registerGrpcAPI).RegisterGRPCAPIs(health.RegisterInternalHealthService).Build()
 	require.NoError(t, err)
 	defer service.Stop(context.Background())
 	go service.Run(context.Background())
 	conn, err := grpc.Dial(":8888", grpc.WithInsecure())
 	defer conn.Close()
 	require.NoError(t, err)
-	healthClient := grpc_health_v1.NewHealthClient(conn)
-	response, err := healthClient.Check(context.Background(), &grpc_health_v1.HealthCheckRequest{Service: ""})
+	healthClient := health.NewHealthClient(conn)
+	_, err = healthClient.Check(context.Background(), &health.HealthCheckRequest{})
 	require.NoError(t, err)
-	assert.Equal(t, grpc_health_v1.HealthCheckResponse_SERVING, response.Status)
 }
 
 func registerGrpcAPI(srv *grpc.Server) {

@@ -6,8 +6,6 @@ import (
 	"github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/health"
-	"google.golang.org/grpc/health/grpc_health_v1"
 	"net"
 	"net/http"
 	"sync"
@@ -140,8 +138,9 @@ func (ws *webService) setupGRPC(cfg *grpcConfig) (err error) {
 		if ws.grpcServer == nil {
 			ws.grpcServer = grpc.NewServer(cfg.options...)
 		}
-		cfg.registerApi(ws.grpcServer)
-		ws.registerHealthService(ws.grpcServer) // register internal health service
+		for _, api := range cfg.registerApi {
+			api(ws.grpcServer)
+		}
 		// save, since this should run first we have no problem with previous values
 		ws.muxAndListeners = append(ws.muxAndListeners, &listenerMuxPair{l: grpcListener, m: ws.grpcServer})
 		ws.grpcAddr = grpcListener.Addr().String() // we need this later for grpc gateway
@@ -224,12 +223,6 @@ func (ws *webService) setupREST(restConfigs []*restConfig) (err error) {
 		ws.muxAndListeners = append(ws.muxAndListeners, &listenerMuxPair{l: restListener, m: webSrv})
 	}
 	return
-}
-
-func (ws *webService) registerHealthService(server *grpc.Server) {
-	ws.serviceConfig.logger(context.Background(), "Registering internal health service")
-	healthService := health.NewServer()
-	grpc_health_v1.RegisterHealthServer(server, healthService)
 }
 
 // Sanity

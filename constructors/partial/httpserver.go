@@ -2,6 +2,7 @@ package partial
 
 import (
 	"fmt"
+	"github.com/go-masonry/mortar/health"
 	"github.com/go-masonry/mortar/http/server"
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
@@ -59,10 +60,11 @@ func HttpServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
 		interceptorsOption := grpc.ChainUnaryInterceptor(deps.UnaryInterceptors...)
 		builder = builder.AddGRPCServerOptions(interceptorsOption)
 	}
-	return deps.buildInternalREST(builder)
+	return deps.buildInternalAPI(builder)
 }
 
-func (deps httpServerDeps) buildInternalREST(builder serverInt.GRPCWebServiceBuilder) serverInt.GRPCWebServiceBuilder {
+func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuilder) serverInt.GRPCWebServiceBuilder {
+	builder = builder.RegisterGRPCAPIs(health.RegisterInternalHealthService)
 	// Internal REST
 	internalPort := deps.Config.Get(mortar.ServerRESTInternalPort)
 	includeInternalREST := internalPort.IsSet() && (len(deps.InternalHttpHandlerFunctions) > 0 || len(deps.InternalHttpHandlers) > 0)
@@ -75,6 +77,7 @@ func (deps httpServerDeps) buildInternalREST(builder serverInt.GRPCWebServiceBui
 		for _, handlerFuncPair := range deps.InternalHttpHandlerFunctions {
 			restBuilder = restBuilder.AddHandlerFunc(handlerFuncPair.Pattern, handlerFuncPair.HandlerFunc)
 		}
+		restBuilder = restBuilder.AddGRPCGatewayHandlers(health.RegisterInternalGRPCGatewayHandler)  // Health
 		builder = restBuilder.BuildRESTPart()
 	}
 	return builder

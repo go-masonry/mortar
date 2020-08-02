@@ -117,7 +117,7 @@ type grpcConfig struct {
 	addr         string
 	server       *grpc.Server
 	listener     net.Listener
-	registerApi  func(server *grpc.Server)
+	registerApi  []func(server *grpc.Server)
 	options      []grpc.ServerOption
 	panicHandler func(interface{}) error
 }
@@ -159,7 +159,7 @@ func (s *serviceBuilder) SetCustomListener(listener net.Listener) server.GRPCWeb
 
 func (s *serviceBuilder) RegisterGRPCAPIs(register func(server *grpc.Server)) server.GRPCWebServiceBuilder {
 	s.ll.PushBack(func(cfg *webServiceConfig) {
-		cfg.grpc.registerApi = register
+		cfg.grpc.registerApi = append(cfg.grpc.registerApi, register)
 	})
 	return s
 }
