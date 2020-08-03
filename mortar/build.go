@@ -1,6 +1,7 @@
 package mortar
 
 import (
+	"fmt"
 	"os"
 	"time"
 )
@@ -33,13 +34,13 @@ func init() {
 
 // Information is a struct that will hold all the statically injected information during build
 type Information struct {
-	GitCommit string        `json:"git_commit,omitempty"`
-	Version   string        `json:"version,omitempty"`
-	BuildTag  string        `json:"build_tag,omitempty"`
-	BuildTime time.Time     `json:"build_time,omitempty"`
-	InitTime  time.Time     `json:"init_time,omitempty"`
-	UpTime    time.Duration `json:"up_time,omitempty"`
-	Hostname  string        `json:"hostname,omitempty"`
+	GitCommit string       `json:"git_commit,omitempty"`
+	Version   string       `json:"version,omitempty"`
+	BuildTag  string       `json:"build_tag,omitempty"`
+	BuildTime time.Time    `json:"build_time,omitempty"`
+	InitTime  time.Time    `json:"init_time,omitempty"`
+	UpTime    JsonDuration `json:"up_time,omitempty"`
+	Hostname  string       `json:"hostname,omitempty"`
 }
 
 func GetBuildInformation(includeExplanations ...bool) (info Information) {
@@ -47,7 +48,7 @@ func GetBuildInformation(includeExplanations ...bool) (info Information) {
 	info.Version = version
 	info.BuildTag = buildTag
 	info.InitTime = initTime
-	info.UpTime = time.Since(initTime)
+	info.UpTime = JsonDuration(time.Since(initTime))
 	info.BuildTime = time.Time{} // Zero
 	info.Hostname = hostname
 	if len(buildTimestamp) != 0 {
@@ -69,4 +70,10 @@ func GetBuildInformation(includeExplanations ...bool) (info Information) {
 		}
 	}
 	return
+}
+
+type JsonDuration time.Duration
+
+func (jd JsonDuration) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, time.Duration(jd))), nil
 }

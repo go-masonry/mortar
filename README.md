@@ -19,9 +19,7 @@ TODO a drawing
 ## Documentation
 
 Mortar is not a drop-in replacement. It will probably change the way you code and build services.
-We think it's important to read its documentation first, starting with the Tutorial. 
-
-***TODO***
+We think it's important to read its documentation first, starting with the [Tutorial](https://github.com/go-masonry/tutorial). 
 
 ## Core Concepts
 
