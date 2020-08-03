@@ -6,6 +6,7 @@ import (
 	"github.com/go-masonry/mortar/handlers"
 	"github.com/go-masonry/mortar/http/server"
 	"github.com/go-masonry/mortar/middleware/interceptors/client"
+	middlewareServer "github.com/go-masonry/mortar/middleware/interceptors/server"
 	"go.uber.org/fx"
 )
 
@@ -23,9 +24,9 @@ func HttpClientBuildersFxOption() fx.Option {
 	)
 }
 
-// HttpServerFxOption adds Default Http Server builder which later injected to the Service Invoke option
+// HttpServerBuilderFxOption adds Default Http Server builder which later injected to the Service Invoke option
 // by calling CreateEntireWebServiceDependencyGraph fx.Invoke option to the graph
-func HttpServerFxOption() fx.Option {
+func HttpServerBuilderFxOption() fx.Option {
 	return fx.Provide(partial.HttpServerBuilder)
 }
 
@@ -46,8 +47,8 @@ func InternalProfileHandlerFunctionsFxOption() fx.Option {
 		})
 }
 
-// SelfHandlersFxOption adds Internal Self Build and Config information Handler to the graph
-func SelfHandlersFxOption() fx.Option {
+// InternalSelfHandlersFxOption adds Internal Self Build and Config information Handler to the graph
+func InternalSelfHandlersFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
 			Group:  partial.FxGroupInternalHttpHandlers + ",flatten",
@@ -71,5 +72,22 @@ func CopyGRPCHeadersClientInterceptorFxOption() fx.Option {
 		fx.Annotated{
 			Group:  partial.FxGroupGRPCUnaryClientInterceptors,
 			Target: client.CopyGRPCHeadersClientInterceptor,
+		})
+}
+
+// LoggerGRPCInterceptorFxOption adds Unary Server Interceptor that will log Request and Response if needed
+func LoggerGRPCInterceptorFxOption() fx.Option {
+	return fx.Provide(fx.Annotated{
+		Group:  partial.FxGroupUnaryServerInterceptors,
+		Target: middlewareServer.LoggerGRPCInterceptor,
+	})
+}
+
+// MonitorGRPCInterceptorFxOption adds Unary Server Interceptor that will notify metric provider of every call
+func MonitorGRPCInterceptorFxOption() fx.Option {
+	return fx.Provide(
+		fx.Annotated{
+			Group:  partial.FxGroupUnaryServerInterceptors,
+			Target: middlewareServer.MonitorGRPCInterceptor,
 		})
 }

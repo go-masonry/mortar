@@ -12,6 +12,8 @@ const (
 	application = "app"
 	hostname    = "host"
 	gitCommit   = "git"
+
+	callerSkipDepth = 0
 )
 
 type LoggerDeps struct {
@@ -33,6 +35,7 @@ func DefaultLogger(deps LoggerDeps) log.Logger {
 		SetLevel(logLevel).
 		AddStaticFields(selfStaticFields(appName)).
 		AddContextExtractors(deps.ContextExtractors...).
+		IncludeCallerAndSkipFrames(callerSkipDepth).
 		Build()
 }
 

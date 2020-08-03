@@ -2,9 +2,7 @@ package providers
 
 import (
 	"github.com/go-masonry/mortar/constructors"
-	"github.com/go-masonry/mortar/constructors/partial"
 	"github.com/go-masonry/mortar/middleware/context"
-	"github.com/go-masonry/mortar/middleware/interceptors/server"
 	"go.uber.org/fx"
 )
 
@@ -20,13 +18,5 @@ func LoggerGRPCIncomingContextExtractorFxOption() fx.Option {
 	return fx.Provide(fx.Annotated{
 		Group:  constructors.FxGroupLoggerContextExtractors,
 		Target: context.LoggerGRPCIncomingContextExtractor,
-	})
-}
-
-// LoggerGRPCInterceptorFxOption adds Server Unary Interceptor that will log Request and Response if needed
-func LoggerGRPCInterceptorFxOption() fx.Option {
-	return fx.Provide(fx.Annotated{
-		Group:  partial.FxGroupUnaryServerInterceptors,
-		Target: server.LoggerGRPCInterceptor,
 	})
 }
