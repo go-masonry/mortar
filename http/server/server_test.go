@@ -18,7 +18,7 @@ func TestDefaultListeners(t *testing.T) {
 	service, err := Builder().
 		RegisterGRPCAPIs(registerGrpcAPI).
 		AddRESTServerConfiguration().
-		AddGRPCGatewayHandlers(registerGatewayHandler).
+		RegisterGRPCGatewayHandlers(registerGatewayHandler).
 		BuildRESTPart().
 		Build()
 	require.NoError(t, err)
@@ -39,11 +39,11 @@ func TestListenOnAddresses(t *testing.T) {
 		RegisterGRPCAPIs(registerGrpcAPI).
 		AddRESTServerConfiguration().
 		ListenOn(":8887").
-		AddGRPCGatewayHandlers(registerGatewayHandler).
+		RegisterGRPCGatewayHandlers(registerGatewayHandler).
 		BuildRESTPart().
 		AddRESTServerConfiguration().
 		ListenOn(":8889").
-		AddGRPCGatewayHandlers(registerGatewayHandler).
+		RegisterGRPCGatewayHandlers(registerGatewayHandler).
 		BuildRESTPart().
 		Build()
 	require.NoError(t, err)
@@ -68,7 +68,7 @@ func TestCustomListeners(t *testing.T) {
 		RegisterGRPCAPIs(registerGrpcAPI).
 		AddRESTServerConfiguration().
 		SetCustomListener(restL).
-		AddGRPCGatewayHandlers(registerGatewayHandler).
+		RegisterGRPCGatewayHandlers(registerGatewayHandler).
 		BuildRESTPart().
 		Build()
 	require.NoError(t, err)
@@ -94,7 +94,7 @@ func TestSettingCustomGrpcServer(t *testing.T) {
 func TestSettingCustomRESTServer(t *testing.T) {
 	restServer := &http.Server{}
 	service, err := Builder().RegisterGRPCAPIs(registerGrpcAPI).
-		AddRESTServerConfiguration().SetCustomServer(restServer).AddGRPCGatewayHandlers(registerGatewayHandler).BuildRESTPart().
+		AddRESTServerConfiguration().SetCustomServer(restServer).RegisterGRPCGatewayHandlers(registerGatewayHandler).BuildRESTPart().
 		Build()
 	require.NoError(t, err)
 	defer service.Stop(context.Background())

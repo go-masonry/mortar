@@ -68,7 +68,7 @@ func (os *onePortSuite) makeBuilderAndCmux() {
 		// REST 1 with GRPC Gateway
 		AddRESTServerConfiguration().
 		SetCustomListener(restL).
-		AddGRPCGatewayHandlers(func(mux *runtime.ServeMux, endpoint string) error {
+		RegisterGRPCGatewayHandlers(func(mux *runtime.ServeMux, endpoint string) error {
 			return demopackage.RegisterDemoHandlerFromEndpoint(context.Background(), mux, endpoint, []grpc.DialOption{grpc.WithInsecure()})
 		}).
 		BuildRESTPart()

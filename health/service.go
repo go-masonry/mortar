@@ -10,7 +10,7 @@ type healthService struct {
 	UnimplementedHealthServer
 }
 
-func RegisterInternalGRPCGatewayHandler(mux *runtime.ServeMux, endpoint string) error{
+func RegisterInternalGRPCGatewayHandler(mux *runtime.ServeMux, endpoint string) error {
 	return RegisterHealthHandlerFromEndpoint(context.Background(), mux, endpoint, []grpc.DialOption{grpc.WithInsecure()})
 }
 

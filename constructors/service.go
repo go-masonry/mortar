@@ -13,29 +13,33 @@ import (
 type webServiceDependencies struct {
 	fx.In
 
-	LifeCycle fx.Lifecycle
-
+	LifeCycle         fx.Lifecycle
 	Logger            log.Logger
-	WebServiceBuilder server.WebService
+	WebServiceBuilder server.GRPCWebServiceBuilder
 }
 
 // Service should be invoked by FX, it will build the entire dependencies graph and add lifecycle hooks
-func Service(deps webServiceDependencies) {
+func Service(deps webServiceDependencies) (server.WebService, error) {
+	webService, err := deps.WebServiceBuilder.Build()
+	if err != nil {
+		return nil, err
+	}
 	deps.LifeCycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			go deps.WebServiceBuilder.Run(ctx) // this should exit only when service was shutdown
-			return deps.pingService(ctx)
+			go webService.Run(ctx) // this should exit only when service was shutdown
+			return deps.pingService(ctx, webService)
 		},
 		OnStop: func(ctx context.Context) error {
-			return deps.WebServiceBuilder.Stop(ctx)
+			return webService.Stop(ctx)
 		},
 	})
+	return webService, nil
 }
 
-func (deps webServiceDependencies) pingService(ctx context.Context) (err error) {
+func (deps webServiceDependencies) pingService(ctx context.Context, service server.WebService) (err error) {
 	err = fmt.Errorf("failed to check internal service health")
-	ports := deps.WebServiceBuilder.Ports()
-	if grpcAddress := deps.getGRPCAddress(); len(grpcAddress) > 0 {
+	ports := service.Ports()
+	if grpcAddress := deps.getGRPCAddress(ports); len(grpcAddress) > 0 {
 		var conn *grpc.ClientConn
 		if conn, err = grpc.DialContext(ctx, grpcAddress, grpc.WithInsecure()); err == nil {
 			defer conn.Close()
@@ -50,8 +54,8 @@ func (deps webServiceDependencies) pingService(ctx context.Context) (err error) 
 	}
 	return
 }
-func (deps webServiceDependencies) getGRPCAddress() string {
-	for _, info := range deps.WebServiceBuilder.Ports() {
+func (deps webServiceDependencies) getGRPCAddress(ports []server.ListenInfo) string {
+	for _, info := range ports {
 		if info.Type == server.GRPCServer {
 			return info.Address
 		}

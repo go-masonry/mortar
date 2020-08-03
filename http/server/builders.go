@@ -21,7 +21,7 @@ type restConfig struct {
 	handlers            map[string]http.Handler
 	handlerFuncs        map[string]http.HandlerFunc
 	grpcGatewayMux      *runtime.ServeMux
-	grpcGatewayHandlers []func(mux *runtime.ServeMux, endpoint string) error
+	grpcGatewayHandlers []server.GRPCGatewayGeneratedHandlers
 	grpcGatewayOptions  []runtime.ServeMuxOption
 }
 
@@ -87,7 +87,7 @@ func (r *restBuilder) SetCustomGRPCGatewayMux(mux *runtime.ServeMux) server.REST
 	return r
 }
 
-func (r *restBuilder) AddGRPCGatewayHandlers(handlers ...func(mux *runtime.ServeMux, endpoint string) error) server.RESTBuilder {
+func (r *restBuilder) RegisterGRPCGatewayHandlers(handlers ...server.GRPCGatewayGeneratedHandlers) server.RESTBuilder {
 	r.ll.PushBack(func(cfg *restConfig) {
 		cfg.grpcGatewayHandlers = append(cfg.grpcGatewayHandlers, handlers...)
 	})
@@ -117,7 +117,7 @@ type grpcConfig struct {
 	addr         string
 	server       *grpc.Server
 	listener     net.Listener
-	registerApi  []func(server *grpc.Server)
+	registerApi  []server.GRPCServerAPI
 	options      []grpc.ServerOption
 	panicHandler func(interface{}) error
 }
@@ -157,9 +157,9 @@ func (s *serviceBuilder) SetCustomListener(listener net.Listener) server.GRPCWeb
 	return s
 }
 
-func (s *serviceBuilder) RegisterGRPCAPIs(register func(server *grpc.Server)) server.GRPCWebServiceBuilder {
+func (s *serviceBuilder) RegisterGRPCAPIs(apis ...server.GRPCServerAPI) server.GRPCWebServiceBuilder {
 	s.ll.PushBack(func(cfg *webServiceConfig) {
-		cfg.grpc.registerApi = append(cfg.grpc.registerApi, register)
+		cfg.grpc.registerApi = append(cfg.grpc.registerApi, apis...)
 	})
 	return s
 }

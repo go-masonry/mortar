@@ -18,4 +18,3 @@ func (md MDTraceCarrier) ForeachKey(handler func(key, value string) error) error
 	}
 	return nil
 }
-

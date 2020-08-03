@@ -3,8 +3,8 @@ package constructors
 import (
 	"context"
 	"fmt"
-	"github.com/go-masonry/mortar/interfaces/auth/jwt"
-	"go.uber.org/fx"
+	"github.com/go-masonry/mortar/auth/jwt"
+	jwtInt "github.com/go-masonry/mortar/interfaces/auth/jwt"
 	"google.golang.org/grpc/metadata"
 	"strings"
 )
@@ -13,14 +13,8 @@ const (
 	authorizationHeader = "authorization"
 )
 
-type jwtTokenExtractorDeps struct {
-	fx.In
-
-	Builder jwt.ExtractorBuilder
-}
-
-func DefaultJWTTokenExtractor(deps jwtTokenExtractorDeps) jwt.TokenExtractor {
-	return deps.Builder.SetContextExtractor(contextExtractorAuthWithBearer).Build()
+func DefaultJWTTokenExtractor() jwtInt.TokenExtractor {
+	return jwt.Builder().SetContextExtractor(contextExtractorAuthWithBearer).Build()
 }
 
 // Handles use cases where 'authorization' header value is
