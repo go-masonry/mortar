@@ -21,14 +21,13 @@ type monitorDeps struct {
 	ContextExtractors []monitor.ContextExtractor `group:"monitorContextExtractors"`
 }
 
-// DefaultMonitor is a constructor that will create a Datadog client based on value from the Config Map
+// DefaultMonitor is a constructor that will create a Metrics client based on values from the Config Map
 // such as
 //
-// 	- Address: we will look for a key self.MonitorAddressKey within the configuration map
-// 	- Prefix: we will look for a key self.MonitorPrefixKey within the configuration map
-// 	- Tags: we will look for default tags using self.MonitorTagsKey within the configuration map
-// 	- ContextExtractors: Since we are using uber.Fx for DI we can expect any number of context extractors
-//		All context extractors must be grouped under a fx.Group named: 'monitorExtractors'
+// 	- Address: we will look for a key mortar.MonitorAddressKey within the configuration map
+// 	- Prefix: we will look for a key mortar.MonitorPrefixKey within the configuration map
+// 	- Tags: we will look for default tags using mortar.MonitorTagsKey within the configuration map
+//
 func DefaultMonitor(deps monitorDeps) monitor.Metrics {
 	address := deps.Config.Get(mortar.MonitorAddressKey).String()
 	builder := deps.MonitorBuilder.SetAddress(address)

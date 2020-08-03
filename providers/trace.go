@@ -24,10 +24,10 @@ func TracerRESTClientInterceptorFxOption() fx.Option {
 		})
 }
 
-// GRPCTracingUnaryInterceptorFxOption adds grpc trace unary server interceptor to the graph
-func GRPCTracingUnaryInterceptorFxOption() fx.Option {
+// GRPCTracingUnaryServerInterceptorFxOption adds grpc trace unary server interceptor to the graph
+func GRPCTracingUnaryServerInterceptorFxOption() fx.Option {
 	return fx.Provide(fx.Annotated{
 		Group:  partial.FxGroupUnaryServerInterceptors,
-		Target: trace.GRPCTracingUnaryInterceptor,
+		Target: trace.GRPCTracingUnaryServerInterceptor,
 	})
 }

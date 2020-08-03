@@ -8,8 +8,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-// GRPCTracingUnaryInterceptor is a grpc unary server interceptor that adds trace information of the invoked grpc method and starts a new span
-func GRPCTracingUnaryInterceptor(deps tracingDeps) grpc.UnaryServerInterceptor {
+// GRPCTracingUnaryServerInterceptor is a grpc unary server interceptor that adds trace information of the invoked grpc method and starts a new span
+func GRPCTracingUnaryServerInterceptor(deps tracingDeps) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		if deps.Tracer == nil {
 			return handler(ctx, req)
