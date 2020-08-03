@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"github.com/go-masonry/mortar/constructors/partial"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/interfaces/monitor"
 	"github.com/go-masonry/mortar/utils"
@@ -13,7 +12,7 @@ import (
 )
 
 const (
-	statusTagName = "status"
+	statusTagName = "sts"
 )
 
 type grpcMetricInterceptorsDeps struct {
@@ -23,14 +22,7 @@ type grpcMetricInterceptorsDeps struct {
 	Metrics monitor.Metrics `optional:"true"`
 }
 
-func MonitorGRPCInterceptorOption() fx.Option {
-	return fx.Provide(
-		fx.Annotated{
-			Group:  partial.FxGroupUnaryServerInterceptors,
-			Target: MonitorGRPCInterceptor,
-		})
-}
-
+// MonitorGRPCInterceptor sends grpc method invocation metrics to the configured Metrics server (Prometheus, Datadog)
 func MonitorGRPCInterceptor(deps grpcMetricInterceptorsDeps) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		start := time.Now()

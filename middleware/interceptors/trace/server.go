@@ -2,21 +2,13 @@ package trace
 
 import (
 	"context"
-	"github.com/go-masonry/mortar/constructors/partial"
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
-	"go.uber.org/fx"
 	"google.golang.org/grpc"
 )
 
-func GRPCTracingUnaryInterceptorOption() fx.Option {
-	return fx.Provide(fx.Annotated{
-		Group:  partial.FxGroupUnaryServerInterceptors,
-		Target: GRPCTracingUnaryInterceptor,
-	})
-}
-
+// GRPCTracingUnaryInterceptor is a grpc unary server interceptor that adds trace information of the invoked grpc method and starts a new span
 func GRPCTracingUnaryInterceptor(deps tracingDeps) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		if deps.Tracer == nil {

@@ -2,8 +2,8 @@ package partial
 
 import (
 	"fmt"
-	"github.com/go-masonry/mortar/health"
 	"github.com/go-masonry/mortar/http/server"
+	"github.com/go-masonry/mortar/http/server/health"
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/go-masonry/mortar/interfaces/log"

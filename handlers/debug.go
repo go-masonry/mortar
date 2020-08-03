@@ -35,13 +35,6 @@ type debugHandlersDeps struct {
 	Logger log.Logger
 }
 
-func InternalDebugHandlersOption() fx.Option {
-	return fx.Provide(fx.Annotated{
-		Group:  partial.FxGroupInternalHttpHandlers + ",flatten",
-		Target: InternalDebugHandlers,
-	})
-}
-
 func InternalDebugHandlers(deps debugHandlersDeps) []partial.HttpHandlerPatternPair {
 	return []partial.HttpHandlerPatternPair{
 		{Pattern: internalPatternPrefix + "/debug/vars", Handler: deps.DebugVars()},

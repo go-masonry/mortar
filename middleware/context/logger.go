@@ -2,7 +2,6 @@ package context
 
 import (
 	"context"
-	"github.com/go-masonry/mortar/constructors"
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/mortar"
@@ -11,13 +10,6 @@ import (
 	"sort"
 	"strings"
 )
-
-func LoggerGRPCIncomingContextExtractorOption() fx.Option {
-	return fx.Provide(fx.Annotated{
-		Group:  constructors.FxGroupLoggerContextExtractors,
-		Target: LoggerGRPCIncomingContextExtractor,
-	})
-}
 
 type loggerContextExtractorDeps struct {
 	fx.In

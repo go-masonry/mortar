@@ -3,7 +3,7 @@ package constructors
 import (
 	"context"
 	"fmt"
-	"github.com/go-masonry/mortar/health"
+	"github.com/go-masonry/mortar/http/server/health"
 	"github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"go.uber.org/fx"

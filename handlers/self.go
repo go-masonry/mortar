@@ -26,19 +26,6 @@ type selfHandlerDeps struct {
 	Config cfg.Config
 }
 
-type InternalHandlers interface {
-	BuildInfo() http.HandlerFunc
-	ConfigMap() http.HandlerFunc
-}
-
-func SelfHandlersOption() fx.Option {
-	return fx.Provide(
-		fx.Annotated{
-			Group:  partial.FxGroupInternalHttpHandlers + ",flatten",
-			Target: SelfHandlers,
-		})
-}
-
 func SelfHandlers(deps selfHandlerDeps) []partial.HttpHandlerPatternPair {
 	return []partial.HttpHandlerPatternPair{
 		{Pattern: selfHandlerPrefix + "/build", Handler: deps.BuildInfo()},

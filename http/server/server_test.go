@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"github.com/go-masonry/mortar/health"
+	"github.com/go-masonry/mortar/http/server/health"
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	"github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"

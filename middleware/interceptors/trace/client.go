@@ -3,34 +3,17 @@ package trace
 import (
 	"context"
 	"fmt"
-	"github.com/go-masonry/mortar/constructors/partial"
 	"github.com/go-masonry/mortar/interfaces/http/client"
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
-	"go.uber.org/fx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"net/http"
 	"net/http/httputil"
 )
 
-func TracerGRPCClientInterceptorOption() fx.Option {
-	return fx.Provide(
-		fx.Annotated{
-			Group:  partial.FxGroupGRPCUnaryClientInterceptors,
-			Target: TracerGRPCClientInterceptor,
-		})
-}
-
-func TracerRESTClientInterceptorOption() fx.Option {
-	return fx.Provide(
-		fx.Annotated{
-			Group:  partial.FxGroupRESTClientInterceptors,
-			Target: TracerRESTClientInterceptor,
-		})
-}
-
+// TracerGRPCClientInterceptor is a grpc tracing client interceptor, it can log req/resp if needed
 func TracerGRPCClientInterceptor(deps tracingDeps) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		if deps.Tracer == nil {
@@ -56,6 +39,7 @@ func TracerGRPCClientInterceptor(deps tracingDeps) grpc.UnaryClientInterceptor {
 	}
 }
 
+// TracerRESTClientInterceptor is a REST tracing client interceptor, it can log req/resp if needed
 func TracerRESTClientInterceptor(deps tracingDeps) client.HttpClientInterceptor {
 	return func(req *http.Request, handler client.HttpHandler) (resp *http.Response, err error) {
 		if deps.Tracer == nil {

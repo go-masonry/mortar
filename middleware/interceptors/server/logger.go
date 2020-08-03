@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"github.com/go-masonry/mortar/constructors/partial"
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/mortar"
@@ -19,13 +18,7 @@ type loggerInterceptorDeps struct {
 	Logger log.Logger
 }
 
-func LoggerGRPCInterceptorOption() fx.Option {
-	return fx.Provide(fx.Annotated{
-		Group:  partial.FxGroupUnaryServerInterceptors,
-		Target: LoggerGRPCInterceptor,
-	})
-}
-
+// LoggerGRPCInterceptor logging interceptor, it will log grpc server call with request/response if configured
 func LoggerGRPCInterceptor(deps loggerInterceptorDeps) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		start := time.Now()
