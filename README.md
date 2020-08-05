@@ -23,7 +23,7 @@ We think it's important to read its documentation first, starting with the [Tuto
 
 ## Core Concepts
 
-- Bricks
+- [Bricks](wiki/bricks.md)
 - [Builders](wiki/builder.md)
 - [Middleware](wiki/middleware.md)
 - [Structural typing](https://en.wikipedia.org/wiki/Structural_type_system)
