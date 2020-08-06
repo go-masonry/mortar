@@ -30,14 +30,14 @@ Looking at the above example to access gRPC server port you should use the follo
 
 > Default delimiter is `.` but if needed it can be changed. (TODO)
 
-Once you `Get` a value with a provided key you can 
+Once you `Get` a value with a provided key you can
 
 - Check if it was set `value.IsSet() bool`
 - Cast it to a type
-    - `Bool() bool`
-    - `Int() int`
-    - `StringMapStringSlice() map[string][]string`
-    - ...
+  - `Bool() bool`
+  - `Int() int`
+  - `StringMapStringSlice() map[string][]string`
+  - ...
 
 ## Environment variables
 
@@ -67,8 +67,19 @@ Viper allows you to override configuration values with a matching Environment Va
 export MORTAR_SERVER_GRPC_PORT="7777"
 ```
 
-When you want to read gRPC server port value in your code you should write 
+When you want to read gRPC server port value in your code you should write
 
 `mortar.server.grpc.port`
 
 Viper will look for Environment variable by replacing `_` with `.` case-insensitive **first** and return its value if set.
+
+## Mortar Keys
+
+Mortar expects different keys in it's configuration map to enable or configure different abilities.
+In [this](../mortar/keys.go) file we try to show what the configuration map should look like and expose all the keys.
+
+## Config format
+
+While in this example we showed you `config.yml` in YAML format you can choose what ever works for you as long as the provided `Config` implementation knows how to read it and will abstract every key to be queried in this form:
+
+`root.child.childOfChild`

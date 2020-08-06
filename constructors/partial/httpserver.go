@@ -87,12 +87,12 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 }
 
 func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuilder) serverInt.GRPCWebServiceBuilder {
+	builder = builder.RegisterGRPCAPIs(health.RegisterInternalHealthService) // add internal GRPC health endpoint
 	// Internal
 	internalPort := deps.Config.Get(mortar.ServerRESTInternalPort)
 	includeInternalREST := internalPort.IsSet() && (len(deps.InternalHttpHandlerFunctions) > 0 || len(deps.InternalHttpHandlers) > 0)
 	if includeInternalREST {
 		restBuilder := builder.
-			RegisterGRPCAPIs(health.RegisterInternalHealthService). // add internal GRPC health endpoint
 			AddRESTServerConfiguration().
 			ListenOn(fmt.Sprintf(":%d", internalPort.Int()))
 		for _, handlerPair := range deps.InternalHttpHandlers {

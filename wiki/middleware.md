@@ -20,7 +20,8 @@ func (r *http.Request) WithContext(ctx context.Context) *http.Request
 ```
 
 Since we are used to it why not leverage on it ?
-Let's pretend we have a `Logger` interface and it's defined as following:
+
+Let's [pretend](../interfaces/log/interfaces.go) we have a `Logger` interface, and it's defined as following:
 
 ```golang
 ...
