@@ -1,8 +1,8 @@
 package providers
 
 import (
-	"github.com/go-masonry/mortar/constructors/partial"
 	"github.com/go-masonry/mortar/middleware/interceptors/trace"
+	"github.com/go-masonry/mortar/providers/groups"
 	"go.uber.org/fx"
 )
 
@@ -10,7 +10,7 @@ import (
 func TracerGRPCClientInterceptorFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  partial.FxGroupGRPCUnaryClientInterceptors,
+			Group:  groups.GRPCUnaryClientInterceptors,
 			Target: trace.TracerGRPCClientInterceptor,
 		})
 }
@@ -19,7 +19,7 @@ func TracerGRPCClientInterceptorFxOption() fx.Option {
 func TracerRESTClientInterceptorFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  partial.FxGroupRESTClientInterceptors,
+			Group:  groups.RESTClientInterceptors,
 			Target: trace.TracerRESTClientInterceptor,
 		})
 }
@@ -27,7 +27,7 @@ func TracerRESTClientInterceptorFxOption() fx.Option {
 // GRPCTracingUnaryServerInterceptorFxOption adds grpc trace unary server interceptor to the graph
 func GRPCTracingUnaryServerInterceptorFxOption() fx.Option {
 	return fx.Provide(fx.Annotated{
-		Group:  partial.FxGroupUnaryServerInterceptors,
+		Group:  groups.UnaryServerInterceptors,
 		Target: trace.GRPCTracingUnaryServerInterceptor,
 	})
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/go-masonry/mortar/http/server"
 	"github.com/go-masonry/mortar/middleware/interceptors/client"
 	middlewareServer "github.com/go-masonry/mortar/middleware/interceptors/server"
+	"github.com/go-masonry/mortar/providers/groups"
 	"go.uber.org/fx"
 )
 
@@ -33,7 +34,7 @@ func HttpServerBuilderFxOption() fx.Option {
 // InternalDebugHandlersFxOption adds Internal Debug Handlers to the graph
 func InternalDebugHandlersFxOption() fx.Option {
 	return fx.Provide(fx.Annotated{
-		Group:  partial.FxGroupInternalHttpHandlers + ",flatten",
+		Group:  groups.InternalHttpHandlers + ",flatten",
 		Target: handlers.InternalDebugHandlers,
 	})
 }
@@ -42,7 +43,7 @@ func InternalDebugHandlersFxOption() fx.Option {
 func InternalProfileHandlerFunctionsFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  partial.FxGroupInternalHttpHandlerFunctions + ",flatten",
+			Group:  groups.InternalHttpHandlerFunctions + ",flatten",
 			Target: handlers.InternalProfileHandlerFunctions,
 		})
 }
@@ -51,7 +52,7 @@ func InternalProfileHandlerFunctionsFxOption() fx.Option {
 func InternalSelfHandlersFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  partial.FxGroupInternalHttpHandlers + ",flatten",
+			Group:  groups.InternalHttpHandlers + ",flatten",
 			Target: handlers.SelfHandlers,
 		})
 }
@@ -61,7 +62,7 @@ func InternalSelfHandlersFxOption() fx.Option {
 func GRPCGatewayMetadataTraceCarrierFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  partial.FxGroupGRPCGatewayMuxOptions,
+			Group:  groups.GRPCGatewayMuxOptions,
 			Target: server.MetadataTraceCarrierOption,
 		})
 }
@@ -70,7 +71,7 @@ func GRPCGatewayMetadataTraceCarrierFxOption() fx.Option {
 func CopyGRPCHeadersClientInterceptorFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  partial.FxGroupGRPCUnaryClientInterceptors,
+			Group:  groups.GRPCUnaryClientInterceptors,
 			Target: client.CopyGRPCHeadersClientInterceptor,
 		})
 }
@@ -78,7 +79,7 @@ func CopyGRPCHeadersClientInterceptorFxOption() fx.Option {
 // LoggerGRPCInterceptorFxOption adds Unary Server Interceptor that will log Request and Response if needed
 func LoggerGRPCInterceptorFxOption() fx.Option {
 	return fx.Provide(fx.Annotated{
-		Group:  partial.FxGroupUnaryServerInterceptors,
+		Group:  groups.UnaryServerInterceptors,
 		Target: middlewareServer.LoggerGRPCInterceptor,
 	})
 }
@@ -87,7 +88,7 @@ func LoggerGRPCInterceptorFxOption() fx.Option {
 func MonitorGRPCInterceptorFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  partial.FxGroupUnaryServerInterceptors,
+			Group:  groups.UnaryServerInterceptors,
 			Target: middlewareServer.MonitorGRPCInterceptor,
 		})
 }

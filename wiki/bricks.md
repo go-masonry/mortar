@@ -15,9 +15,9 @@ Let's look at Logger libraries for example, there are
 
 You are encouraged to have a look at each library, but if not I can assure you, all of their API are different from each other.
 Mortar after all is a library, and it's purpose to be used in many projects.
-That is why we defined different Interfaces that really worked great for us.
+That is why we defined different [Interfaces](../interfaces).
 
-## *Brick* is an implementation of an Interface defined in Mortar.
+## We define *Brick* as an implementation of an Interface defined in Mortar using *external* library. 
 
 - [Mortar Logger](https://github.com/go-masonry/mortar/blob/master/interfaces/log/interfaces.go) 
     - [Implementation using Zerolog](https://github.com/go-masonry/bzerolog)

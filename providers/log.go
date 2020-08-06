@@ -3,6 +3,7 @@ package providers
 import (
 	"github.com/go-masonry/mortar/constructors"
 	"github.com/go-masonry/mortar/middleware/context"
+	"github.com/go-masonry/mortar/providers/groups"
 	"go.uber.org/fx"
 )
 
@@ -16,7 +17,7 @@ func LoggerFxOption() fx.Option {
 // This one will be included during Logger build
 func LoggerGRPCIncomingContextExtractorFxOption() fx.Option {
 	return fx.Provide(fx.Annotated{
-		Group:  constructors.FxGroupLoggerContextExtractors,
+		Group:  groups.LoggerContextExtractors,
 		Target: context.LoggerGRPCIncomingContextExtractor,
 	})
 }
