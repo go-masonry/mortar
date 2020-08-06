@@ -36,6 +36,8 @@ To easily differentiate an actual library from its Brick wrapper, every Brick pa
 
 # As a rule every Brick is based on Mortar itself, but not on any other Brick
 
-Meaning you can't use bzerolog with bjaeger for example.
+Meaning you can't import `bzerolog` from within `bjaeger` for example.
+
+Check their `go.mod` files to make sure.
 
 This rule is here to ensure that every Brick can be easily swapped.
