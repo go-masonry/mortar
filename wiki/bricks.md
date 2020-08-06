@@ -34,5 +34,8 @@ To easily differentiate an actual library from its Brick wrapper, every Brick pa
 - **b**zerolog
 - ...
 
+# As a rule every Brick is based on Mortar itself, but not on any other Brick
 
+Meaning you can't use bzerolog with bjaeger for example.
 
+This rule is here to ensure that every Brick can be easily swapped.
