@@ -60,6 +60,6 @@ func (d LoggerDeps) getLogBuilder() logInt.Builder {
 	if d.LoggerBuilder != nil {
 		return d.LoggerBuilder
 	}
-	log.Printf("No logger builder provided, using default logger. Some features will not be supported")
+	log.Printf("[Mortar] WARNING \tNo logger builder provided, using default logger. Some features will not be supported")
 	return defaultLogger.Builder()
 }
