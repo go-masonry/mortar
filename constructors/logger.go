@@ -2,9 +2,11 @@ package constructors
 
 import (
 	"github.com/go-masonry/mortar/interfaces/cfg"
-	"github.com/go-masonry/mortar/interfaces/log"
+	logInt "github.com/go-masonry/mortar/interfaces/log"
+	defaultLogger "github.com/go-masonry/mortar/logger"
 	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
+	"log"
 )
 
 const FxGroupLoggerContextExtractors = "loggerContextExtractors"
@@ -20,18 +22,18 @@ type LoggerDeps struct {
 	fx.In
 
 	Config            cfg.Config
-	LoggerBuilder     log.Builder
-	ContextExtractors []log.ContextExtractor `group:"loggerContextExtractors"`
+	LoggerBuilder     logInt.Builder            `optional:"true"`
+	ContextExtractors []logInt.ContextExtractor `group:"loggerContextExtractors"`
 }
 
 // DefaultLogger is a constructor that will create a logger with some default values on top of provided ones
-func DefaultLogger(deps LoggerDeps) log.Logger {
-	var logLevel = log.InfoLevel
+func DefaultLogger(deps LoggerDeps) logInt.Logger {
+	var logLevel = logInt.InfoLevel
 	if levelValue := deps.Config.Get(mortar.LoggerLevelKey); levelValue.IsSet() {
-		logLevel = log.ParseLevel(levelValue.String())
+		logLevel = logInt.ParseLevel(levelValue.String())
 	}
 	appName := deps.Config.Get(mortar.Name).String() // empty string is just fine
-	return deps.LoggerBuilder.
+	return deps.getLogBuilder().
 		SetLevel(logLevel).
 		AddStaticFields(selfStaticFields(appName)).
 		AddContextExtractors(deps.ContextExtractors...).
@@ -52,4 +54,12 @@ func selfStaticFields(name string) map[string]interface{} {
 		output[gitCommit] = info.GitCommit
 	}
 	return output
+}
+
+func (d LoggerDeps) getLogBuilder() logInt.Builder {
+	if d.LoggerBuilder != nil {
+		return d.LoggerBuilder
+	}
+	log.Printf("No logger builder provided, using default logger. Some features will not be supported")
+	return defaultLogger.Builder()
 }

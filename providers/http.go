@@ -6,7 +6,6 @@ import (
 	"github.com/go-masonry/mortar/handlers"
 	"github.com/go-masonry/mortar/http/server"
 	"github.com/go-masonry/mortar/middleware/interceptors/client"
-	middlewareServer "github.com/go-masonry/mortar/middleware/interceptors/server"
 	"github.com/go-masonry/mortar/providers/groups"
 	"go.uber.org/fx"
 )
@@ -73,22 +72,5 @@ func CopyGRPCHeadersClientInterceptorFxOption() fx.Option {
 		fx.Annotated{
 			Group:  groups.GRPCUnaryClientInterceptors,
 			Target: client.CopyGRPCHeadersClientInterceptor,
-		})
-}
-
-// LoggerGRPCInterceptorFxOption adds Unary Server Interceptor that will log Request and Response if needed
-func LoggerGRPCInterceptorFxOption() fx.Option {
-	return fx.Provide(fx.Annotated{
-		Group:  groups.UnaryServerInterceptors,
-		Target: middlewareServer.LoggerGRPCInterceptor,
-	})
-}
-
-// MonitorGRPCInterceptorFxOption adds Unary Server Interceptor that will notify metric provider of every call
-func MonitorGRPCInterceptorFxOption() fx.Option {
-	return fx.Provide(
-		fx.Annotated{
-			Group:  groups.UnaryServerInterceptors,
-			Target: middlewareServer.MonitorGRPCInterceptor,
 		})
 }
