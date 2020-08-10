@@ -2,6 +2,7 @@ package constructors
 
 import (
 	"context"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/interfaces/monitor"
 	"github.com/go-masonry/mortar/mortar"
@@ -24,13 +25,11 @@ type monitorDeps struct {
 // DefaultMonitor is a constructor that will create a Metrics client based on values from the Config Map
 // such as
 //
-// 	- Address: we will look for a key mortar.MonitorAddressKey within the configuration map
 // 	- Prefix: we will look for a key mortar.MonitorPrefixKey within the configuration map
 // 	- Tags: we will look for default tags using mortar.MonitorTagsKey within the configuration map
 //
 func DefaultMonitor(deps monitorDeps) monitor.Metrics {
-	address := deps.Config.Get(mortar.MonitorAddressKey).String()
-	builder := deps.MonitorBuilder.SetAddress(address)
+	var builder = deps.MonitorBuilder
 	if tags := deps.Config.Get(mortar.MonitorTagsKey); tags.IsSet() {
 		builder = builder.SetTags(tags.StringMapString())
 	}

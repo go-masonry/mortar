@@ -17,7 +17,6 @@ mortar:
 		level: info
 		console: false
 	monitor:
-		address: "host:port"
 		prefix: "awesome.project"
 		tags:
 			tag1: value
@@ -72,9 +71,8 @@ const (
 	LoggerWriterConsole = "mortar.logger.console"
 
 	// Monitoring
-	MonitorAddressKey = "mortar.monitor.address"
-	MonitorTagsKey    = "mortar.monitor.tags"
-	MonitorPrefixKey  = "mortar.monitor.prefix"
+	MonitorTagsKey   = "mortar.monitor.tags"
+	MonitorPrefixKey = "mortar.monitor.prefix"
 
 	// Middleware
 	//// Server
