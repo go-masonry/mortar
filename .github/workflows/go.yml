@@ -21,17 +21,6 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-
-#     - name: Get dependencies
-#       run: |
-#         go get -v -t -d ./...
-
-#     - name: Build
-#       run: go build -v .
-    - name: List
-      run: |
-        pwd
-        ls -la
         
     - name: Test
       run: go test -count=1 -v ./...
