@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
+	"time"
 )
 
 type multiListenersSuite struct {
@@ -89,6 +90,7 @@ func (ms *multiListenersSuite) BeforeTest(_, _ string) {
 		}
 		ms.web.Run(context.Background())
 	}()
+	time.Sleep(500 * time.Millisecond) // compensate on build machine
 }
 
 func (ms *multiListenersSuite) AfterTest(_, _ string) {

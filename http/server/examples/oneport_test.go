@@ -13,6 +13,7 @@ import (
 	"net"
 	"net/http"
 	"testing"
+	"time"
 )
 
 type onePortSuite struct {
@@ -85,6 +86,7 @@ func (os *onePortSuite) BeforeTest(_, _ string) {
 		go os.cMux.Serve()               // cmux must serve on it's own since it's blocking
 		os.web.Run(context.Background()) // this one is blocking
 	}()
+	time.Sleep(500 * time.Millisecond) // compensate on build machine
 }
 
 func (os *onePortSuite) AfterTest(_, _ string) {
