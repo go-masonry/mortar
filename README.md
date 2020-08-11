@@ -21,7 +21,7 @@ Mortar is based on an internal project developed within [Here-Mobility](https://
 ## Documentation
 
 Mortar is not a drop-in replacement. It will probably change the way you code and build services.
-It's important to read its documentation first, starting with the [Tutorial](https://github.com/go-masonry/tutorial).
+It's important to read its documentation first, starting with the [Tutorial](https://github.com/go-masonry/tutorial) which is also a bit-of-everything example.
 
 ### Core Concepts
 
