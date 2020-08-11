@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+//go:generate mockgen -source=interfaces.go -destination=mock/mock.go
+
 type Level int8
 
 const (

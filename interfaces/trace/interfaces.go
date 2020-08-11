@@ -5,6 +5,8 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
+//go:generate mockgen -source=interfaces.go -destination=mock/mock.go
+
 type OpenTracer interface {
 	Connect(ctx context.Context) error
 	Tracer() opentracing.Tracer

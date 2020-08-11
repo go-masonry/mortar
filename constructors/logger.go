@@ -32,25 +32,25 @@ func DefaultLogger(deps LoggerDeps) logInt.Logger {
 	if levelValue := deps.Config.Get(mortar.LoggerLevelKey); levelValue.IsSet() {
 		logLevel = logInt.ParseLevel(levelValue.String())
 	}
-	appName := deps.Config.Get(mortar.Name).String() // empty string is just fine
 	return deps.getLogBuilder().
 		SetLevel(logLevel).
-		AddStaticFields(selfStaticFields(appName)).
+		AddStaticFields(deps.selfStaticFields()).
 		AddContextExtractors(deps.ContextExtractors...).
 		IncludeCallerAndSkipFrames(callerSkipDepth).
 		Build()
 }
 
-func selfStaticFields(name string) map[string]interface{} {
+func (d LoggerDeps) selfStaticFields() map[string]interface{} {
 	output := make(map[string]interface{})
 	info := mortar.GetBuildInformation()
-	if len(name) > 0 {
-		output[application] = name
+	appName := d.Config.Get(mortar.Name).String()
+	if len(appName) > 0 && d.Config.Get(mortar.LoggerStaticName).Bool() {
+		output[application] = appName
 	}
-	if len(info.Hostname) > 0 {
+	if len(info.Hostname) > 0 && d.Config.Get(mortar.LoggerStaticHost).Bool() {
 		output[hostname] = info.Hostname
 	}
-	if len(info.GitCommit) > 0 {
+	if len(info.GitCommit) > 0 && d.Config.Get(mortar.LoggerStaticGit).Bool() {
 		output[gitCommit] = info.GitCommit
 	}
 	return output

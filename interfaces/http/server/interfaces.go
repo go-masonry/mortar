@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+//go:generate mockgen -source=interfaces.go -destination=mock/mock.go
+
 type WebServerType string
 
 const (

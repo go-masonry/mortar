@@ -2,6 +2,8 @@ package cfg
 
 import "time"
 
+//go:generate mockgen -source=interfaces.go -destination=mock/mock.go
+
 type Value interface {
 	// IsSet will tell if this key really exists in the configuration
 	IsSet() bool

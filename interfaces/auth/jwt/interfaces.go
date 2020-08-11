@@ -5,6 +5,8 @@ import (
 	"encoding/base64"
 )
 
+//go:generate mockgen -source=interfaces.go -destination=mock/mock.go
+
 type JsonDecoder func(data []byte, v interface{}) error
 
 // ExtractorBuilder lets you define custom options

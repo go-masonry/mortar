@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	statusTagName = "sts"
+	statusTagName = "status"
 )
 
 type grpcMetricInterceptorsDeps struct {

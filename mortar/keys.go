@@ -16,6 +16,10 @@ mortar:
 	logger:
 		level: info
 		console: false
+		static:
+			git: true
+			host: true
+			name: true
 	monitor:
 		prefix: "awesome.project"
 		tags:
@@ -69,6 +73,9 @@ const (
 	// Logger
 	LoggerLevelKey      = "mortar.logger.level"
 	LoggerWriterConsole = "mortar.logger.console"
+	LoggerStaticGit     = "mortar.logger.static.git"
+	LoggerStaticHost    = "mortar.logger.static.host"
+	LoggerStaticName    = "mortar.logger.static.name"
 
 	// Monitoring
 	MonitorTagsKey   = "mortar.monitor.tags"

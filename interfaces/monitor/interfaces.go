@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+//go:generate mockgen -source=interfaces.go -destination=mock/mock.go
+
 // Metrics defines various monitoring capabilities
 type Metrics interface {
 	// Gauge measures the value of a metric at a particular time.
