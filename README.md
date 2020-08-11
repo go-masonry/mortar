@@ -4,7 +4,7 @@ Mortar is a GO framework/library for building gRPC (and REST) web services.
 Mortar has out-of-the-box support for configuration, application metrics, logging, tracing, profiling and much more.
 While it comes with predefined defaults Mortar gives you total control to fully customize it.
 
-Mortar based on an internal project developed within [Here-Mobility](https://mobility.here.com/) where it was used in hundreds of different services.
+Mortar is based on an internal project developed within [Here-Mobility](https://mobility.here.com/) where it powered hundreds of different services.
 
 ## Overview of Building ~~Blocks~~ Bricks
 
