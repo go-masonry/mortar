@@ -1,9 +1,8 @@
-package examples
+package server
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/go-masonry/mortar/http/server"
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -59,7 +58,7 @@ func (ms *multiListenersSuite) TestCustomPath() {
 }
 
 func (ms *multiListenersSuite) SetupSuite() {
-	ms.builder = server.Builder().
+	ms.builder = Builder().
 		SetLogger(func(ctx context.Context, format string, args ...interface{}) {
 			ms.T().Logf(format, args...)
 		}).

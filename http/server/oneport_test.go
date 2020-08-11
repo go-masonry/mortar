@@ -1,9 +1,8 @@
-package examples
+package server
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/go-masonry/mortar/http/server"
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -57,7 +56,7 @@ func (os *onePortSuite) makeBuilderAndCmux() {
 	restL := os.cMux.Match(cmux.HTTP1())
 	grpcL := os.cMux.Match(cmux.Any())
 
-	os.builder = server.Builder().
+	os.builder = Builder().
 		SetLogger(func(ctx context.Context, format string, args ...interface{}) {
 			os.T().Logf(format, args...)
 		}).

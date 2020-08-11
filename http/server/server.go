@@ -67,7 +67,6 @@ func (ws *webService) Stop(ctx context.Context) error {
 	if ws.close {
 		return nil // already closed
 	}
-	ws.serviceConfig.logger(ctx, "Shutting down...")
 	ws.close = true
 	var wg sync.WaitGroup
 	for _, listenerAndMux := range ws.muxAndListeners {

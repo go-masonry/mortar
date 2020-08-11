@@ -9,8 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"io/ioutil"
 	"net"
 	"net/http"
+	"strings"
 	"testing"
 )
 
@@ -114,6 +118,90 @@ func TestInternalHealthService(t *testing.T) {
 	healthClient := health.NewHealthClient(conn)
 	_, err = healthClient.Check(context.Background(), &health.HealthCheckRequest{})
 	require.NoError(t, err)
+}
+
+func TestCustomGrpcServerOptions(t *testing.T) {
+	service, err := Builder().
+		ListenOn(":8888").
+		AddGRPCServerOptions(grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+			return nil, status.Error(codes.OutOfRange, "out of range")
+		})).
+		RegisterGRPCAPIs(registerGrpcAPI).Build()
+	require.NoError(t, err)
+	defer service.Stop(context.Background())
+	go service.Run(context.Background())
+	conn, err := grpc.Dial(":8888", grpc.WithInsecure())
+	defer conn.Close()
+	require.NoError(t, err)
+	demoClient := demopackage.NewDemoClient(conn)
+	_, err = demoClient.Ping(context.Background(), &demopackage.PingRequest{In: "in"})
+	assert.EqualError(t, err, "rpc error: code = OutOfRange desc = out of range")
+}
+
+func TestAddCustomHandler(t *testing.T) {
+	service, err := Builder().
+		ListenOn(":8888").
+		RegisterGRPCAPIs(registerGrpcAPI).
+		AddRESTServerConfiguration().
+		ListenOn(":8889").
+		AddHandler("/notfound", http.NotFoundHandler()).
+		BuildRESTPart().
+		Build()
+	require.NoError(t, err)
+	defer service.Stop(context.Background())
+	go service.Run(context.Background())
+	resp, err := http.Get("http://localhost:8889/notfound")
+	require.NoError(t, err)
+	defer resp.Body.Close()
+	assert.Equal(t, http.StatusNotFound, resp.StatusCode)
+}
+
+func TestCustomGrpcGatewayOptions(t *testing.T) {
+	service, err := Builder().
+		ListenOn(":8888").
+		RegisterGRPCAPIs(registerGrpcAPI).
+		AddRESTServerConfiguration().
+		ListenOn(":8889").
+		RegisterGRPCGatewayHandlers(registerGatewayHandler).
+		AddGRPCGatewayOptions(runtime.WithProtoErrorHandler(func(ctx context.Context, serveMux *runtime.ServeMux, marshaler runtime.Marshaler, writer http.ResponseWriter, request *http.Request, err error) {
+			http.Error(writer, "bad one", http.StatusTeapot)
+		})).
+		BuildRESTPart().
+		Build()
+	require.NoError(t, err)
+	defer service.Stop(context.Background()) // clean
+	go service.Run(context.Background())
+	resp, err := http.Get("http://localhost:8889/v1/demo/ping")
+	require.NoError(t, err)
+	defer resp.Body.Close()
+	assert.Equal(t, http.StatusTeapot, resp.StatusCode)
+	bytes, err := ioutil.ReadAll(resp.Body)
+	require.NoError(t, err)
+	assert.Equal(t, "bad one", strings.TrimSpace(string(bytes)))
+}
+
+func TestCustomGrpcGatewayMux(t *testing.T) {
+	service, err := Builder().
+		ListenOn(":8888").
+		RegisterGRPCAPIs(registerGrpcAPI).
+		AddRESTServerConfiguration().
+		ListenOn(":8889").
+		RegisterGRPCGatewayHandlers(registerGatewayHandler).
+		SetCustomGRPCGatewayMux(runtime.NewServeMux(runtime.WithProtoErrorHandler(func(ctx context.Context, serveMux *runtime.ServeMux, marshaler runtime.Marshaler, writer http.ResponseWriter, request *http.Request, err error) {
+			http.Error(writer, "bad one", http.StatusTeapot)
+		}))).
+		BuildRESTPart().
+		Build()
+	require.NoError(t, err)
+	defer service.Stop(context.Background()) // clean
+	go service.Run(context.Background())
+	resp, err := http.Get("http://localhost:8889/v1/demo/ping")
+	require.NoError(t, err)
+	defer resp.Body.Close()
+	assert.Equal(t, http.StatusTeapot, resp.StatusCode)
+	bytes, err := ioutil.ReadAll(resp.Body)
+	require.NoError(t, err)
+	assert.Equal(t, "bad one", strings.TrimSpace(string(bytes)))
 }
 
 func registerGrpcAPI(srv *grpc.Server) {
