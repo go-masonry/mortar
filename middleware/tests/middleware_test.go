@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
+	"github.com/go-masonry/mortar/interfaces/http/client"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/golang/mock/gomock"
+	"github.com/opentracing/opentracing-go"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
@@ -21,9 +23,11 @@ type middlewareSuite struct {
 	app          *fxtest.App
 	loggerOutput bytes.Buffer
 	// populate
-	logExtractor      log.ContextExtractor
-	clientInterceptor grpc.UnaryClientInterceptor
-	serverInterceptor grpc.UnaryServerInterceptor
+	logExtractor          log.ContextExtractor
+	clientInterceptor     grpc.UnaryClientInterceptor
+	restClientInterceptor client.HttpClientInterceptor
+	serverInterceptor     grpc.UnaryServerInterceptor
+	tracer                opentracing.Tracer
 }
 
 func TestMiddleware(t *testing.T) {
@@ -48,6 +52,12 @@ func (s *middlewareSuite) BeforeTest(suiteName, testName string) {
 		extraOptions = s.testLoggerGRPCInterceptorBeforeTest()
 	case "TestMonitorGRPCInterceptor":
 		extraOptions = s.testMonitorGRPCInterceptorBeforeTest()
+	case "TestTracerGRPCClientInterceptor":
+		extraOptions = s.testTracerGRPCClientInterceptorBeforeTest()
+	case "TestTracerRESTClientInterceptor":
+		extraOptions = s.testTracerRESTClientInterceptorBeforeTest()
+	case "TestGRPCTracingUnaryServerInterceptor":
+		extraOptions = s.testGRPCTracingUnaryServerInterceptorBeforeTest()
 	default:
 		s.T().Fatalf("no pre test logic found for %s", testName)
 	}

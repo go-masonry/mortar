@@ -120,7 +120,7 @@ func (s *middlewareSuite) TestGRPCTracingUnaryServerInterceptor() {
 	s.Empty(s.loggerOutput.String())
 }
 
-func (s *middlewareSuite) testGRPCTracingUnaryServerInterceptorBeforeTest() fx.Option{
+func (s *middlewareSuite) testGRPCTracingUnaryServerInterceptorBeforeTest() fx.Option {
 	s.cfgMock.EXPECT().Get(mortar.MiddlewareServerGRPCTraceIncludeRequest).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().Bool().Return(true)

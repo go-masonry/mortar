@@ -10,9 +10,9 @@ import (
 	"go.uber.org/fx"
 )
 
-// CreateEntireWebServiceDependencyGraph creates the entire dependency graph
+// BuildMortarWebService creates the entire dependency graph
 // and registers all provided fx.LifeCycle hooks
-func CreateEntireWebServiceDependencyGraph() fx.Option {
+func BuildMortarWebService() fx.Option {
 	return fx.Invoke(constructors.Service)
 }
 
@@ -25,7 +25,7 @@ func HttpClientBuildersFxOption() fx.Option {
 }
 
 // HttpServerBuilderFxOption adds Default Http Server builder which later injected to the Service Invoke option
-// by calling CreateEntireWebServiceDependencyGraph fx.Invoke option to the graph
+// by calling BuildMortarWebService fx.Invoke option to the graph
 func HttpServerBuilderFxOption() fx.Option {
 	return fx.Provide(partial.HttpServerBuilder)
 }
