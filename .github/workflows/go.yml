@@ -28,6 +28,10 @@ jobs:
 
 #     - name: Build
 #       run: go build -v .
-
+    - name: List
+      run: |
+        pwd
+        ls -la
+        
     - name: Test
-      run: go test -v ./...
+      run: go test -count=1 -v ./...
