@@ -32,7 +32,7 @@ type GRPCServerAPI func(server *grpc.Server)
 
 type GRPCWebServiceBuilder interface {
 	ListenOn(addr string) GRPCWebServiceBuilder
-	SetCustomGRPCServer(server *grpc.Server) GRPCWebServiceBuilder
+	SetCustomGRPCServer(customServer *grpc.Server) GRPCWebServiceBuilder
 	SetCustomListener(listener net.Listener) GRPCWebServiceBuilder
 	RegisterGRPCAPIs(register ...GRPCServerAPI) GRPCWebServiceBuilder
 	AddGRPCServerOptions(options ...grpc.ServerOption) GRPCWebServiceBuilder
@@ -46,7 +46,7 @@ type GRPCGatewayGeneratedHandlers func(mux *runtime.ServeMux, endpoint string) e
 
 type RESTBuilder interface {
 	ListenOn(addr string) RESTBuilder
-	SetCustomServer(server *http.Server) RESTBuilder
+	SetCustomServer(customServer *http.Server) RESTBuilder
 	SetCustomListener(listener net.Listener) RESTBuilder
 	AddHandler(pattern string, handler http.Handler) RESTBuilder
 	AddHandlerFunc(pattern string, handlerFunc http.HandlerFunc) RESTBuilder

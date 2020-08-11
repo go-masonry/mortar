@@ -118,17 +118,17 @@ func (mr *MockGRPCWebServiceBuilderMockRecorder) ListenOn(addr interface{}) *gom
 }
 
 // SetCustomGRPCServer mocks base method.
-func (m *MockGRPCWebServiceBuilder) SetCustomGRPCServer(server *grpc.Server) server.GRPCWebServiceBuilder {
+func (m *MockGRPCWebServiceBuilder) SetCustomGRPCServer(customServer *grpc.Server) server.GRPCWebServiceBuilder {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetCustomGRPCServer", server)
+	ret := m.ctrl.Call(m, "SetCustomGRPCServer", customServer)
 	ret0, _ := ret[0].(server.GRPCWebServiceBuilder)
 	return ret0
 }
 
 // SetCustomGRPCServer indicates an expected call of SetCustomGRPCServer.
-func (mr *MockGRPCWebServiceBuilderMockRecorder) SetCustomGRPCServer(server interface{}) *gomock.Call {
+func (mr *MockGRPCWebServiceBuilderMockRecorder) SetCustomGRPCServer(customServer interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCustomGRPCServer", reflect.TypeOf((*MockGRPCWebServiceBuilder)(nil).SetCustomGRPCServer), server)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCustomGRPCServer", reflect.TypeOf((*MockGRPCWebServiceBuilder)(nil).SetCustomGRPCServer), customServer)
 }
 
 // SetCustomListener mocks base method.
@@ -276,17 +276,17 @@ func (mr *MockRESTBuilderMockRecorder) ListenOn(addr interface{}) *gomock.Call {
 }
 
 // SetCustomServer mocks base method.
-func (m *MockRESTBuilder) SetCustomServer(server *http.Server) server.RESTBuilder {
+func (m *MockRESTBuilder) SetCustomServer(customServer *http.Server) server.RESTBuilder {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetCustomServer", server)
+	ret := m.ctrl.Call(m, "SetCustomServer", customServer)
 	ret0, _ := ret[0].(server.RESTBuilder)
 	return ret0
 }
 
 // SetCustomServer indicates an expected call of SetCustomServer.
-func (mr *MockRESTBuilderMockRecorder) SetCustomServer(server interface{}) *gomock.Call {
+func (mr *MockRESTBuilderMockRecorder) SetCustomServer(customServer interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCustomServer", reflect.TypeOf((*MockRESTBuilder)(nil).SetCustomServer), server)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCustomServer", reflect.TypeOf((*MockRESTBuilder)(nil).SetCustomServer), customServer)
 }
 
 // SetCustomListener mocks base method.
