@@ -38,3 +38,8 @@ jobs:
       with:
         name: coverage
         path: coverage*.*
+    
+    - name: Coverage summary
+      shell: bash
+      run: |
+        tail -n1 coverage-summary.txt | awk '{print "Coverage summary: " $3}'
