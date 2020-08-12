@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v2
         
     - name: Code generation
-      uses: make generate
+      run: make generate
 
     - name: Test
       run: make test
