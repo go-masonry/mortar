@@ -1,7 +1,7 @@
 LISTPKG:=$(shell go list ./... | grep -v "/tests" | tr "\n" ",")
 
 deps:
-	@go get github.com/golang/mock/mockgen
+	@go install github.com/golang/mock/mockgen
 
 generate:
 	@echo -n Generating files and checking ...
