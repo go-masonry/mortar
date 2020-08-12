@@ -47,7 +47,7 @@ Mortar defines different interfaces, without implementing them.
 There are a lot of great libraries that can be used to implement them.
 They just need to be (wrapped) first.
 
-We call them [bricks](wiki/bricks.md).
+We call them [Bricks](wiki/bricks.md).
 
 ### Logger
 
