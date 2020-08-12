@@ -1,6 +1,6 @@
 # Mortar
 
-![Logo](wiki/logo.svg)
+<img src=wiki/logo.svg height=256>
 
 Mortar is a lightweight GO framework/library for building gRPC (and REST) web services.
 Mortar has out-of-the-box support for configuration, application metrics, logging, tracing, profiling and much more.
