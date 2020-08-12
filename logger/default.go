@@ -3,9 +3,10 @@ package logger
 import (
 	"context"
 	"fmt"
-	logInt "github.com/go-masonry/mortar/interfaces/log"
 	"io"
 	"log"
+
+	logInt "github.com/go-masonry/mortar/interfaces/log"
 )
 
 type defaultLogger struct {

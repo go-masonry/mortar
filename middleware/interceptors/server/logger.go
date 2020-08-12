@@ -2,13 +2,14 @@ package server
 
 import (
 	"context"
+	"time"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/go-masonry/mortar/utils"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
-	"time"
 )
 
 type loggerInterceptorDeps struct {

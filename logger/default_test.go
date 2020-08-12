@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	logInt "github.com/go-masonry/mortar/interfaces/log"
-	"github.com/stretchr/testify/assert"
 	"log"
 	"strings"
 	"testing"
 	"time"
+
+	logInt "github.com/go-masonry/mortar/interfaces/log"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDefaultLogger(t *testing.T) {

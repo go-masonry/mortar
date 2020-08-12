@@ -2,6 +2,7 @@ package trace
 
 import (
 	"context"
+
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"

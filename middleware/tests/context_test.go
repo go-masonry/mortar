@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	contextMiddleware "github.com/go-masonry/mortar/middleware/context"

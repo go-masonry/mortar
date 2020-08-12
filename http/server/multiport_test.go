@@ -3,15 +3,16 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"testing"
+	"time"
+
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"
-	"io/ioutil"
-	"net/http"
-	"testing"
-	"time"
 )
 
 type multiListenersSuite struct {

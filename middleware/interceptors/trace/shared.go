@@ -2,6 +2,7 @@ package trace
 
 import (
 	"context"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/utils"

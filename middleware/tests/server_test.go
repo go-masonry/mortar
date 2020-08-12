@@ -3,6 +3,8 @@ package tests
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/log"
@@ -14,7 +16,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
-	"time"
 )
 
 func (s *middlewareSuite) TestLoggerGRPCInterceptor() {

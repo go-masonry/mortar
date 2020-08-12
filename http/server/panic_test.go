@@ -3,11 +3,12 @@ package server
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	"testing"
 )
 
 func TestPanicHandler(t *testing.T) {

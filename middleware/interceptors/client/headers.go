@@ -2,12 +2,13 @@ package client
 
 import (
 	"context"
+	"strings"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"strings"
 )
 
 type copyHeadersDeps struct {

@@ -1,7 +1,7 @@
 LISTPKG:=$(shell go list ./... | grep -vE "/tests|/mock|/mortar/http/server/health|/mortar/http/server/proto" | tr "\n" ",")
 
 deps:
-	@go install github.com/golang/mock/mockgen
+	@go install github.com/golang/mock/mockgen golang.org/x/tools/cmd/goimports golang.org/x/lint/golint
 
 generate: deps
 	@echo -n Generating files and checking ...
@@ -15,12 +15,21 @@ generate: deps
 
 go-fmt:
 	@echo -n Checking format...
-	@test $(shell go fmt ./... | wc -l) = 0 \
-		|| { echo; echo "some files are not properly formated";\
-		echo $(shell git status --porcelain);\
+	@test $(shell goimports -l ./ | grep -v mock.go | wc -l) = 0 \
+		|| { echo; echo "some files are not properly formatted";\
+		echo $(shell goimports -l ./ | grep -v mock.go);\
 		exit 1;}\
 
-	@echo " everything formated properly"	
+	@echo " everything formatted properly"	
+
+go-lint:
+	@echo -n Checking format...
+	@test $(shell golint ./... | wc -l) = 0 \
+		|| { echo; echo "some files are not properly linted";\
+		echo $(shell golint ./...);\
+		exit 1;}\
+
+	@echo " everything linted properly"	
 
 cover-report:
 	@go tool cover -html=coverage.out -o coverage.html
@@ -32,6 +41,6 @@ test:
 
 test-with-report: test cover-report
 
-code-up-to-date: generate go-fmt
+code-up-to-date: generate go-fmt go-lint
 
 all: code-up-to-date test-with-report 

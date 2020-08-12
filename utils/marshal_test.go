@@ -1,10 +1,11 @@
 package utils
 
 import (
+	"testing"
+
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestMarshalMessageBody(t *testing.T) {

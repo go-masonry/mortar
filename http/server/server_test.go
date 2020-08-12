@@ -2,6 +2,12 @@ package server
 
 import (
 	"context"
+	"io/ioutil"
+	"net"
+	"net/http"
+	"strings"
+	"testing"
+
 	"github.com/go-masonry/mortar/http/server/health"
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	"github.com/go-masonry/mortar/interfaces/http/server"
@@ -11,11 +17,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"io/ioutil"
-	"net"
-	"net/http"
-	"strings"
-	"testing"
 )
 
 func TestDefaultListeners(t *testing.T) {

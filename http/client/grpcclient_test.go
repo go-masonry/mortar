@@ -2,10 +2,11 @@ package client
 
 import (
 	"context"
-	"github.com/stretchr/testify/assert"
-	"google.golang.org/grpc"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc"
 )
 
 func TestGRPCClientConnBuilder(t *testing.T) {

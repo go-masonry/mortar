@@ -2,6 +2,10 @@ package tests
 
 import (
 	"context"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/log"
@@ -12,9 +16,6 @@ import (
 	"github.com/opentracing/opentracing-go/mocktracer"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 func (s *middlewareSuite) TestTracerGRPCClientInterceptor() {
