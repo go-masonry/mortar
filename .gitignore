@@ -2,3 +2,5 @@
 .vscode
 vendor
 coverage.out
+coverage.html
+coverage-summary.txt

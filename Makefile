@@ -1,4 +1,4 @@
-LISTPKG:=$(shell go list ./... | grep -v "/tests" | tr "\n" ",")
+LISTPKG:=$(shell go list ./... | grep -vE "/tests|/mock|/mortar/http/server/health|/mortar/http/server/proto" | tr "\n" ",")
 
 deps:
 	@go install github.com/golang/mock/mockgen
@@ -12,6 +12,10 @@ generate:
 		exit 1;}\
 
 	@echo " Everything is up to date"
+
+cover-report:
+	@go tool cover -html=coverage.out -o coverage.html
+	@go tool cover -func=coverage.out -o coverage-summary.txt
 
 test:
 	@echo "Testing ..."
