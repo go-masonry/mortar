@@ -22,17 +22,11 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
         
-    - name: Dependencies
-      run: make deps
-
-    - name: Code generation
-      run: make generate
+    - name: Code sanity
+      run: make code-up-to-date
 
     - name: Test
-      run: make test
-
-    - name: Coverage report
-      run: make cover-report
+      run: make test-with-report
 
     - uses: actions/upload-artifact@v2
       with:

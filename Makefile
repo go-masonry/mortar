@@ -3,7 +3,7 @@ LISTPKG:=$(shell go list ./... | grep -vE "/tests|/mock|/mortar/http/server/heal
 deps:
 	@go install github.com/golang/mock/mockgen
 
-generate:
+generate: deps
 	@echo -n Generating files and checking ...
 	@go generate ./...
 	@test $(shell git status --porcelain | wc -l) = 0 \
@@ -11,7 +11,16 @@ generate:
 		echo $(shell git status --porcelain);\
 		exit 1;}\
 
-	@echo " Everything is up to date"
+	@echo " everything is up to date"
+
+go-fmt:
+	@echo -n Checking format...
+	@test $(shell go fmt ./... | wc -l) = 0 \
+		|| { echo; echo "some files are not properly formated";\
+		echo $(shell git status --porcelain);\
+		exit 1;}\
+
+	@echo " everything formated properly"	
 
 cover-report:
 	@go tool cover -html=coverage.out -o coverage.html
@@ -21,4 +30,8 @@ test:
 	@echo "Testing ..."
 	@go test -count=1 -coverpkg=${LISTPKG:,=} -coverprofile=coverage.out -failfast ./...
 
+test-with-report: test cover-report
 
+code-up-to-date: generate go-fmt
+
+all: code-up-to-date test-with-report 

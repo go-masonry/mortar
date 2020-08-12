@@ -13,30 +13,30 @@ import (
 	reflect "reflect"
 )
 
-// MockHttpClientBuilder is a mock of HttpClientBuilder interface.
+// MockHttpClientBuilder is a mock of HttpClientBuilder interface
 type MockHttpClientBuilder struct {
 	ctrl     *gomock.Controller
 	recorder *MockHttpClientBuilderMockRecorder
 }
 
-// MockHttpClientBuilderMockRecorder is the mock recorder for MockHttpClientBuilder.
+// MockHttpClientBuilderMockRecorder is the mock recorder for MockHttpClientBuilder
 type MockHttpClientBuilderMockRecorder struct {
 	mock *MockHttpClientBuilder
 }
 
-// NewMockHttpClientBuilder creates a new mock instance.
+// NewMockHttpClientBuilder creates a new mock instance
 func NewMockHttpClientBuilder(ctrl *gomock.Controller) *MockHttpClientBuilder {
 	mock := &MockHttpClientBuilder{ctrl: ctrl}
 	mock.recorder = &MockHttpClientBuilderMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
+// EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockHttpClientBuilder) EXPECT() *MockHttpClientBuilderMockRecorder {
 	return m.recorder
 }
 
-// AddInterceptors mocks base method.
+// AddInterceptors mocks base method
 func (m *MockHttpClientBuilder) AddInterceptors(arg0 ...client.HttpClientInterceptor) client.HttpClientBuilder {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{}
@@ -48,13 +48,13 @@ func (m *MockHttpClientBuilder) AddInterceptors(arg0 ...client.HttpClientInterce
 	return ret0
 }
 
-// AddInterceptors indicates an expected call of AddInterceptors.
+// AddInterceptors indicates an expected call of AddInterceptors
 func (mr *MockHttpClientBuilderMockRecorder) AddInterceptors(arg0 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddInterceptors", reflect.TypeOf((*MockHttpClientBuilder)(nil).AddInterceptors), arg0...)
 }
 
-// WithPreconfiguredClient mocks base method.
+// WithPreconfiguredClient mocks base method
 func (m *MockHttpClientBuilder) WithPreconfiguredClient(arg0 *http.Client) client.HttpClientBuilder {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "WithPreconfiguredClient", arg0)
@@ -62,13 +62,13 @@ func (m *MockHttpClientBuilder) WithPreconfiguredClient(arg0 *http.Client) clien
 	return ret0
 }
 
-// WithPreconfiguredClient indicates an expected call of WithPreconfiguredClient.
+// WithPreconfiguredClient indicates an expected call of WithPreconfiguredClient
 func (mr *MockHttpClientBuilderMockRecorder) WithPreconfiguredClient(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithPreconfiguredClient", reflect.TypeOf((*MockHttpClientBuilder)(nil).WithPreconfiguredClient), arg0)
 }
 
-// Build mocks base method.
+// Build mocks base method
 func (m *MockHttpClientBuilder) Build() *http.Client {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Build")
@@ -76,36 +76,36 @@ func (m *MockHttpClientBuilder) Build() *http.Client {
 	return ret0
 }
 
-// Build indicates an expected call of Build.
+// Build indicates an expected call of Build
 func (mr *MockHttpClientBuilderMockRecorder) Build() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockHttpClientBuilder)(nil).Build))
 }
 
-// MockGRPCClientConnectionWrapper is a mock of GRPCClientConnectionWrapper interface.
+// MockGRPCClientConnectionWrapper is a mock of GRPCClientConnectionWrapper interface
 type MockGRPCClientConnectionWrapper struct {
 	ctrl     *gomock.Controller
 	recorder *MockGRPCClientConnectionWrapperMockRecorder
 }
 
-// MockGRPCClientConnectionWrapperMockRecorder is the mock recorder for MockGRPCClientConnectionWrapper.
+// MockGRPCClientConnectionWrapperMockRecorder is the mock recorder for MockGRPCClientConnectionWrapper
 type MockGRPCClientConnectionWrapperMockRecorder struct {
 	mock *MockGRPCClientConnectionWrapper
 }
 
-// NewMockGRPCClientConnectionWrapper creates a new mock instance.
+// NewMockGRPCClientConnectionWrapper creates a new mock instance
 func NewMockGRPCClientConnectionWrapper(ctrl *gomock.Controller) *MockGRPCClientConnectionWrapper {
 	mock := &MockGRPCClientConnectionWrapper{ctrl: ctrl}
 	mock.recorder = &MockGRPCClientConnectionWrapperMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
+// EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockGRPCClientConnectionWrapper) EXPECT() *MockGRPCClientConnectionWrapperMockRecorder {
 	return m.recorder
 }
 
-// Dial mocks base method.
+// Dial mocks base method
 func (m *MockGRPCClientConnectionWrapper) Dial(ctx context.Context, target string, extraOptions ...grpc.DialOption) (*grpc.ClientConn, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, target}
@@ -118,37 +118,37 @@ func (m *MockGRPCClientConnectionWrapper) Dial(ctx context.Context, target strin
 	return ret0, ret1
 }
 
-// Dial indicates an expected call of Dial.
+// Dial indicates an expected call of Dial
 func (mr *MockGRPCClientConnectionWrapperMockRecorder) Dial(ctx, target interface{}, extraOptions ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, target}, extraOptions...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Dial", reflect.TypeOf((*MockGRPCClientConnectionWrapper)(nil).Dial), varargs...)
 }
 
-// MockGRPCClientConnectionBuilder is a mock of GRPCClientConnectionBuilder interface.
+// MockGRPCClientConnectionBuilder is a mock of GRPCClientConnectionBuilder interface
 type MockGRPCClientConnectionBuilder struct {
 	ctrl     *gomock.Controller
 	recorder *MockGRPCClientConnectionBuilderMockRecorder
 }
 
-// MockGRPCClientConnectionBuilderMockRecorder is the mock recorder for MockGRPCClientConnectionBuilder.
+// MockGRPCClientConnectionBuilderMockRecorder is the mock recorder for MockGRPCClientConnectionBuilder
 type MockGRPCClientConnectionBuilderMockRecorder struct {
 	mock *MockGRPCClientConnectionBuilder
 }
 
-// NewMockGRPCClientConnectionBuilder creates a new mock instance.
+// NewMockGRPCClientConnectionBuilder creates a new mock instance
 func NewMockGRPCClientConnectionBuilder(ctrl *gomock.Controller) *MockGRPCClientConnectionBuilder {
 	mock := &MockGRPCClientConnectionBuilder{ctrl: ctrl}
 	mock.recorder = &MockGRPCClientConnectionBuilderMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
+// EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockGRPCClientConnectionBuilder) EXPECT() *MockGRPCClientConnectionBuilderMockRecorder {
 	return m.recorder
 }
 
-// AddOptions mocks base method.
+// AddOptions mocks base method
 func (m *MockGRPCClientConnectionBuilder) AddOptions(opts ...grpc.DialOption) client.GRPCClientConnectionBuilder {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{}
@@ -160,13 +160,13 @@ func (m *MockGRPCClientConnectionBuilder) AddOptions(opts ...grpc.DialOption) cl
 	return ret0
 }
 
-// AddOptions indicates an expected call of AddOptions.
+// AddOptions indicates an expected call of AddOptions
 func (mr *MockGRPCClientConnectionBuilderMockRecorder) AddOptions(opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddOptions", reflect.TypeOf((*MockGRPCClientConnectionBuilder)(nil).AddOptions), opts...)
 }
 
-// Build mocks base method.
+// Build mocks base method
 func (m *MockGRPCClientConnectionBuilder) Build() client.GRPCClientConnectionWrapper {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Build")
@@ -174,7 +174,7 @@ func (m *MockGRPCClientConnectionBuilder) Build() client.GRPCClientConnectionWra
 	return ret0
 }
 
-// Build indicates an expected call of Build.
+// Build indicates an expected call of Build
 func (mr *MockGRPCClientConnectionBuilderMockRecorder) Build() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockGRPCClientConnectionBuilder)(nil).Build))
