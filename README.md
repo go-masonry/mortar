@@ -1,4 +1,5 @@
 # Mortar
+
 <p align="center">
     <img src=wiki/logo.svg align="center" height=256>
 </p>
@@ -40,11 +41,11 @@ TODO: document all the built in features
 
 ## Moulds
 
-Mortar can be viewed as [Trait](https://en.wikipedia.org/wiki/Trait_(computer_programming)), but for it to work you need add your logic.
+Mortar can be viewed as [Trait](https://en.wikipedia.org/wiki/Trait_(computer_programming)), but for it to work you need to add your logic.
 
 Here you can find service templates to help you get started.
 
-## Bricks 
+## Bricks
 
 Mortar defines different interfaces, without implementing them.
 There are a lot of great libraries that can be used to implement them.
@@ -67,4 +68,3 @@ We call them [Bricks](wiki/bricks.md).
 ### Tracing
 
 - [jaeger](https://github.com/go-masonry/bjaeger)  
-
