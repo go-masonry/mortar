@@ -3,26 +3,29 @@ package handlers
 import (
 	"encoding/json"
 	"expvar"
-	"github.com/go-masonry/mortar/constructors/partial"
-	"github.com/go-masonry/mortar/interfaces/log"
-	"go.uber.org/fx"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"runtime"
 	"runtime/debug"
+
+	"github.com/go-masonry/mortar/constructors/partial"
+	"github.com/go-masonry/mortar/interfaces/log"
+	"go.uber.org/fx"
 )
 
 const (
 	internalPatternPrefix = "/internal"
 )
 
+// StatsInfo some statistics information
 type StatsInfo struct {
 	Memory          *runtime.MemStats `json:"memory"`
 	NumOfCPU        int               `json:"num_of_cpu"`
 	NumOfGoRoutines int               `json:"num_of_go_routines"`
 }
 
+// DebugHandlers different debug handlers
 type DebugHandlers interface {
 	DebugVars() http.Handler
 	Stats() http.HandlerFunc
@@ -35,8 +38,12 @@ type debugHandlersDeps struct {
 	Logger log.Logger
 }
 
-func InternalDebugHandlers(deps debugHandlersDeps) []partial.HttpHandlerPatternPair {
-	return []partial.HttpHandlerPatternPair{
+// InternalDebugHandlers defines internal debug handlers
+//	- dump heap
+//	- expvar
+//	- running stats
+func InternalDebugHandlers(deps debugHandlersDeps) []partial.HTTPHandlerPatternPair {
+	return []partial.HTTPHandlerPatternPair{
 		{Pattern: internalPatternPrefix + "/debug/vars", Handler: deps.DebugVars()},
 		{Pattern: internalPatternPrefix + "/dump", Handler: deps.DumpFunc()},
 		{Pattern: internalPatternPrefix + "/stats", Handler: deps.Stats()},

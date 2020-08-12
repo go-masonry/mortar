@@ -6,20 +6,23 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+
 	"github.com/go-masonry/mortar/interfaces/auth/jwt"
 )
 
-type JsonDecoder func(data []byte, v interface{}) error
+// JSONDecoder json.Unmarshaler
+type JSONDecoder func(data []byte, v interface{}) error
 
+// ExtractorBuilder defines what can be configured when building JWT Token Extractor
 type ExtractorBuilder interface {
-	SetDecoder(dec JsonDecoder) ExtractorBuilder
+	SetDecoder(dec JSONDecoder) ExtractorBuilder
 	SetContextExtractor(extractor jwt.ContextExtractor) ExtractorBuilder
 	SetBase64Decoder(dec *base64.Encoding) ExtractorBuilder
 	Build() jwt.TokenExtractor
 }
 
 type extractorConfig struct {
-	jsonDecoder      JsonDecoder
+	jsonDecoder      JSONDecoder
 	base64Enc        *base64.Encoding
 	contextExtractor jwt.ContextExtractor
 }
@@ -28,13 +31,14 @@ type builder struct {
 	ll *list.List
 }
 
+// Builder creates a fresh instance of Extractor Builder
 func Builder() ExtractorBuilder {
 	return &builder{
 		ll: list.New(),
 	}
 }
 
-func (b *builder) SetDecoder(dec JsonDecoder) ExtractorBuilder {
+func (b *builder) SetDecoder(dec JSONDecoder) ExtractorBuilder {
 	b.ll.PushBack(func(cfg *extractorConfig) {
 		cfg.jsonDecoder = dec
 	})

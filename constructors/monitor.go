@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	// FxGroupMonitorContextExtractors defines group name
 	FxGroupMonitorContextExtractors = "monitorContextExtractors"
 )
 

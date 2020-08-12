@@ -3,14 +3,15 @@ package trace
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"net/http/httputil"
+
 	"github.com/go-masonry/mortar/interfaces/http/client"
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"net/http"
-	"net/http/httputil"
 )
 
 // TracerGRPCClientInterceptor is a grpc tracing client interceptor, it can log req/resp if needed
@@ -40,8 +41,8 @@ func TracerGRPCClientInterceptor(deps tracingDeps) grpc.UnaryClientInterceptor {
 }
 
 // TracerRESTClientInterceptor is a REST tracing client interceptor, it can log req/resp if needed
-func TracerRESTClientInterceptor(deps tracingDeps) client.HttpClientInterceptor {
-	return func(req *http.Request, handler client.HttpHandler) (resp *http.Response, err error) {
+func TracerRESTClientInterceptor(deps tracingDeps) client.HTTPClientInterceptor {
+	return func(req *http.Request, handler client.HTTPpHandler) (resp *http.Response, err error) {
 		if deps.Tracer == nil {
 			return handler(req)
 		}

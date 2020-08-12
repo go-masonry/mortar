@@ -13,63 +13,63 @@ import (
 	reflect "reflect"
 )
 
-// MockHttpClientBuilder is a mock of HttpClientBuilder interface
-type MockHttpClientBuilder struct {
+// MockHTTPClientBuilder is a mock of HTTPClientBuilder interface
+type MockHTTPClientBuilder struct {
 	ctrl     *gomock.Controller
-	recorder *MockHttpClientBuilderMockRecorder
+	recorder *MockHTTPClientBuilderMockRecorder
 }
 
-// MockHttpClientBuilderMockRecorder is the mock recorder for MockHttpClientBuilder
-type MockHttpClientBuilderMockRecorder struct {
-	mock *MockHttpClientBuilder
+// MockHTTPClientBuilderMockRecorder is the mock recorder for MockHTTPClientBuilder
+type MockHTTPClientBuilderMockRecorder struct {
+	mock *MockHTTPClientBuilder
 }
 
-// NewMockHttpClientBuilder creates a new mock instance
-func NewMockHttpClientBuilder(ctrl *gomock.Controller) *MockHttpClientBuilder {
-	mock := &MockHttpClientBuilder{ctrl: ctrl}
-	mock.recorder = &MockHttpClientBuilderMockRecorder{mock}
+// NewMockHTTPClientBuilder creates a new mock instance
+func NewMockHTTPClientBuilder(ctrl *gomock.Controller) *MockHTTPClientBuilder {
+	mock := &MockHTTPClientBuilder{ctrl: ctrl}
+	mock.recorder = &MockHTTPClientBuilderMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockHttpClientBuilder) EXPECT() *MockHttpClientBuilderMockRecorder {
+func (m *MockHTTPClientBuilder) EXPECT() *MockHTTPClientBuilderMockRecorder {
 	return m.recorder
 }
 
 // AddInterceptors mocks base method
-func (m *MockHttpClientBuilder) AddInterceptors(arg0 ...client.HttpClientInterceptor) client.HttpClientBuilder {
+func (m *MockHTTPClientBuilder) AddInterceptors(arg0 ...client.HTTPClientInterceptor) client.HTTPClientBuilder {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{}
 	for _, a := range arg0 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "AddInterceptors", varargs...)
-	ret0, _ := ret[0].(client.HttpClientBuilder)
+	ret0, _ := ret[0].(client.HTTPClientBuilder)
 	return ret0
 }
 
 // AddInterceptors indicates an expected call of AddInterceptors
-func (mr *MockHttpClientBuilderMockRecorder) AddInterceptors(arg0 ...interface{}) *gomock.Call {
+func (mr *MockHTTPClientBuilderMockRecorder) AddInterceptors(arg0 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddInterceptors", reflect.TypeOf((*MockHttpClientBuilder)(nil).AddInterceptors), arg0...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddInterceptors", reflect.TypeOf((*MockHTTPClientBuilder)(nil).AddInterceptors), arg0...)
 }
 
 // WithPreconfiguredClient mocks base method
-func (m *MockHttpClientBuilder) WithPreconfiguredClient(arg0 *http.Client) client.HttpClientBuilder {
+func (m *MockHTTPClientBuilder) WithPreconfiguredClient(arg0 *http.Client) client.HTTPClientBuilder {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "WithPreconfiguredClient", arg0)
-	ret0, _ := ret[0].(client.HttpClientBuilder)
+	ret0, _ := ret[0].(client.HTTPClientBuilder)
 	return ret0
 }
 
 // WithPreconfiguredClient indicates an expected call of WithPreconfiguredClient
-func (mr *MockHttpClientBuilderMockRecorder) WithPreconfiguredClient(arg0 interface{}) *gomock.Call {
+func (mr *MockHTTPClientBuilderMockRecorder) WithPreconfiguredClient(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithPreconfiguredClient", reflect.TypeOf((*MockHttpClientBuilder)(nil).WithPreconfiguredClient), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithPreconfiguredClient", reflect.TypeOf((*MockHTTPClientBuilder)(nil).WithPreconfiguredClient), arg0)
 }
 
 // Build mocks base method
-func (m *MockHttpClientBuilder) Build() *http.Client {
+func (m *MockHTTPClientBuilder) Build() *http.Client {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Build")
 	ret0, _ := ret[0].(*http.Client)
@@ -77,9 +77,9 @@ func (m *MockHttpClientBuilder) Build() *http.Client {
 }
 
 // Build indicates an expected call of Build
-func (mr *MockHttpClientBuilderMockRecorder) Build() *gomock.Call {
+func (mr *MockHTTPClientBuilderMockRecorder) Build() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockHttpClientBuilder)(nil).Build))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockHTTPClientBuilder)(nil).Build))
 }
 
 // MockGRPCClientConnectionWrapper is a mock of GRPCClientConnectionWrapper interface

@@ -2,6 +2,8 @@ package tests
 
 import (
 	"bytes"
+	"testing"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/http/client"
@@ -12,7 +14,6 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
 	"google.golang.org/grpc"
-	"testing"
 )
 
 type middlewareSuite struct {
@@ -25,7 +26,7 @@ type middlewareSuite struct {
 	// populate
 	logExtractor          log.ContextExtractor
 	clientInterceptor     grpc.UnaryClientInterceptor
-	restClientInterceptor client.HttpClientInterceptor
+	restClientInterceptor client.HTTPClientInterceptor
 	serverInterceptor     grpc.UnaryServerInterceptor
 	tracer                opentracing.Tracer
 }

@@ -1,14 +1,16 @@
 package constructors
 
 import (
+	"log"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	logInt "github.com/go-masonry/mortar/interfaces/log"
 	defaultLogger "github.com/go-masonry/mortar/logger"
 	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
-	"log"
 )
 
+// FxGroupLoggerContextExtractors defines group name
 const FxGroupLoggerContextExtractors = "loggerContextExtractors"
 const (
 	application = "app"
@@ -18,7 +20,7 @@ const (
 	callerSkipDepth = 0
 )
 
-type LoggerDeps struct {
+type loggerDeps struct {
 	fx.In
 
 	Config            cfg.Config
@@ -27,7 +29,7 @@ type LoggerDeps struct {
 }
 
 // DefaultLogger is a constructor that will create a logger with some default values on top of provided ones
-func DefaultLogger(deps LoggerDeps) logInt.Logger {
+func DefaultLogger(deps loggerDeps) logInt.Logger {
 	var logLevel = logInt.InfoLevel
 	if levelValue := deps.Config.Get(mortar.LoggerLevelKey); levelValue.IsSet() {
 		logLevel = logInt.ParseLevel(levelValue.String())
@@ -40,7 +42,7 @@ func DefaultLogger(deps LoggerDeps) logInt.Logger {
 		Build()
 }
 
-func (d LoggerDeps) selfStaticFields() map[string]interface{} {
+func (d loggerDeps) selfStaticFields() map[string]interface{} {
 	output := make(map[string]interface{})
 	info := mortar.GetBuildInformation()
 	appName := d.Config.Get(mortar.Name).String()
@@ -56,7 +58,7 @@ func (d LoggerDeps) selfStaticFields() map[string]interface{} {
 	return output
 }
 
-func (d LoggerDeps) getLogBuilder() logInt.Builder {
+func (d loggerDeps) getLogBuilder() logInt.Builder {
 	if d.LoggerBuilder != nil {
 		return d.LoggerBuilder
 	}

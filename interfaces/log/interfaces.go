@@ -8,6 +8,7 @@ import (
 
 //go:generate mockgen -source=interfaces.go -destination=mock/mock.go
 
+// Level is a log level enum
 type Level int8
 
 const (
@@ -38,7 +39,7 @@ func (l Level) String() string {
 	}
 }
 
-// If unable to parse a Trace level will be returned as a default
+// ParseLevel tries to parse level from string, if unable to parse a Trace level will be returned as a default
 func ParseLevel(str string) Level {
 	switch strings.ToLower(str) {
 	case "error":
@@ -54,6 +55,7 @@ func ParseLevel(str string) Level {
 	}
 }
 
+// LoggerConfiguration get some of the logger configuration options and also the implementation
 type LoggerConfiguration interface {
 	Writer() io.Writer
 	Level() Level
@@ -63,9 +65,11 @@ type LoggerConfiguration interface {
 	Implementation() interface{}
 }
 
+// ContextExtractor is an alias for a function that extract values from context
 // Make sure that this function returns fast and is "thread safe"
 type ContextExtractor func(ctx context.Context) map[string]interface{}
 
+// Builder defines log configuration options
 type Builder interface {
 	// TODO Allow adding static values to LOG such as "appname, host, etc"
 	// Set output writer [os.Stderr, os.Stdout, bufio.Writer, ...]
@@ -88,6 +92,7 @@ type Builder interface {
 	Build() Logger
 }
 
+// Messages part of the Logger interface
 type Messages interface {
 	// Highly detailed tracing messages. Produces the most voluminous output. Used by developers for developers
 	// Some implementations doesn't have that granularity and use Debug level instead
@@ -123,6 +128,7 @@ type Messages interface {
 	Custom(ctx context.Context, level Level, format string, args ...interface{})
 }
 
+// Fields part of the Logger interface
 type Fields interface {
 	Messages
 	// Add an error to the log structure, output depends on the implementation

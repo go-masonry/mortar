@@ -2,6 +2,8 @@ package partial
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/go-masonry/mortar/http/server"
 	"github.com/go-masonry/mortar/http/server/health"
 	"github.com/go-masonry/mortar/interfaces/cfg"
@@ -11,25 +13,32 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
-	"net/http"
 )
 
 // Group order is not guaranteed, if it's important then add them manually
 const (
-	FxGroupGRPCServerAPIs               = "grpcServerAPIs"
+	// FxGroupGRPCServerAPIs defines group name
+	FxGroupGRPCServerAPIs = "grpcServerAPIs"
+	// FxGroupGRPCGatewayGeneratedHandlers defines group name
 	FxGroupGRPCGatewayGeneratedHandlers = "grpcGatewayGeneratedHandlers"
-	FxGroupGRPCGatewayMuxOptions        = "grpcGatewayMuxOptions"
-	FxGroupUnaryServerInterceptors      = "unaryServerInterceptors"
-	FxGroupInternalHttpHandlers         = "internalHttpHandlers"
-	FxGroupInternalHttpHandlerFunctions = "internalHttpHandlerFunctions"
+	// FxGroupGRPCGatewayMuxOptions defines group name
+	FxGroupGRPCGatewayMuxOptions = "grpcGatewayMuxOptions"
+	// FxGroupUnaryServerInterceptors defines group name
+	FxGroupUnaryServerInterceptors = "unaryServerInterceptors"
+	// FxGroupInternalHTTPHandlers defines group name
+	FxGroupInternalHTTPHandlers = "internalHttpHandlers"
+	// FxGroupInternalHTTPHandlerFunctions defines group name
+	FxGroupInternalHTTPHandlerFunctions = "internalHttpHandlerFunctions"
 )
 
-type HttpHandlerPatternPair struct {
+// HTTPHandlerPatternPair defines pattern -> handler pair
+type HTTPHandlerPatternPair struct {
 	Pattern string
 	Handler http.Handler
 }
 
-type HttpHandlerFuncPatternPair struct {
+// HTTPHandlerFuncPatternPair defines patter -> handler func pair
+type HTTPHandlerFuncPatternPair struct {
 	Pattern     string
 	HandlerFunc http.HandlerFunc
 }
@@ -46,16 +55,16 @@ type httpServerDeps struct {
 	GRPCGatewayGeneratedHandlers []serverInt.GRPCGatewayGeneratedHandlers `group:"grpcGatewayGeneratedHandlers"`
 	GRPCGatewayMuxOptions        []runtime.ServeMuxOption                 `group:"grpcGatewayMuxOptions"`
 	// Internal REST
-	InternalHttpHandlers         []HttpHandlerPatternPair     `group:"internalHttpHandlers"`
-	InternalHttpHandlerFunctions []HttpHandlerFuncPatternPair `group:"internalHttpHandlerFunctions"`
+	InternalHTTPHandlers         []HTTPHandlerPatternPair     `group:"internalHttpHandlers"`
+	InternalHTTPHandlerFunctions []HTTPHandlerFuncPatternPair `group:"internalHttpHandlerFunctions"`
 }
 
-// HttpServerBuilder true to it's name, it is partially initialized builder.
+// HTTPServerBuilder true to it's name, it is partially initialized builder.
 //
 // It uses some default assumptions and configurations, which are mostly good.
 // However, if you need to customize your configuration it's better to build yours from scratch
 //
-func HttpServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
+func HTTPServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
 	builder := server.Builder().SetLogger(deps.Logger.Debug)
 	// GRPC port
 	if grpcPort := deps.Config.Get(mortar.ServerGRPCPort); grpcPort.IsSet() {
@@ -90,15 +99,15 @@ func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuil
 	builder = builder.RegisterGRPCAPIs(health.RegisterInternalHealthService) // add internal GRPC health endpoint
 	// Internal
 	internalPort := deps.Config.Get(mortar.ServerRESTInternalPort)
-	includeInternalREST := internalPort.IsSet() && (len(deps.InternalHttpHandlerFunctions) > 0 || len(deps.InternalHttpHandlers) > 0)
+	includeInternalREST := internalPort.IsSet() && (len(deps.InternalHTTPHandlerFunctions) > 0 || len(deps.InternalHTTPHandlers) > 0)
 	if includeInternalREST {
 		restBuilder := builder.
 			AddRESTServerConfiguration().
 			ListenOn(fmt.Sprintf(":%d", internalPort.Int()))
-		for _, handlerPair := range deps.InternalHttpHandlers {
+		for _, handlerPair := range deps.InternalHTTPHandlers {
 			restBuilder = restBuilder.AddHandler(handlerPair.Pattern, handlerPair.Handler)
 		}
-		for _, handlerFuncPair := range deps.InternalHttpHandlerFunctions {
+		for _, handlerFuncPair := range deps.InternalHTTPHandlerFunctions {
 			restBuilder = restBuilder.AddHandlerFunc(handlerFuncPair.Pattern, handlerFuncPair.HandlerFunc)
 		}
 		restBuilder = restBuilder.RegisterGRPCGatewayHandlers(health.RegisterInternalGRPCGatewayHandler) // Health

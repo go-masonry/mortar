@@ -4,6 +4,7 @@ import "time"
 
 //go:generate mockgen -source=interfaces.go -destination=mock/mock.go
 
+// Value is a convenient interface to cast value to different types
 type Value interface {
 	// IsSet will tell if this key really exists in the configuration
 	IsSet() bool
@@ -74,6 +75,7 @@ type Config interface {
 	Implementation() interface{}
 }
 
+// Builder defines configuration builder options
 type Builder interface {
 	// SetConfigFile tells builder where to look for file with the configuration map
 	SetConfigFile(path string) Builder

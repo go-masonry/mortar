@@ -3,8 +3,9 @@ package jwt
 import (
 	"context"
 	"fmt"
-	"github.com/go-masonry/mortar/interfaces/auth/jwt"
 	"strings"
+
+	"github.com/go-masonry/mortar/interfaces/auth/jwt"
 )
 
 type tokenExtractorImpl struct {
@@ -25,25 +26,24 @@ func (t *tokenExtractorImpl) FromContext(ctx context.Context) (jwt.Token, error)
 	return nil, err
 }
 
-func (t *tokenExtractorImpl) FromString(str string) (jwt.Token, error) {
+func (t *tokenExtractorImpl) FromString(str string) (token jwt.Token, err error) {
 	if parts := strings.Split(str, "."); len(parts) == 3 {
-		if payload, err := t.cfg.base64Enc.DecodeString(parts[1]); err == nil {
+		var payload []byte
+		if payload, err = t.cfg.base64Enc.DecodeString(parts[1]); err == nil {
 			return newToken(str, payload, t.cfg.jsonDecoder), nil
-		} else {
-			return nil, fmt.Errorf("error decoding from base 64 %w", err)
 		}
-	} else {
-		return nil, fmt.Errorf("%s is not a JWT", str)
+		return nil, fmt.Errorf("error decoding from base 64 %w", err)
 	}
+	return nil, fmt.Errorf("%s is not a JWT", str)
 }
 
 type tokenInstance struct {
 	raw         string
 	payload     []byte
-	jsonDecoder JsonDecoder
+	jsonDecoder JSONDecoder
 }
 
-func newToken(jwtAsString string, justPayload []byte, decoder JsonDecoder) jwt.Token {
+func newToken(jwtAsString string, justPayload []byte, decoder JSONDecoder) jwt.Token {
 	return &tokenInstance{
 		raw:         jwtAsString,
 		payload:     justPayload,

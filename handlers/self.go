@@ -3,19 +3,20 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"os"
+	"strings"
+
 	"github.com/go-masonry/mortar/constructors/partial"
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/go-masonry/mortar/utils"
 	"go.uber.org/fx"
-	"net/http"
-	"os"
-	"strings"
 )
 
 const (
-	ObfuscationEdgeLength = 4
+	obfuscationEdgeLength = 4
 	selfHandlerPrefix     = "/self"
 )
 
@@ -26,8 +27,9 @@ type selfHandlerDeps struct {
 	Config cfg.Config
 }
 
-func SelfHandlers(deps selfHandlerDeps) []partial.HttpHandlerPatternPair {
-	return []partial.HttpHandlerPatternPair{
+// SelfHandlers this service information handlers
+func SelfHandlers(deps selfHandlerDeps) []partial.HTTPHandlerPatternPair {
+	return []partial.HTTPHandlerPatternPair{
 		{Pattern: selfHandlerPrefix + "/build", Handler: deps.BuildInfo()},
 		{Pattern: selfHandlerPrefix + "/config", Handler: deps.ConfigMap()},
 	}
@@ -98,7 +100,7 @@ func (s *selfHandlerDeps) obfuscateIfNeeded(key string, value interface{}) strin
 	hideKeys := s.Config.Get(mortar.HandlersSelfObfuscateConfigKeys).StringSlice() // if none exist slice will be empty
 	for _, hidePart := range hideKeys {
 		if strings.Contains(strings.ToLower(key), strings.ToLower(hidePart)) {
-			return utils.Obfuscate(valueAsString, ObfuscationEdgeLength)
+			return utils.Obfuscate(valueAsString, obfuscationEdgeLength)
 		}
 	}
 	return valueAsString

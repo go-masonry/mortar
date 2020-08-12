@@ -2,10 +2,12 @@ package utils
 
 import (
 	"encoding/json"
+
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 )
 
+// MarshalMessageBody convenience method to marshal different interfaces into JSON
 func MarshalMessageBody(body interface{}) ([]byte, error) {
 	switch msg := body.(type) {
 	case proto.Message:

@@ -1,16 +1,18 @@
 package handlers
 
 import (
-	"github.com/go-masonry/mortar/constructors/partial"
 	"net/http/pprof"
+
+	"github.com/go-masonry/mortar/constructors/partial"
 )
 
 const (
 	profilePrefix = internalPatternPrefix + "/debug/pprof"
 )
 
-func InternalProfileHandlerFunctions() []partial.HttpHandlerFuncPatternPair {
-	return []partial.HttpHandlerFuncPatternPair{
+// InternalProfileHandlerFunctions profile handlers
+func InternalProfileHandlerFunctions() []partial.HTTPHandlerFuncPatternPair {
+	return []partial.HTTPHandlerFuncPatternPair{
 		{Pattern: profilePrefix, HandlerFunc: pprof.Index},
 		{Pattern: profilePrefix + "/cmdline", HandlerFunc: pprof.Cmdline},
 		{Pattern: profilePrefix + "/profile", HandlerFunc: pprof.Profile},

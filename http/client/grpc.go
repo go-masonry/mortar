@@ -3,6 +3,7 @@ package client
 import (
 	"container/list"
 	"context"
+
 	"github.com/go-masonry/mortar/interfaces/http/client"
 	"google.golang.org/grpc"
 )
@@ -15,6 +16,7 @@ type grpcClientConnBuilder struct {
 	ll *list.List
 }
 
+// GRPCClientConnBuilder creates a fresh gRPC connection for client builder
 func GRPCClientConnBuilder() client.GRPCClientConnectionBuilder {
 	return &grpcClientConnBuilder{
 		ll: list.New(),

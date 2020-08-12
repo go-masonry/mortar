@@ -7,12 +7,13 @@ import (
 
 //go:generate mockgen -source=interfaces.go -destination=mock/mock.go
 
-type JsonDecoder func(data []byte, v interface{}) error
+// JSONDecoder is an alias to json.Unmarshal
+type JSONDecoder func(data []byte, v interface{}) error
 
 // ExtractorBuilder lets you define custom options
 type ExtractorBuilder interface {
 	// What decoder to use when unmarshalling
-	SetDecoder(dec JsonDecoder) ExtractorBuilder
+	SetDecoder(dec JSONDecoder) ExtractorBuilder
 	// ContextExtractor lets you set a custom extractor from context.Context
 	SetContextExtractor(extractor ContextExtractor) ExtractorBuilder
 	// SetBase64Decoder lets you customize base64.Encoding, standard or URL or other

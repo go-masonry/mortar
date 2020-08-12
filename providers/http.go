@@ -16,24 +16,24 @@ func BuildMortarWebService() fx.Option {
 	return fx.Invoke(constructors.Service)
 }
 
-// HttpClientBuildersFxOption adds both (GRPC, REST) partial http clients to the graph
-func HttpClientBuildersFxOption() fx.Option {
+// HTTPClientBuildersFxOption adds both (GRPC, REST) partial http clients to the graph
+func HTTPClientBuildersFxOption() fx.Option {
 	return fx.Provide(
-		partial.HttpClientBuilder,
+		partial.HTTPClientBuilder,
 		partial.GRPCClientConnectionBuilder,
 	)
 }
 
-// HttpServerBuilderFxOption adds Default Http Server builder which later injected to the Service Invoke option
+// HTTPServerBuilderFxOption adds Default Http Server builder which later injected to the Service Invoke option
 // by calling BuildMortarWebService fx.Invoke option to the graph
-func HttpServerBuilderFxOption() fx.Option {
-	return fx.Provide(partial.HttpServerBuilder)
+func HTTPServerBuilderFxOption() fx.Option {
+	return fx.Provide(partial.HTTPServerBuilder)
 }
 
 // InternalDebugHandlersFxOption adds Internal Debug Handlers to the graph
 func InternalDebugHandlersFxOption() fx.Option {
 	return fx.Provide(fx.Annotated{
-		Group:  groups.InternalHttpHandlers + ",flatten",
+		Group:  groups.InternalHTTPHandlers + ",flatten",
 		Target: handlers.InternalDebugHandlers,
 	})
 }
@@ -42,7 +42,7 @@ func InternalDebugHandlersFxOption() fx.Option {
 func InternalProfileHandlerFunctionsFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  groups.InternalHttpHandlerFunctions + ",flatten",
+			Group:  groups.InternalHTTPHandlerFunctions + ",flatten",
 			Target: handlers.InternalProfileHandlerFunctions,
 		})
 }
@@ -51,7 +51,7 @@ func InternalProfileHandlerFunctionsFxOption() fx.Option {
 func InternalSelfHandlersFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
-			Group:  groups.InternalHttpHandlers + ",flatten",
+			Group:  groups.InternalHTTPHandlers + ",flatten",
 			Target: handlers.SelfHandlers,
 		})
 }

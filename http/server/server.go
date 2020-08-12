@@ -3,12 +3,13 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/go-masonry/mortar/interfaces/http/server"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"google.golang.org/grpc"
 	"net"
 	"net/http"
 	"sync"
+
+	"github.com/go-masonry/mortar/interfaces/http/server"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"google.golang.org/grpc"
 )
 
 type listenerMuxPair struct {
@@ -122,7 +123,7 @@ func (ws *webService) Ports() (list []server.ListenInfo) {
 }
 
 func (ws *webService) setupGRPC(cfg *grpcConfig) (err error) {
-	if cfg.registerApi == nil {
+	if cfg.registerAPI == nil {
 		err = fmt.Errorf("no GRPC APIs registered, make sure to call 'RegisterGRPCAPIs' when building")
 	} else {
 		// Listener
@@ -137,7 +138,7 @@ func (ws *webService) setupGRPC(cfg *grpcConfig) (err error) {
 		if ws.grpcServer == nil {
 			ws.grpcServer = grpc.NewServer(cfg.options...)
 		}
-		for _, api := range cfg.registerApi {
+		for _, api := range cfg.registerAPI {
 			api(ws.grpcServer)
 		}
 		// save, since this should run first we have no problem with previous values

@@ -33,6 +33,7 @@ type Metrics interface {
 	Implementation() interface{}
 }
 
+// Reporter defines Metrics reporter
 type Reporter interface {
 	Connect(ctx context.Context) error
 	Close(ctx context.Context) error
@@ -43,6 +44,7 @@ type Reporter interface {
 // Make sure that this function returns fast and is "thread safe"
 type ContextExtractor func(ctx context.Context) map[string]string
 
+// Builder defines Monitor builder options
 type Builder interface {
 	SetAddress(hostPort string) Builder
 	SetPrefix(prefix string) Builder

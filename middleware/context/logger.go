@@ -2,13 +2,14 @@ package context
 
 import (
 	"context"
+	"sort"
+	"strings"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
 	"google.golang.org/grpc/metadata"
-	"sort"
-	"strings"
 )
 
 type loggerContextExtractorDeps struct {
@@ -17,6 +18,8 @@ type loggerContextExtractorDeps struct {
 	Config cfg.Config
 }
 
+// LoggerGRPCIncomingContextExtractor creates a context extractor for logger
+// This is usefull if you want to add different fields from gRPC incoming metadata.MD
 func LoggerGRPCIncomingContextExtractor(deps loggerContextExtractorDeps) log.ContextExtractor {
 	var includedHeaders []string
 	if headers := deps.Config.Get(mortar.MiddlewareLoggerHeaders); headers.IsSet() {

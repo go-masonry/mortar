@@ -3,6 +3,7 @@ package tests
 import (
 	"context"
 	"fmt"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/middleware/interceptors/client"
@@ -25,9 +26,8 @@ func (s *middlewareSuite) TestClientInterceptorHeaderCopier() {
 			s.NotContains(outgoingContext, "another-kind")
 		if result {
 			return nil
-		} else {
-			return fmt.Errorf("assertions failed")
 		}
+		return fmt.Errorf("assertions failed")
 	}
 	err := s.clientInterceptor(ctxWithIncoming, "", nil, nil, nil, invoker)
 	s.NoError(err)

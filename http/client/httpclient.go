@@ -2,26 +2,28 @@ package client
 
 import (
 	"container/list"
-	"github.com/go-masonry/mortar/interfaces/http/client"
 	"net/http"
+
+	"github.com/go-masonry/mortar/interfaces/http/client"
 )
 
 type restBuilderConfig struct {
 	predefinedClient *http.Client
-	interceptors     []client.HttpClientInterceptor
+	interceptors     []client.HTTPClientInterceptor
 }
 
 type builderImpl struct {
 	ll *list.List
 }
 
-func HTTPClientBuilder() client.HttpClientBuilder {
+// HTTPClientBuilder creates a fresh http.Client builder
+func HTTPClientBuilder() client.HTTPClientBuilder {
 	return &builderImpl{
 		ll: list.New(),
 	}
 }
 
-func (impl *builderImpl) AddInterceptors(interceptors ...client.HttpClientInterceptor) client.HttpClientBuilder {
+func (impl *builderImpl) AddInterceptors(interceptors ...client.HTTPClientInterceptor) client.HTTPClientBuilder {
 	impl.ll.PushBack(func(cfg *restBuilderConfig) {
 		if len(interceptors) > 0 {
 			cfg.interceptors = append(cfg.interceptors, interceptors...)
@@ -30,7 +32,7 @@ func (impl *builderImpl) AddInterceptors(interceptors ...client.HttpClientInterc
 	return impl
 }
 
-func (impl *builderImpl) WithPreconfiguredClient(client *http.Client) client.HttpClientBuilder {
+func (impl *builderImpl) WithPreconfiguredClient(client *http.Client) client.HTTPClientBuilder {
 	impl.ll.PushBack(func(cfg *restBuilderConfig) {
 		cfg.predefinedClient = client
 	})
@@ -60,10 +62,10 @@ func (impl *builderImpl) Build() *http.Client {
 
 type customRoundTripper struct {
 	inner             http.RoundTripper
-	unitedInterceptor client.HttpClientInterceptor
+	unitedInterceptor client.HTTPClientInterceptor
 }
 
-func prepareCustomRoundTripper(actual http.RoundTripper, interceptors ...client.HttpClientInterceptor) http.RoundTripper {
+func prepareCustomRoundTripper(actual http.RoundTripper, interceptors ...client.HTTPClientInterceptor) http.RoundTripper {
 	return &customRoundTripper{
 		inner:             actual,
 		unitedInterceptor: uniteInterceptors(interceptors),
@@ -74,15 +76,15 @@ func (crt *customRoundTripper) RoundTrip(req *http.Request) (*http.Response, err
 	return crt.unitedInterceptor(req, crt.inner.RoundTrip)
 }
 
-func uniteInterceptors(interceptors []client.HttpClientInterceptor) client.HttpClientInterceptor {
+func uniteInterceptors(interceptors []client.HTTPClientInterceptor) client.HTTPClientInterceptor {
 	if len(interceptors) == 0 {
-		return func(req *http.Request, handler client.HttpHandler) (*http.Response, error) {
+		return func(req *http.Request, handler client.HTTPpHandler) (*http.Response, error) {
 			// That's why we needed an alias to http.RoundTripper.RoundTrip
 			return handler(req)
 		}
 	}
 
-	return func(req *http.Request, handler client.HttpHandler) (*http.Response, error) {
+	return func(req *http.Request, handler client.HTTPpHandler) (*http.Response, error) {
 		tailHandler := func(innerReq *http.Request) (*http.Response, error) {
 			unitedInterceptor := uniteInterceptors(interceptors[1:])
 			return unitedInterceptor(req, handler)
@@ -92,4 +94,4 @@ func uniteInterceptors(interceptors []client.HttpClientInterceptor) client.HttpC
 	}
 }
 
-var _ client.HttpClientBuilder = (*builderImpl)(nil)
+var _ client.HTTPClientBuilder = (*builderImpl)(nil)

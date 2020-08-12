@@ -2,9 +2,10 @@ package logger
 
 import (
 	"container/list"
-	logInt "github.com/go-masonry/mortar/interfaces/log"
 	"io"
 	"os"
+
+	logInt "github.com/go-masonry/mortar/interfaces/log"
 )
 
 const defaultSkipDepth = 4
@@ -21,6 +22,7 @@ type defaultBuilder struct {
 	ll *list.List
 }
 
+// Builder creates a fresh default Logger builder, this will eventually build a std logger wrapper without structured logging
 func Builder() logInt.Builder {
 	return &defaultBuilder{
 		ll: list.New(),

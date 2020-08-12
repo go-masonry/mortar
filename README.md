@@ -25,7 +25,7 @@ Mortar is based on an internal project developed within [Here-Mobility](https://
 ## Documentation
 
 Mortar is not a drop-in replacement. It will probably change the way you code and build services.
-It's important to read its documentation first, starting with the [Tutorial](https://github.com/go-masonry/tutorial) which is also a bit-of-everything example.
+It's important to read its documentation first, starting with the step by step [Tutorial](https://github.com/go-masonry/tutorial) which is also a bit-of-everything example.
 
 ### Core Concepts
 
@@ -37,19 +37,17 @@ It's important to read its documentation first, starting with the [Tutorial](htt
 
 ### Everything else
 
-TODO: document all the built in features
+To understand better some of the internals (without browsing the code) have a look [here](wiki/features.md)
 
-## Moulds
+## Scaffolds
 
-Mortar can be viewed as [Trait](https://en.wikipedia.org/wiki/Trait_(computer_programming)), but for it to work you need to add your logic.
-
-Here you can find service templates to help you get started.
+To help you bootstrap your services with Mortar here you can find different templates.
 
 ## Bricks
 
 Mortar defines different interfaces, without implementing them.
 There are a lot of great libraries that can be used to implement them.
-They just need to be (wrapped) first.
+They just need to be {[(wrapped)]} first.
 
 We call them [Bricks](wiki/bricks.md).
 

@@ -3,11 +3,12 @@ package server
 import (
 	"container/list"
 	"context"
+	"net"
+	"net/http"
+
 	"github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
-	"net"
-	"net/http"
 )
 
 // ******************************************************************************************************************************************************
@@ -117,7 +118,7 @@ type grpcConfig struct {
 	addr         string
 	server       *grpc.Server
 	listener     net.Listener
-	registerApi  []server.GRPCServerAPI
+	registerAPI  []server.GRPCServerAPI
 	options      []grpc.ServerOption
 	panicHandler func(interface{}) error
 }
@@ -132,6 +133,7 @@ type serviceBuilder struct {
 	ll *list.List
 }
 
+// Builder creates a new gRPC web service builder, call it if you want to custom define your web services
 func Builder() server.GRPCWebServiceBuilder {
 	return &serviceBuilder{ll: list.New()}
 }
@@ -159,7 +161,7 @@ func (s *serviceBuilder) SetCustomListener(listener net.Listener) server.GRPCWeb
 
 func (s *serviceBuilder) RegisterGRPCAPIs(apis ...server.GRPCServerAPI) server.GRPCWebServiceBuilder {
 	s.ll.PushBack(func(cfg *webServiceConfig) {
-		cfg.grpc.registerApi = append(cfg.grpc.registerApi, apis...)
+		cfg.grpc.registerAPI = append(cfg.grpc.registerAPI, apis...)
 	})
 	return s
 }

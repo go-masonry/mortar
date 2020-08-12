@@ -8,18 +8,18 @@ import (
 
 // Some of these variables should be populated during build using LDFLAGS
 var (
-	// LDFLAG
+	// should be injected with LDFLAG
 	gitCommit string
-	// LDFLAG
+	// should be injected with LDFLAG
 	version string
-	// LDFLAG
+	// should be injected with LDFLAG
 	buildTimestamp string // "2006-01-02T15:04:05Z07:00" defined in RFC3339
-	// LDFLAG
+	// should be injected with LDFLAG
 	buildTag string
 
-	// During init()
+	// initialized During init()
 	initTime time.Time
-	// During init()
+	// initialized During init()
 	hostname string
 )
 
@@ -39,16 +39,17 @@ type Information struct {
 	BuildTag  string       `json:"build_tag,omitempty"`
 	BuildTime time.Time    `json:"build_time,omitempty"`
 	InitTime  time.Time    `json:"init_time,omitempty"`
-	UpTime    JsonDuration `json:"up_time,omitempty"`
+	UpTime    JSONDuration `json:"up_time,omitempty"`
 	Hostname  string       `json:"hostname,omitempty"`
 }
 
+// GetBuildInformation returns this service build information
 func GetBuildInformation(includeExplanations ...bool) (info Information) {
 	info.GitCommit = gitCommit
 	info.Version = version
 	info.BuildTag = buildTag
 	info.InitTime = initTime
-	info.UpTime = JsonDuration(time.Since(initTime))
+	info.UpTime = JSONDuration(time.Since(initTime))
 	info.BuildTime = time.Time{} // Zero
 	info.Hostname = hostname
 	if len(buildTimestamp) != 0 {
@@ -72,8 +73,10 @@ func GetBuildInformation(includeExplanations ...bool) (info Information) {
 	return
 }
 
-type JsonDuration time.Duration
+// JSONDuration is an alias to time.Duration for Json marshaling
+type JSONDuration time.Duration
 
-func (jd JsonDuration) MarshalJSON() ([]byte, error) {
+// MarshalJSON for JsonDuration is a helper function to better marshal time.Duration
+func (jd JSONDuration) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf(`"%s"`, time.Duration(jd))), nil
 }

@@ -36,7 +36,7 @@ func (m *MockExtractorBuilder) EXPECT() *MockExtractorBuilderMockRecorder {
 }
 
 // SetDecoder mocks base method
-func (m *MockExtractorBuilder) SetDecoder(dec jwt.JsonDecoder) jwt.ExtractorBuilder {
+func (m *MockExtractorBuilder) SetDecoder(dec jwt.JSONDecoder) jwt.ExtractorBuilder {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetDecoder", dec)
 	ret0, _ := ret[0].(jwt.ExtractorBuilder)
