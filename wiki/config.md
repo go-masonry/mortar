@@ -67,7 +67,7 @@ Viper allows you to override configuration values with a matching Environment Va
 export MORTAR_SERVER_GRPC_PORT="7777"
 ```
 
-When you want to read gRPC server port value in your code you should write
+When you want to read gRPC server port value in your code you should use this as a key.
 
 `mortar.server.grpc.port`
 
@@ -75,7 +75,7 @@ Viper will look for Environment variable by replacing `_` with `.` case-insensit
 
 ## Mortar Keys
 
-Mortar expects different keys in it's configuration map to enable or configure different abilities.
+Mortar expects different keys in its configuration map to enable or configure different abilities.
 In [this](../mortar/keys.go) file we try to show what the configuration map should look like and expose all the keys.
 
 ## Config format
