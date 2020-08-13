@@ -23,7 +23,7 @@ go-fmt:
 	@echo " everything formatted properly"	
 
 go-lint:
-	@echo -n Checking format...
+	@echo -n Checking with linter...
 	@test $(shell golint ./... | wc -l) = 0 \
 		|| { echo; echo "some files are not properly linted";\
 		echo $(shell golint ./...);\

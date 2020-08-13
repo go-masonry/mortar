@@ -1,5 +1,7 @@
 # Mortar
 
+![Go](https://github.com/go-masonry/mortar/workflows/Go/badge.svg)
+
 <p align="center">
     <img src=wiki/logo.svg align="center" height=256>
 </p>
@@ -59,7 +61,7 @@ We call them [Bricks](wiki/bricks.md).
 
 ### Monitoring/Metrics
 
-- [bdatadog](https://github.com/go-masonry/bdatadog)
+- [datadog](https://github.com/go-masonry/bdatadog)
 
 ### Tracing
 
