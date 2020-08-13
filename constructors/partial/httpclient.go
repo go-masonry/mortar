@@ -14,9 +14,6 @@ const (
 	FxGroupGRPCUnaryClientInterceptors = "grpcUnaryClientInterceptors"
 )
 
-// HTTPClientPartialBuilder REST HTTP builder
-type HTTPClientPartialBuilder func() clientInt.HTTPClientBuilder
-
 type httpClientBuilderDeps struct {
 	fx.In
 
@@ -25,9 +22,9 @@ type httpClientBuilderDeps struct {
 
 // HTTPClientBuilder creates an injectable http.Client builder that can be predefined with Interceptors
 //
-// This function returns a closure that will always create a new builder. That way every usage can add additional
+// This function returns a closure that will always create a new builder. That way every usage can add different
 // interceptors without influencing others
-func HTTPClientBuilder(deps httpClientBuilderDeps) HTTPClientPartialBuilder {
+func HTTPClientBuilder(deps httpClientBuilderDeps) clientInt.NewHTTPClientBuilder {
 	return func() clientInt.HTTPClientBuilder {
 		return client.HTTPClientBuilder().AddInterceptors(deps.Interceptors...)
 	}

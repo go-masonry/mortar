@@ -39,3 +39,4 @@ func CopyGRPCHeadersClientInterceptor(deps copyHeadersDeps) grpc.UnaryClientInte
 }
 
 // TODO Add http Client Interceptor that copies selected fields to HTTP Request Headers so they will propagate to the next REST service
+// TODO Add http Client Interceptor that dumps request and response to log

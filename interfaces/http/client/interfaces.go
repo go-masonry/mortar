@@ -27,6 +27,11 @@ type HTTPClientBuilder interface {
 	Build() *http.Client
 }
 
+// NewHTTPClientBuilder REST HTTP builder
+//
+// Useful when you want to create several *http.Client with different options
+type NewHTTPClientBuilder func() HTTPClientBuilder
+
 //********************************************************************************
 // grpc.Client
 //********************************************************************************

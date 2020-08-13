@@ -7,6 +7,8 @@ import (
 	"go.uber.org/fx"
 )
 
+// TODO Revisit Monitoring
+
 // MonitorFxOption adds default metric client to the graph
 func MonitorFxOption() fx.Option {
 	return fx.Provide(constructors.DefaultMonitor)

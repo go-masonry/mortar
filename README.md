@@ -30,7 +30,6 @@ It's important to read its documentation first, starting with the step by step [
 ### Core Concepts
 
 - [Builders](wiki/builder.md)
-- [Configuration](wiki/config.md)
 - [Middleware](wiki/middleware.md)
 - [Dependency Injection](wiki/di.md)
 - [Multiple Web Servers](wiki/multiweb.md)
