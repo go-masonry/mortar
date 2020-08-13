@@ -45,7 +45,7 @@ type grpcClientConnImpl struct {
 	options *grpcClientConnOptions
 }
 
-func (g *grpcClientConnImpl) Dial(ctx context.Context, target string, extraOptions ...grpc.DialOption) (*grpc.ClientConn, error) {
+func (g *grpcClientConnImpl) Dial(ctx context.Context, target string, extraOptions ...grpc.DialOption) (grpc.ClientConnInterface, error) {
 	var allOptions = append(g.options.options, extraOptions...)
 	if ctx == nil {
 		ctx = context.Background()

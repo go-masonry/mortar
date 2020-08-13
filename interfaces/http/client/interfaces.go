@@ -40,7 +40,7 @@ type NewHTTPClientBuilder func() HTTPClientBuilder
 // provided by GRPCClientConnectionBuilder
 type GRPCClientConnectionWrapper interface {
 	// Context can be nil
-	Dial(ctx context.Context, target string, extraOptions ...grpc.DialOption) (*grpc.ClientConn, error)
+	Dial(ctx context.Context, target string, extraOptions ...grpc.DialOption) (grpc.ClientConnInterface, error)
 }
 
 // GRPCClientConnectionBuilder is a convenience builder to gather []grpc.DialOption

@@ -106,14 +106,14 @@ func (m *MockGRPCClientConnectionWrapper) EXPECT() *MockGRPCClientConnectionWrap
 }
 
 // Dial mocks base method
-func (m *MockGRPCClientConnectionWrapper) Dial(ctx context.Context, target string, extraOptions ...grpc.DialOption) (*grpc.ClientConn, error) {
+func (m *MockGRPCClientConnectionWrapper) Dial(ctx context.Context, target string, extraOptions ...grpc.DialOption) (grpc.ClientConnInterface, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, target}
 	for _, a := range extraOptions {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Dial", varargs...)
-	ret0, _ := ret[0].(*grpc.ClientConn)
+	ret0, _ := ret[0].(grpc.ClientConnInterface)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
