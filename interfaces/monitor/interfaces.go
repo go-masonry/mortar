@@ -43,11 +43,6 @@ type Timer interface {
 	Start() Stopwatch
 }
 
-type Stopwatch interface {
-	// Stop reports time elapsed since the stopwatch start to the recorder.
-	Stop() error
-}
-
 // Histogram is the interface for emitting histogram metrics
 type Histogram interface {
 	// RecordValue records a specific value directly.
@@ -59,6 +54,11 @@ type Histogram interface {
 	// Start gives you a specific point in time to then record a duration.
 	// Will use the configured duration buckets for the histogram.
 	Start() Stopwatch
+}
+
+type Stopwatch interface {
+	// Stop reports time elapsed since the stopwatch start to the recorder.
+	Stop() error
 }
 
 // Reporter defines Metrics reporter
