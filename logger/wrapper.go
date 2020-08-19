@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	incrementSkipFrames = 1
+	compensateMortarLoggerWrapper = 1
 )
 
 type loggerWrapper struct {
@@ -21,7 +21,7 @@ type loggerWrapper struct {
 // **Important**
 //	This constructor will call builder.IncrementSkipFrames to peel additional layer of itself.
 func CreateMortarLogger(builder log.Builder, contextExtractors ...log.ContextExtractor) log.Logger {
-	logger := builder.IncrementSkipFrames(incrementSkipFrames).Build() // add 1
+	logger := builder.IncrementSkipFrames(compensateMortarLoggerWrapper).Build() // add 1
 	return &loggerWrapper{
 		contextExtractors: contextExtractors,
 		logger:            logger,
