@@ -236,9 +236,9 @@ func (mr *MockMessagesMockRecorder) Error(ctx, format interface{}, args ...inter
 }
 
 // Custom mocks base method
-func (m *MockMessages) Custom(ctx context.Context, level log.Level, format string, args ...interface{}) {
+func (m *MockMessages) Custom(ctx context.Context, level log.Level, skipAdditionalFrames int, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, level, format}
+	varargs := []interface{}{ctx, level, skipAdditionalFrames, format}
 	for _, a := range args {
 		varargs = append(varargs, a)
 	}
@@ -246,9 +246,9 @@ func (m *MockMessages) Custom(ctx context.Context, level log.Level, format strin
 }
 
 // Custom indicates an expected call of Custom
-func (mr *MockMessagesMockRecorder) Custom(ctx, level, format interface{}, args ...interface{}) *gomock.Call {
+func (mr *MockMessagesMockRecorder) Custom(ctx, level, skipAdditionalFrames, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, level, format}, args...)
+	varargs := append([]interface{}{ctx, level, skipAdditionalFrames, format}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Custom", reflect.TypeOf((*MockMessages)(nil).Custom), varargs...)
 }
 
@@ -361,9 +361,9 @@ func (mr *MockFieldsMockRecorder) Error(ctx, format interface{}, args ...interfa
 }
 
 // Custom mocks base method
-func (m *MockFields) Custom(ctx context.Context, level log.Level, format string, args ...interface{}) {
+func (m *MockFields) Custom(ctx context.Context, level log.Level, skipAdditionalFrames int, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, level, format}
+	varargs := []interface{}{ctx, level, skipAdditionalFrames, format}
 	for _, a := range args {
 		varargs = append(varargs, a)
 	}
@@ -371,9 +371,9 @@ func (m *MockFields) Custom(ctx context.Context, level log.Level, format string,
 }
 
 // Custom indicates an expected call of Custom
-func (mr *MockFieldsMockRecorder) Custom(ctx, level, format interface{}, args ...interface{}) *gomock.Call {
+func (mr *MockFieldsMockRecorder) Custom(ctx, level, skipAdditionalFrames, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, level, format}, args...)
+	varargs := append([]interface{}{ctx, level, skipAdditionalFrames, format}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Custom", reflect.TypeOf((*MockFields)(nil).Custom), varargs...)
 }
 
@@ -514,9 +514,9 @@ func (mr *MockLoggerMockRecorder) Error(ctx, format interface{}, args ...interfa
 }
 
 // Custom mocks base method
-func (m *MockLogger) Custom(ctx context.Context, level log.Level, format string, args ...interface{}) {
+func (m *MockLogger) Custom(ctx context.Context, level log.Level, skipAdditionalFrames int, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, level, format}
+	varargs := []interface{}{ctx, level, skipAdditionalFrames, format}
 	for _, a := range args {
 		varargs = append(varargs, a)
 	}
@@ -524,9 +524,9 @@ func (m *MockLogger) Custom(ctx context.Context, level log.Level, format string,
 }
 
 // Custom indicates an expected call of Custom
-func (mr *MockLoggerMockRecorder) Custom(ctx, level, format interface{}, args ...interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) Custom(ctx, level, skipAdditionalFrames, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, level, format}, args...)
+	varargs := append([]interface{}{ctx, level, skipAdditionalFrames, format}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Custom", reflect.TypeOf((*MockLogger)(nil).Custom), varargs...)
 }
 

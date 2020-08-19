@@ -40,7 +40,7 @@ func LoggerGRPCInterceptor(deps loggerInterceptorDeps) grpc.UnaryServerIntercept
 			if deps.Config.Get(mortar.MiddlewareServerGRPCLogIncludeResponse).Bool() {
 				entry = addBodyToLogger(entry, "response", resp)
 			}
-			entry.Custom(ctx, level, "%s finished", info.FullMethod)
+			entry.Custom(ctx, level, 0, "%s finished", info.FullMethod)
 		}
 		return
 	}

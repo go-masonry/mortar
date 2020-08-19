@@ -114,10 +114,11 @@ type Messages interface {
 	// 	ctx can be nil
 	Error(ctx context.Context, format string, args ...interface{})
 	// Custom is a Convenience function that will enable you to set log level dynamically
+	//  and perhaps skip additional frames.
 	//
 	// Note:
 	// 	ctx can be nil
-	Custom(ctx context.Context, level Level, format string, args ...interface{})
+	Custom(ctx context.Context, level Level, skipAdditionalFrames int, format string, args ...interface{})
 }
 
 // Fields part of the Logger interface

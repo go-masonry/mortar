@@ -32,6 +32,13 @@ func TestTimeAndCaller(t *testing.T) {
 	assert.Regexp(t, `^\d{4}\/\d{2}\/\d{2}.+\d{2}\:\d{2}\:\d{2} .+naive/default_test\.go\:\d{2}\: with caller`, buf.String())
 }
 
+func TestCustomOutputWithCaller(t *testing.T) {
+	var buf bytes.Buffer
+	logger := Builder().SetWriter(&buf).IncludeCaller().Build()
+	logger.Custom(nil, logInt.InfoLevel, 1, "with caller")
+	assert.NotContains(t, buf.String(), `naive/default_test.go`)
+}
+
 func TestLevelHigher(t *testing.T) {
 	var buf bytes.Buffer
 	logger := Builder().SetWriter(&buf).SetLevel(logInt.ErrorLevel).Build()
@@ -49,10 +56,11 @@ func TestConfiguration(t *testing.T) {
 
 func TestNotSupported(t *testing.T) {
 	var buf bytes.Buffer
-	logger := Builder().SetWriter(&buf).SetLevel(logInt.ErrorLevel).Build()
+	logger := Builder().SetWriter(&buf).IncludeCaller().SetLevel(logInt.ErrorLevel).Build()
 	logger.WithError(fmt.Errorf("an error")).WithField("one", "two").Error(nil, "warning line")
 	assert.NotContains(t, buf.String(), "an error")
 	assert.NotContains(t, buf.String(), "one")
 	assert.NotContains(t, buf.String(), "two")
 	assert.Contains(t, buf.String(), "warning line")
+	assert.Contains(t, buf.String(), `naive/default_test.go`)
 }

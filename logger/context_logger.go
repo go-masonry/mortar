@@ -6,44 +6,50 @@ import (
 	"github.com/go-masonry/mortar/interfaces/log"
 )
 
+const (
+	noAdditionalSkipFrames = 0
+)
+
 type contextAwareLogEntry struct {
 	contextExtractors []log.ContextExtractor
 	innerLogger       log.Fields
 	fields            map[string]interface{}
 	err               error
+	withFields        bool
 }
 
-func newEntry(contextExtractors []log.ContextExtractor, logger log.Fields) log.Fields {
+func newEntry(contextExtractors []log.ContextExtractor, logger log.Fields, withFields bool) log.Fields {
 	return &contextAwareLogEntry{
 		contextExtractors: contextExtractors,
 		innerLogger:       logger,
 		fields:            make(map[string]interface{}),
 		err:               nil,
+		withFields:        withFields,
 	}
 }
 
 func (c *contextAwareLogEntry) Trace(ctx context.Context, format string, args ...interface{}) {
-	c.log(ctx, log.TraceLevel, format, args...)
+	c.log(ctx, log.TraceLevel, noAdditionalSkipFrames, format, args...)
 }
 
 func (c *contextAwareLogEntry) Debug(ctx context.Context, format string, args ...interface{}) {
-	c.log(ctx, log.DebugLevel, format, args...)
+	c.log(ctx, log.DebugLevel, noAdditionalSkipFrames, format, args...)
 }
 
 func (c *contextAwareLogEntry) Info(ctx context.Context, format string, args ...interface{}) {
-	c.log(ctx, log.InfoLevel, format, args...)
+	c.log(ctx, log.InfoLevel, noAdditionalSkipFrames, format, args...)
 }
 
 func (c *contextAwareLogEntry) Warn(ctx context.Context, format string, args ...interface{}) {
-	c.log(ctx, log.WarnLevel, format, args...)
+	c.log(ctx, log.WarnLevel, noAdditionalSkipFrames, format, args...)
 }
 
 func (c *contextAwareLogEntry) Error(ctx context.Context, format string, args ...interface{}) {
-	c.log(ctx, log.ErrorLevel, format, args...)
+	c.log(ctx, log.ErrorLevel, noAdditionalSkipFrames, format, args...)
 }
 
-func (c *contextAwareLogEntry) Custom(ctx context.Context, level log.Level, format string, args ...interface{}) {
-	c.log(ctx, level, format, args...)
+func (c *contextAwareLogEntry) Custom(ctx context.Context, level log.Level, skipAdditionalFrames int, format string, args ...interface{}) {
+	c.log(ctx, level, skipAdditionalFrames, format, args...)
 }
 
 func (c *contextAwareLogEntry) WithError(err error) log.Fields {
@@ -56,7 +62,7 @@ func (c *contextAwareLogEntry) WithField(name string, value interface{}) log.Fie
 	return c
 }
 
-func (c *contextAwareLogEntry) log(ctx context.Context, level log.Level, format string, args ...interface{}) {
+func (c *contextAwareLogEntry) log(ctx context.Context, level log.Level, skipAdditionalFrames int, format string, args ...interface{}) {
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -67,7 +73,10 @@ func (c *contextAwareLogEntry) log(ctx context.Context, level log.Level, format 
 	if c.err != nil {
 		logger = logger.WithError(c.err)
 	}
-	logger.Custom(ctx, level, format, args...)
+	if !c.withFields { // if no fields, we have one less layer to peel
+		skipAdditionalFrames++
+	}
+	logger.Custom(ctx, level, skipAdditionalFrames, format, args...)
 }
 
 func (c *contextAwareLogEntry) enrich(ctx context.Context) (logger log.Fields) {

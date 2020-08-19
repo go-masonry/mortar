@@ -13,6 +13,10 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+const (
+	skipFramesExpect = 1
+)
+
 type wrapperSuite struct {
 	suite.Suite
 }
@@ -35,7 +39,7 @@ func (s *wrapperSuite) TestLogLevels() {
 	s.Contains(output.String(), "warn line")
 	logger.Error(nil, "error line")
 	s.Contains(output.String(), "error line")
-	logger.Custom(nil, logInt.ErrorLevel, "custom line")
+	logger.Custom(nil, logInt.ErrorLevel, 0, "custom line")
 	s.Contains(output.String(), "custom line")
 }
 
@@ -54,7 +58,10 @@ func (s *wrapperSuite) TestIncludeCallerNoAdditionalSkipFrames() {
 	builder := naive.Builder().SetWriter(&output).IncludeCaller().SetLevel(logInt.TraceLevel)
 	logger := CreateMortarLogger(builder)
 	logger.Trace(nil, "trace line")
-	s.Contains(output.String(), "logger/wrapper.go")
+	s.Contains(output.String(), "logger/wrapper_test.go")
+	output.Reset()
+	logger.WithField("nothing", "printed").Trace(nil, "trace line")
+	s.Contains(output.String(), "logger/wrapper_test.go")
 }
 
 func (s *wrapperSuite) TestIncludeCallerAddSkipFrames() {
@@ -62,6 +69,17 @@ func (s *wrapperSuite) TestIncludeCallerAddSkipFrames() {
 	builder := naive.Builder().SetWriter(&output).IncludeCaller().IncrementSkipFrames(1).SetLevel(logInt.InfoLevel)
 	logger := CreateMortarLogger(builder)
 	logger.Info(nil, "info line")
+	s.Contains(output.String(), "reflect/value.go") // to much
+}
+
+func (s *wrapperSuite) TestIncludeCallerWithFields() {
+	var output bytes.Buffer
+	builder := naive.Builder().SetWriter(&output).IncludeCaller().SetLevel(logInt.InfoLevel)
+	logger := CreateMortarLogger(builder)
+	logger.WithField("field", "value").Info(nil, "info line")
+	s.Contains(output.String(), "logger/wrapper_test.go")
+	output.Reset()
+	logger.WithField("field", "value").Custom(nil, logInt.InfoLevel, 0, "info line")
 	s.Contains(output.String(), "logger/wrapper_test.go")
 }
 
@@ -70,10 +88,10 @@ func (s *wrapperSuite) TestFields() {
 	mockLogger := mock_log.NewMockLogger(controller)
 	mockBuilder := mock_log.NewMockBuilder(controller)
 	mockBuilder.EXPECT().Build().Return(mockLogger).After(
-		mockBuilder.EXPECT().IncrementSkipFrames(1).Return(mockBuilder),
+		mockBuilder.EXPECT().IncrementSkipFrames(skipFramesExpect).Return(mockBuilder),
 	)
 	logger := CreateMortarLogger(mockBuilder)
-	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, "info line").After(
+	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, 0, "info line").After(
 		mockLogger.EXPECT().WithField("field", "value").Return(mockLogger),
 	)
 	logger.WithField("field", "value").Info(nil, "info line")
@@ -85,13 +103,13 @@ func (s *wrapperSuite) TestFieldsNotOverlapping() {
 	mockLogger := mock_log.NewMockLogger(controller)
 	mockBuilder := mock_log.NewMockBuilder(controller)
 	mockBuilder.EXPECT().Build().Return(mockLogger).After(
-		mockBuilder.EXPECT().IncrementSkipFrames(1).Return(mockBuilder),
+		mockBuilder.EXPECT().IncrementSkipFrames(skipFramesExpect).Return(mockBuilder),
 	)
 	logger := CreateMortarLogger(mockBuilder)
-	firstFieldCall := mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, "info line").After(
+	firstFieldCall := mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, 0, "info line").After(
 		mockLogger.EXPECT().WithField("first", "value").Return(mockLogger),
 	)
-	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.ErrorLevel, "error line").After(
+	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.ErrorLevel, 0, "error line").After(
 		mockLogger.EXPECT().WithField("second", "value").Return(mockLogger).After(
 			firstFieldCall,
 		),
@@ -109,10 +127,10 @@ func (s *wrapperSuite) TestError() {
 	mockLogger := mock_log.NewMockLogger(controller)
 	mockBuilder := mock_log.NewMockBuilder(controller)
 	mockBuilder.EXPECT().Build().Return(mockLogger).After(
-		mockBuilder.EXPECT().IncrementSkipFrames(1).Return(mockBuilder),
+		mockBuilder.EXPECT().IncrementSkipFrames(skipFramesExpect).Return(mockBuilder),
 	)
 	logger := CreateMortarLogger(mockBuilder)
-	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, "info line").After(
+	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, 0, "info line").After(
 		mockLogger.EXPECT().WithError(err).Return(mockLogger),
 	)
 	logger.WithError(notRelevantError).WithError(err).Info(nil, "info line")
@@ -126,13 +144,13 @@ func (s *wrapperSuite) TestErrorsNotOverlapping() {
 	mockLogger := mock_log.NewMockLogger(controller)
 	mockBuilder := mock_log.NewMockBuilder(controller)
 	mockBuilder.EXPECT().Build().Return(mockLogger).After(
-		mockBuilder.EXPECT().IncrementSkipFrames(1).Return(mockBuilder),
+		mockBuilder.EXPECT().IncrementSkipFrames(skipFramesExpect).Return(mockBuilder),
 	)
 	logger := CreateMortarLogger(mockBuilder)
-	firstCall := mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, "info line").After(
+	firstCall := mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, 0, "info line").After(
 		mockLogger.EXPECT().WithError(err1).Return(mockLogger),
 	)
-	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.WarnLevel, "warn line").After(
+	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.WarnLevel, 0, "warn line").After(
 		mockLogger.EXPECT().WithError(err2).Return(mockLogger).After(
 			firstCall,
 		),
@@ -159,9 +177,9 @@ func (s *wrapperSuite) TestContextExtractors() {
 	mockLogger := mock_log.NewMockLogger(controller)
 	mockBuilder := mock_log.NewMockBuilder(controller)
 	mockBuilder.EXPECT().Build().Return(mockLogger).After(
-		mockBuilder.EXPECT().IncrementSkipFrames(1).Return(mockBuilder),
+		mockBuilder.EXPECT().IncrementSkipFrames(skipFramesExpect).Return(mockBuilder),
 	)
-	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, "info line").After(
+	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, 0, "info line").After(
 		mockLogger.EXPECT().WithField("one", "three").Return(mockLogger).After(
 			mockLogger.EXPECT().WithField("one", "two").Return(mockLogger),
 		),
@@ -182,9 +200,9 @@ func (s *wrapperSuite) TestPanicExtractor() {
 	mockLogger := mock_log.NewMockLogger(controller)
 	mockBuilder := mock_log.NewMockBuilder(controller)
 	mockBuilder.EXPECT().Build().Return(mockLogger).After(
-		mockBuilder.EXPECT().IncrementSkipFrames(1).Return(mockBuilder),
+		mockBuilder.EXPECT().IncrementSkipFrames(skipFramesExpect).Return(mockBuilder),
 	)
-	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, "info line").After(
+	mockLogger.EXPECT().Custom(gomock.Not((context.Context)(nil)), logInt.InfoLevel, 1, "info line").After(
 		mockLogger.EXPECT().Error(gomock.Not((context.Context)(nil)), "one of the context extractors panicked").After(
 			mockLogger.EXPECT().WithField("__panic__", "oops").Return(mockLogger),
 		),
