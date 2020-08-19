@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	incrementSkipFrames = 1
+	incrementSkipFrames = 2
 )
 
 type loggerWrapper struct {
