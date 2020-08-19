@@ -52,10 +52,10 @@ type Stopwatch interface {
 type Histogram interface {
 	// RecordValue records a specific value directly.
 	// Will use the configured value buckets for the histogram.
-	RecordValue(value float64)
+	RecordValue(value float64) error
 	// RecordDuration records a specific duration directly.
 	// Will use the configured duration buckets for the histogram.
-	RecordDuration(value time.Duration)
+	RecordDuration(value time.Duration) error
 	// Start gives you a specific point in time to then record a duration.
 	// Will use the configured duration buckets for the histogram.
 	Start() Stopwatch

@@ -305,9 +305,11 @@ func (m *MockHistogram) EXPECT() *MockHistogramMockRecorder {
 }
 
 // RecordValue mocks base method
-func (m *MockHistogram) RecordValue(value float64) {
+func (m *MockHistogram) RecordValue(value float64) error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "RecordValue", value)
+	ret := m.ctrl.Call(m, "RecordValue", value)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // RecordValue indicates an expected call of RecordValue
@@ -317,9 +319,11 @@ func (mr *MockHistogramMockRecorder) RecordValue(value interface{}) *gomock.Call
 }
 
 // RecordDuration mocks base method
-func (m *MockHistogram) RecordDuration(value time.Duration) {
+func (m *MockHistogram) RecordDuration(value time.Duration) error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "RecordDuration", value)
+	ret := m.ctrl.Call(m, "RecordDuration", value)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // RecordDuration indicates an expected call of RecordDuration
