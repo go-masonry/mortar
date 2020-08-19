@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-masonry/mortar/logger/naive"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/interfaces/monitor"
 	mock_monitor "github.com/go-masonry/mortar/interfaces/monitor/mock"
-	"github.com/go-masonry/mortar/logger"
 	"github.com/go-masonry/mortar/middleware/interceptors/server"
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/golang/mock/gomock"
@@ -51,7 +52,7 @@ func (s *middlewareSuite) testLoggerGRPCInterceptorBeforeTest() fx.Option {
 	return fx.Options(
 		fx.Provide(server.LoggerGRPCInterceptor),
 		fx.Provide(func() log.Logger {
-			return logger.Builder().SetWriter(&s.loggerOutput).SetLevel(log.DebugLevel).Build()
+			return naive.Builder().SetWriter(&s.loggerOutput).SetLevel(log.DebugLevel).Build()
 		}),
 		fx.Populate(&s.serverInterceptor),
 	)
@@ -69,7 +70,7 @@ func (s *middlewareSuite) testMonitorGRPCInterceptorBeforeTest() fx.Option {
 	return fx.Options(
 		fx.Provide(server.MonitorGRPCInterceptor),
 		fx.Provide(func() log.Logger {
-			return logger.Builder().SetWriter(&s.loggerOutput).SetLevel(log.DebugLevel).Build()
+			return naive.Builder().SetWriter(&s.loggerOutput).SetLevel(log.DebugLevel).Build()
 		}),
 		fx.Provide(func() monitor.Metrics {
 			mockMetrics := mock_monitor.NewMockMetrics(s.ctrl)

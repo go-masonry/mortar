@@ -8,7 +8,6 @@ import (
 	context "context"
 	log "github.com/go-masonry/mortar/interfaces/log"
 	gomock "github.com/golang/mock/gomock"
-	io "io"
 	reflect "reflect"
 )
 
@@ -35,20 +34,6 @@ func (m *MockLoggerConfiguration) EXPECT() *MockLoggerConfigurationMockRecorder 
 	return m.recorder
 }
 
-// Writer mocks base method
-func (m *MockLoggerConfiguration) Writer() io.Writer {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Writer")
-	ret0, _ := ret[0].(io.Writer)
-	return ret0
-}
-
-// Writer indicates an expected call of Writer
-func (mr *MockLoggerConfigurationMockRecorder) Writer() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Writer", reflect.TypeOf((*MockLoggerConfiguration)(nil).Writer))
-}
-
 // Level mocks base method
 func (m *MockLoggerConfiguration) Level() log.Level {
 	m.ctrl.T.Helper()
@@ -61,50 +46,6 @@ func (m *MockLoggerConfiguration) Level() log.Level {
 func (mr *MockLoggerConfigurationMockRecorder) Level() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Level", reflect.TypeOf((*MockLoggerConfiguration)(nil).Level))
-}
-
-// ContextExtractors mocks base method
-func (m *MockLoggerConfiguration) ContextExtractors() []log.ContextExtractor {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ContextExtractors")
-	ret0, _ := ret[0].([]log.ContextExtractor)
-	return ret0
-}
-
-// ContextExtractors indicates an expected call of ContextExtractors
-func (mr *MockLoggerConfigurationMockRecorder) ContextExtractors() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContextExtractors", reflect.TypeOf((*MockLoggerConfiguration)(nil).ContextExtractors))
-}
-
-// TimeFieldConfiguration mocks base method
-func (m *MockLoggerConfiguration) TimeFieldConfiguration() (bool, string) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TimeFieldConfiguration")
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(string)
-	return ret0, ret1
-}
-
-// TimeFieldConfiguration indicates an expected call of TimeFieldConfiguration
-func (mr *MockLoggerConfigurationMockRecorder) TimeFieldConfiguration() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TimeFieldConfiguration", reflect.TypeOf((*MockLoggerConfiguration)(nil).TimeFieldConfiguration))
-}
-
-// CallerConfiguration mocks base method
-func (m *MockLoggerConfiguration) CallerConfiguration() (bool, int) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CallerConfiguration")
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(int)
-	return ret0, ret1
-}
-
-// CallerConfiguration indicates an expected call of CallerConfiguration
-func (mr *MockLoggerConfigurationMockRecorder) CallerConfiguration() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CallerConfiguration", reflect.TypeOf((*MockLoggerConfiguration)(nil).CallerConfiguration))
 }
 
 // Implementation mocks base method
@@ -144,18 +85,18 @@ func (m *MockBuilder) EXPECT() *MockBuilderMockRecorder {
 	return m.recorder
 }
 
-// SetWriter mocks base method
-func (m *MockBuilder) SetWriter(arg0 io.Writer) log.Builder {
+// IncrementSkipFrames mocks base method
+func (m *MockBuilder) IncrementSkipFrames(addition int) log.Builder {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetWriter", arg0)
+	ret := m.ctrl.Call(m, "IncrementSkipFrames", addition)
 	ret0, _ := ret[0].(log.Builder)
 	return ret0
 }
 
-// SetWriter indicates an expected call of SetWriter
-func (mr *MockBuilderMockRecorder) SetWriter(arg0 interface{}) *gomock.Call {
+// IncrementSkipFrames indicates an expected call of IncrementSkipFrames
+func (mr *MockBuilderMockRecorder) IncrementSkipFrames(addition interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetWriter", reflect.TypeOf((*MockBuilder)(nil).SetWriter), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncrementSkipFrames", reflect.TypeOf((*MockBuilder)(nil).IncrementSkipFrames), addition)
 }
 
 // SetLevel mocks base method
@@ -170,80 +111,6 @@ func (m *MockBuilder) SetLevel(level log.Level) log.Builder {
 func (mr *MockBuilderMockRecorder) SetLevel(level interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetLevel", reflect.TypeOf((*MockBuilder)(nil).SetLevel), level)
-}
-
-// AddStaticFields mocks base method
-func (m *MockBuilder) AddStaticFields(fields map[string]interface{}) log.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddStaticFields", fields)
-	ret0, _ := ret[0].(log.Builder)
-	return ret0
-}
-
-// AddStaticFields indicates an expected call of AddStaticFields
-func (mr *MockBuilderMockRecorder) AddStaticFields(fields interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddStaticFields", reflect.TypeOf((*MockBuilder)(nil).AddStaticFields), fields)
-}
-
-// AddContextExtractors mocks base method
-func (m *MockBuilder) AddContextExtractors(hooks ...log.ContextExtractor) log.Builder {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{}
-	for _, a := range hooks {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "AddContextExtractors", varargs...)
-	ret0, _ := ret[0].(log.Builder)
-	return ret0
-}
-
-// AddContextExtractors indicates an expected call of AddContextExtractors
-func (mr *MockBuilderMockRecorder) AddContextExtractors(hooks ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddContextExtractors", reflect.TypeOf((*MockBuilder)(nil).AddContextExtractors), hooks...)
-}
-
-// ExcludeTime mocks base method
-func (m *MockBuilder) ExcludeTime() log.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ExcludeTime")
-	ret0, _ := ret[0].(log.Builder)
-	return ret0
-}
-
-// ExcludeTime indicates an expected call of ExcludeTime
-func (mr *MockBuilderMockRecorder) ExcludeTime() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExcludeTime", reflect.TypeOf((*MockBuilder)(nil).ExcludeTime))
-}
-
-// SetCustomTimeFormatter mocks base method
-func (m *MockBuilder) SetCustomTimeFormatter(format string) log.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetCustomTimeFormatter", format)
-	ret0, _ := ret[0].(log.Builder)
-	return ret0
-}
-
-// SetCustomTimeFormatter indicates an expected call of SetCustomTimeFormatter
-func (mr *MockBuilderMockRecorder) SetCustomTimeFormatter(format interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCustomTimeFormatter", reflect.TypeOf((*MockBuilder)(nil).SetCustomTimeFormatter), format)
-}
-
-// IncludeCallerAndSkipFrames mocks base method
-func (m *MockBuilder) IncludeCallerAndSkipFrames(skip int) log.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IncludeCallerAndSkipFrames", skip)
-	ret0, _ := ret[0].(log.Builder)
-	return ret0
-}
-
-// IncludeCallerAndSkipFrames indicates an expected call of IncludeCallerAndSkipFrames
-func (mr *MockBuilderMockRecorder) IncludeCallerAndSkipFrames(skip interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncludeCallerAndSkipFrames", reflect.TypeOf((*MockBuilder)(nil).IncludeCallerAndSkipFrames), skip)
 }
 
 // Build mocks base method

@@ -2,7 +2,6 @@ package log
 
 import (
 	"context"
-	"io"
 	"strings"
 )
 
@@ -57,11 +56,7 @@ func ParseLevel(str string) Level {
 
 // LoggerConfiguration get some of the logger configuration options and also the implementation
 type LoggerConfiguration interface {
-	Writer() io.Writer
 	Level() Level
-	ContextExtractors() []ContextExtractor
-	TimeFieldConfiguration() (bool, string)
-	CallerConfiguration() (bool, int)
 	Implementation() interface{}
 }
 
@@ -71,23 +66,20 @@ type ContextExtractor func(ctx context.Context) map[string]interface{}
 
 // Builder defines log configuration options
 type Builder interface {
-	// TODO Allow adding static values to LOG such as "appname, host, etc"
-	// Set output writer [os.Stderr, os.Stdout, bufio.Writer, ...]
-	SetWriter(io.Writer) Builder
+	// IncrementSkipFrames **peels** an additional layer(s) to show the actual log line position.
+	//
+	// **Note**
+	//
+	// This one is really important, the implementation must increment and not override
+	// the value of skip frames.
+	//
+	// One should take into account only it's own frame stack, mortar will add 2 on top.
+	IncrementSkipFrames(addition int) Builder
 	// Set system log level
-	// This might filter all logs where it's corresponding log level is lower than what is set here
+	//
+	// Optional:
+	//	Logger Implementation should have a default log level. This allows filtering log lines with level below default one.
 	SetLevel(level Level) Builder
-	// Add static fields to each log. Example: Application name, host, git commit
-	AddStaticFields(fields map[string]interface{}) Builder
-	// Make sure that each extractor function returns fast and is "thread safe"
-	AddContextExtractors(hooks ...ContextExtractor) Builder
-	// ExcludeTime removes implicit time field with it's value from the log
-	ExcludeTime() Builder
-	// SetCustomTimeFormatter allows to set custom time formatter, applicable if ExcludeTime() wasn't called
-	SetCustomTimeFormatter(format string) Builder
-	// IncludeCaller adds path and row number
-	// One should only take into account it's own frame stack
-	IncludeCallerAndSkipFrames(skip int) Builder
 	// Build() returns a Logger implementation, always
 	Build() Logger
 }

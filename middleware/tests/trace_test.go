@@ -6,10 +6,11 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/go-masonry/mortar/logger/naive"
+
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/log"
-	"github.com/go-masonry/mortar/logger"
 	"github.com/go-masonry/mortar/middleware/interceptors/trace"
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/opentracing/opentracing-go"
@@ -142,7 +143,7 @@ func (s *middlewareSuite) testGRPCTracingUnaryServerInterceptorBeforeTest() fx.O
 func (s *middlewareSuite) unifiedOptionsForTraceInterceptors() fx.Option {
 	return fx.Options(
 		fx.Provide(func() log.Logger {
-			return logger.Builder().SetWriter(&s.loggerOutput).SetLevel(log.TraceLevel).Build()
+			return naive.Builder().SetWriter(&s.loggerOutput).SetLevel(log.TraceLevel).Build()
 		}),
 		fx.Provide(func() opentracing.Tracer {
 			return mocktracer.New()

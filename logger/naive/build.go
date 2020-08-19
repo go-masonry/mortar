@@ -1,4 +1,4 @@
-package logger
+package naive
 
 import (
 	"container/list"
@@ -22,16 +22,48 @@ type defaultBuilder struct {
 	ll *list.List
 }
 
+// NativeLogBuilder is a helper interface to configure native log.Logger instance.
+type NativeLogBuilder interface {
+	logInt.Builder
+	// SetWriter set where output should be printed
+	SetWriter(writer io.Writer) NativeLogBuilder
+	// ExcludeTime configures standard Logger to exclude any time field
+	ExcludeTime() NativeLogBuilder
+	// IncludeCaller adds caller:line to the output
+	IncludeCaller() NativeLogBuilder
+}
+
 // Builder creates a fresh default Logger builder, this will eventually build a std logger wrapper without structured logging
-func Builder() logInt.Builder {
+func Builder() NativeLogBuilder {
 	return &defaultBuilder{
 		ll: list.New(),
 	}
 }
 
-func (d *defaultBuilder) SetWriter(writer io.Writer) logInt.Builder {
+func (d *defaultBuilder) SetWriter(writer io.Writer) NativeLogBuilder {
 	d.ll.PushBack(func(cfg *defaultConfig) {
 		cfg.writer = writer
+	})
+	return d
+}
+
+func (d *defaultBuilder) ExcludeTime() NativeLogBuilder {
+	d.ll.PushBack(func(cfg *defaultConfig) {
+		cfg.excludeTime = true
+	})
+	return d
+}
+
+func (d *defaultBuilder) IncludeCaller() NativeLogBuilder {
+	d.ll.PushBack(func(cfg *defaultConfig) {
+		cfg.includeCaller = true
+	})
+	return d
+}
+
+func (d *defaultBuilder) IncrementSkipFrames(inc int) logInt.Builder {
+	d.ll.PushBack(func(cfg *defaultConfig) {
+		cfg.depth += inc
 	})
 	return d
 }
@@ -43,38 +75,11 @@ func (d *defaultBuilder) SetLevel(level logInt.Level) logInt.Builder {
 	return d
 }
 
-func (d *defaultBuilder) AddStaticFields(fields map[string]interface{}) logInt.Builder {
-	return d
-}
-
-func (d *defaultBuilder) AddContextExtractors(hooks ...logInt.ContextExtractor) logInt.Builder {
-	return d
-}
-
-func (d *defaultBuilder) ExcludeTime() logInt.Builder {
-	d.ll.PushBack(func(cfg *defaultConfig) {
-		cfg.excludeTime = true
-	})
-	return d
-}
-
-func (d *defaultBuilder) SetCustomTimeFormatter(format string) logInt.Builder {
-	return d
-}
-
-func (d *defaultBuilder) IncludeCallerAndSkipFrames(skip int) logInt.Builder {
-	d.ll.PushBack(func(cfg *defaultConfig) {
-		cfg.depth = defaultSkipDepth + skip // 2 is used within the log package
-		cfg.includeCaller = true
-	})
-	return d
-}
-
 func (d *defaultBuilder) Build() logInt.Logger {
 	cfg := &defaultConfig{
 		writer:        os.Stderr,
 		level:         logInt.TraceLevel,
-		depth:         defaultSkipDepth,
+		depth:         defaultSkipDepth, // 2 is used within the log package
 		excludeTime:   false,
 		includeCaller: false,
 	}
@@ -84,3 +89,5 @@ func (d *defaultBuilder) Build() logInt.Logger {
 	}
 	return newDefaultLogger(cfg)
 }
+
+var _ logInt.Builder = (*defaultBuilder)(nil)

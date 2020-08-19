@@ -1,11 +1,14 @@
 package constructors
 
 import (
+	"context"
 	"log"
+
+	"github.com/go-masonry/mortar/logger"
+	"github.com/go-masonry/mortar/logger/naive"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	logInt "github.com/go-masonry/mortar/interfaces/log"
-	defaultLogger "github.com/go-masonry/mortar/logger"
 	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
 )
@@ -16,8 +19,6 @@ const (
 	application = "app"
 	hostname    = "host"
 	gitCommit   = "git"
-
-	callerSkipDepth = 0
 )
 
 type loggerDeps struct {
@@ -34,15 +35,12 @@ func DefaultLogger(deps loggerDeps) logInt.Logger {
 	if levelValue := deps.Config.Get(mortar.LoggerLevelKey); levelValue.IsSet() {
 		logLevel = logInt.ParseLevel(levelValue.String())
 	}
-	return deps.getLogBuilder().
-		SetLevel(logLevel).
-		AddStaticFields(deps.selfStaticFields()).
-		AddContextExtractors(deps.ContextExtractors...).
-		IncludeCallerAndSkipFrames(callerSkipDepth).
-		Build()
+
+	builder := deps.getLogBuilder().SetLevel(logLevel)
+	return logger.CreateMortarLogger(builder, append(deps.ContextExtractors, deps.selfStaticFieldsContextExtractor)...)
 }
 
-func (d loggerDeps) selfStaticFields() map[string]interface{} {
+func (d loggerDeps) selfStaticFieldsContextExtractor(_ context.Context) map[string]interface{} {
 	output := make(map[string]interface{})
 	info := mortar.GetBuildInformation()
 	appName := d.Config.Get(mortar.Name).String()
@@ -63,5 +61,5 @@ func (d loggerDeps) getLogBuilder() logInt.Builder {
 		return d.LoggerBuilder
 	}
 	log.Printf("[Mortar] WARNING \tNo logger builder provided, using default logger. Some features will not be supported")
-	return defaultLogger.Builder()
+	return naive.Builder()
 }

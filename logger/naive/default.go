@@ -1,9 +1,8 @@
-package logger
+package naive
 
 import (
 	"context"
 	"fmt"
-	"io"
 	"log"
 
 	logInt "github.com/go-masonry/mortar/interfaces/log"
@@ -14,24 +13,8 @@ type defaultLogger struct {
 	logger *log.Logger
 }
 
-func (d *defaultLogger) Writer() io.Writer {
-	return d.cfg.writer
-}
-
 func (d *defaultLogger) Level() logInt.Level {
 	return d.cfg.level
-}
-
-func (d *defaultLogger) ContextExtractors() []logInt.ContextExtractor {
-	return nil
-}
-
-func (d *defaultLogger) TimeFieldConfiguration() (bool, string) {
-	return false, ""
-}
-
-func (d *defaultLogger) CallerConfiguration() (bool, int) {
-	return d.cfg.includeCaller, d.cfg.depth - defaultSkipDepth
 }
 
 func (d *defaultLogger) Implementation() interface{} {
@@ -100,3 +83,5 @@ func newDefaultLogger(cfg *defaultConfig) logInt.Logger {
 		cfg:    cfg,
 	}
 }
+
+var _ logInt.Logger = (*defaultLogger)(nil)
