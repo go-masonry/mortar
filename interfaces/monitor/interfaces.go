@@ -9,28 +9,56 @@ import (
 
 // Metrics defines various monitoring capabilities
 type Metrics interface {
-	// Gauge measures the value of a metric at a particular time.
-	Gauge(ctx context.Context, name string, value float64) error
-	// Count tracks how many times something happened per second.
-	Count(ctx context.Context, name string, value int64) error
-	// Histogram tracks the statistical distribution of a set of values on each host.
-	Histogram(ctx context.Context, name string, value float64) error
-	// Distribution tracks the statistical distribution of a set of values across your infrastructure.
-	Distribution(ctx context.Context, name string, value float64) error
-	// Decr is just Count of -1
-	Decr(ctx context.Context, name string) error
-	// Incr is just Count of 1
-	Incr(ctx context.Context, name string) error
-	// Set counts the number of unique elements in a group. 'value' is an element in a final SET (["one", "two", "three"])
-	Set(ctx context.Context, name string, value string) error
-	// Timing sends timing information
-	Timing(ctx context.Context, name string, value time.Duration) error
-	// Add custom tags for this metric
+	// Counter returns the Counter object corresponding to the name.
+	Counter(ctx context.Context, name string) Counter
+	// Gauge returns the Gauge object corresponding to the name.
+	Gauge(ctx context.Context, name string) Gauge
+	// Timer returns the Timer object corresponding to the name.
+	Timer(ctx context.Context, name string) Timer
+	// Histogram returns the Histogram object corresponding to the name.
+	Histogram(ctx context.Context, name string) Histogram
+	// AddTag adds a tag to the metric.
 	AddTag(name, value string) Metrics
-	// Set custom rate for this metric
-	SetRate(rate float64) Metrics
 	// Implementation returns the actual lib/struct that is responsible for the above logic
 	Implementation() interface{}
+}
+
+// Counter is the interface for emitting counter type metrics.
+type Counter interface {
+	// Inc increments the counter by a delta.
+	Inc(delta int64) error
+}
+
+// Gauge is the interface for emitting gauge metrics.
+type Gauge interface {
+	// Update sets the gauges absolute value.
+	Update(value float64) error
+}
+
+// Timer is the interface for emitting timer metrics.
+type Timer interface {
+	// Record a specific duration directly.
+	Record(value time.Duration) error
+	// Start gives you back a specific point in time to report via Stop.
+	Start() Stopwatch
+}
+
+type Stopwatch interface {
+	// Stop reports time elapsed since the stopwatch start to the recorder.
+	Stop() error
+}
+
+// Histogram is the interface for emitting histogram metrics
+type Histogram interface {
+	// RecordValue records a specific value directly.
+	// Will use the configured value buckets for the histogram.
+	RecordValue(value float64)
+	// RecordDuration records a specific duration directly.
+	// Will use the configured duration buckets for the histogram.
+	RecordDuration(value time.Duration)
+	// Start gives you a specific point in time to then record a duration.
+	// Will use the configured duration buckets for the histogram.
+	Start() Stopwatch
 }
 
 // Reporter defines Metrics reporter

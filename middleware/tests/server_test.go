@@ -73,8 +73,10 @@ func (s *middlewareSuite) testMonitorGRPCInterceptorBeforeTest() fx.Option {
 		}),
 		fx.Provide(func() monitor.Metrics {
 			mockMetrics := mock_monitor.NewMockMetrics(s.ctrl)
+			mockTimer := mock_monitor.NewMockTimer(s.ctrl)
 			mockMetrics.EXPECT().AddTag(gomock.Any(), gomock.Any()).Return(mockMetrics)
-			mockMetrics.EXPECT().Timing(gomock.Any(), "method", gomock.Any()).Return(nil) // method is from the above unary info
+			mockMetrics.EXPECT().Timer(gomock.Any(), "method").Return(mockTimer) // method is from the above unary info
+			mockTimer.EXPECT().Record(gomock.Any()).Return(nil)
 			return mockMetrics
 		}),
 		fx.Populate(&s.serverInterceptor),

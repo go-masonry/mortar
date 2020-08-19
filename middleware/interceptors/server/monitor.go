@@ -34,7 +34,7 @@ func MonitorGRPCInterceptor(deps gRPCMetricInterceptorsDeps) grpc.UnaryServerInt
 				metric = metric.AddTag(statusTagName, statusTag(err))
 			}
 			_, methodName := utils.SplitMethodAndPackage(info.FullMethod)
-			monitoringError := metric.Timing(ctx, methodName, time.Since(start)) // nothing to do with the error here
+			monitoringError := metric.Timer(ctx, methodName).Record(time.Since(start)) // nothing to do with the error here
 			if monitoringError != nil {
 				deps.Logger.WithError(monitoringError).WithField("method", methodName).Info(ctx, "failed to send grpc timing metric")
 			}
