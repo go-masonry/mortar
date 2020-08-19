@@ -20,6 +20,7 @@ const (
 	hostname    = "host"
 	gitCommit   = "git"
 )
+const compensateDefaultLogger = 1
 
 type loggerDeps struct {
 	fx.In
@@ -36,7 +37,7 @@ func DefaultLogger(deps loggerDeps) logInt.Logger {
 		logLevel = logInt.ParseLevel(levelValue.String())
 	}
 
-	builder := deps.getLogBuilder().SetLevel(logLevel)
+	builder := deps.getLogBuilder().SetLevel(logLevel).IncrementSkipFrames(compensateDefaultLogger)
 	return logger.CreateMortarLogger(builder, append(deps.ContextExtractors, deps.selfStaticFieldsContextExtractor)...)
 }
 
