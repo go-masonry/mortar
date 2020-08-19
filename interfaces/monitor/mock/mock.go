@@ -244,43 +244,6 @@ func (mr *MockTimerMockRecorder) Start() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockTimer)(nil).Start))
 }
 
-// MockStopwatch is a mock of Stopwatch interface
-type MockStopwatch struct {
-	ctrl     *gomock.Controller
-	recorder *MockStopwatchMockRecorder
-}
-
-// MockStopwatchMockRecorder is the mock recorder for MockStopwatch
-type MockStopwatchMockRecorder struct {
-	mock *MockStopwatch
-}
-
-// NewMockStopwatch creates a new mock instance
-func NewMockStopwatch(ctrl *gomock.Controller) *MockStopwatch {
-	mock := &MockStopwatch{ctrl: ctrl}
-	mock.recorder = &MockStopwatchMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockStopwatch) EXPECT() *MockStopwatchMockRecorder {
-	return m.recorder
-}
-
-// Stop mocks base method
-func (m *MockStopwatch) Stop() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Stop")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Stop indicates an expected call of Stop
-func (mr *MockStopwatchMockRecorder) Stop() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stop", reflect.TypeOf((*MockStopwatch)(nil).Stop))
-}
-
 // MockHistogram is a mock of Histogram interface
 type MockHistogram struct {
 	ctrl     *gomock.Controller
@@ -344,6 +307,43 @@ func (m *MockHistogram) Start() monitor.Stopwatch {
 func (mr *MockHistogramMockRecorder) Start() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockHistogram)(nil).Start))
+}
+
+// MockStopwatch is a mock of Stopwatch interface
+type MockStopwatch struct {
+	ctrl     *gomock.Controller
+	recorder *MockStopwatchMockRecorder
+}
+
+// MockStopwatchMockRecorder is the mock recorder for MockStopwatch
+type MockStopwatchMockRecorder struct {
+	mock *MockStopwatch
+}
+
+// NewMockStopwatch creates a new mock instance
+func NewMockStopwatch(ctrl *gomock.Controller) *MockStopwatch {
+	mock := &MockStopwatch{ctrl: ctrl}
+	mock.recorder = &MockStopwatchMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockStopwatch) EXPECT() *MockStopwatchMockRecorder {
+	return m.recorder
+}
+
+// Stop mocks base method
+func (m *MockStopwatch) Stop() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Stop")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Stop indicates an expected call of Stop
+func (mr *MockStopwatchMockRecorder) Stop() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stop", reflect.TypeOf((*MockStopwatch)(nil).Stop))
 }
 
 // MockReporter is a mock of Reporter interface
