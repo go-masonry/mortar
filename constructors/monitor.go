@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	"github.com/go-masonry/mortar/interfaces/monitor"
+	"github.com/go-masonry/mortar/monitoring"
 	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
 )
@@ -23,22 +24,15 @@ type monitorDeps struct {
 	ContextExtractors []monitor.ContextExtractor `group:"monitorContextExtractors"`
 }
 
-// DefaultMonitor is a constructor that will create a Metrics client based on values from the Config Map
+// DefaultMonitor is a constructor that will create a Metrics reporter based on values from the Config Map
 // such as
 //
-// 	- Prefix: we will look for a key mortar.MonitorPrefixKey within the configuration map
 // 	- Tags: we will look for default tags using mortar.MonitorTagsKey within the configuration map
 //
 func DefaultMonitor(deps monitorDeps) monitor.Metrics {
-	var builder = deps.MonitorBuilder
-	if tags := deps.Config.Get(mortar.MonitorTagsKey); tags.IsSet() {
-		builder = builder.SetTags(tags.StringMapString())
-	}
-	if prefix := deps.Config.Get(mortar.MonitorPrefixKey); prefix.IsSet() {
-		builder = builder.SetPrefix(prefix.String())
-	}
-	reporter := builder.AddContextExtractors(deps.ContextExtractors...).Build()
+	tags := deps.Config.Get(mortar.MonitorTagsKey).StringMapString() // can be empty
 
+	reporter := monitoring.NewMortarReporter(deps.MonitorBuilder, tags, deps.ContextExtractors...)
 	deps.LifeCycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			return reporter.Connect(ctx)

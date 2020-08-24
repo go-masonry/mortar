@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/go-masonry/mortar/logger/naive"
+	"github.com/golang/mock/gomock"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
@@ -14,7 +15,6 @@ import (
 	mock_monitor "github.com/go-masonry/mortar/interfaces/monitor/mock"
 	"github.com/go-masonry/mortar/middleware/interceptors/server"
 	"github.com/go-masonry/mortar/mortar"
-	"github.com/golang/mock/gomock"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 )
@@ -73,9 +73,11 @@ func (s *middlewareSuite) testMonitorGRPCInterceptorBeforeTest() fx.Option {
 			return naive.Builder().SetWriter(&s.loggerOutput).SetLevel(log.DebugLevel).Build()
 		}),
 		fx.Provide(func() monitor.Metrics {
+			mockedTimer := mock_monitor.NewMockTagsAwareTimer(s.ctrl)
+			mockedTimer.EXPECT().Record(gomock.AssignableToTypeOf(time.Second)) // assignable to duration
 			mockMetrics := mock_monitor.NewMockMetrics(s.ctrl)
-			mockMetrics.EXPECT().AddTag(gomock.Any(), gomock.Any()).Return(mockMetrics)
-			mockMetrics.EXPECT().Timing(gomock.Any(), "method", gomock.Any()).Return(nil) // method is from the above unary info
+			mockMetrics.EXPECT().WithTags(monitor.Tags{"code": "Unknown"}).Return(mockMetrics)
+			mockMetrics.EXPECT().Timer("method").Return(mockedTimer) // method is from the above unary info
 			return mockMetrics
 		}),
 		fx.Populate(&s.serverInterceptor),

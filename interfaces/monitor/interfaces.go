@@ -5,50 +5,87 @@ import (
 	"time"
 )
 
-//go:generate mockgen -source=interfaces.go -destination=mock/mock.go
+// Buckets must be ordered in increasing order
+type Buckets []float64
 
-// Metrics defines various monitoring capabilities
-type Metrics interface {
-	// Gauge measures the value of a metric at a particular time.
-	Gauge(ctx context.Context, name string, value float64) error
-	// Count tracks how many times something happened per second.
-	Count(ctx context.Context, name string, value int64) error
-	// Histogram tracks the statistical distribution of a set of values on each host.
-	Histogram(ctx context.Context, name string, value float64) error
-	// Distribution tracks the statistical distribution of a set of values across your infrastructure.
-	Distribution(ctx context.Context, name string, value float64) error
-	// Decr is just Count of -1
-	Decr(ctx context.Context, name string) error
-	// Incr is just Count of 1
-	Incr(ctx context.Context, name string) error
-	// Set counts the number of unique elements in a group. 'value' is an element in a final SET (["one", "two", "three"])
-	Set(ctx context.Context, name string, value string) error
-	// Timing sends timing information
-	Timing(ctx context.Context, name string, value time.Duration) error
-	// Add custom tags for this metric
-	AddTag(name, value string) Metrics
-	// Set custom rate for this metric
-	SetRate(rate float64) Metrics
-	// Implementation returns the actual lib/struct that is responsible for the above logic
-	Implementation() interface{}
+// Tags or Labels, key->value
+type Tags map[string]string
+
+// TagsAwareCounter defines a counter with the ability override tags value either explicitly or from context (by extractors)
+type TagsAwareCounter interface {
+	Counter
+	WithTags(tags Tags) TagsAwareCounter
+	WithContext(ctx context.Context) TagsAwareCounter
 }
 
-// Reporter defines Metrics reporter
+// Counter is a Metric that represents a single numerical value that only ever goes up
+type Counter interface {
+	// Inc increments the counter by 1
+	Inc()
+	// Add adds the given value to the counter, negative values are not advised
+	Add(v float64)
+}
+
+// TagsAwareGauge defines a gauge with the ability to override tags value either explicitly or from context (by extractors)
+type TagsAwareGauge interface {
+	Gauge
+	WithTags(tags Tags) TagsAwareGauge
+	WithContext(ctx context.Context) TagsAwareGauge
+}
+
+//Gauge is a Metric that represents a single numerical value that can arbitrarily go up and down
+type Gauge interface {
+	// Set sets Gauge value
+	Set(v float64)
+}
+
+// TagsAwareHistogram defines a histogram with the ability to override tags value either explicitly or from context (by extractors)
+type TagsAwareHistogram interface {
+	Histogram
+	WithTags(tags Tags) TagsAwareHistogram
+	WithContext(ctx context.Context) TagsAwareHistogram
+}
+
+// A Histogram counts individual observations from an event or sample stream in configurable buckets
+type Histogram interface {
+	// Record value
+	Record(v float64)
+}
+
+// --- Auxiliary types ---
+
+// TagsAwareTimer defines a timer with the ability to override tags value either explicitly or from context (by extractors)
+type TagsAwareTimer interface {
+	Record(d time.Duration)
+	WithTags(tags Tags) TagsAwareTimer
+	WithContext(ctx context.Context) TagsAwareTimer
+}
+
+// Metrics defines various monitoring capabilities
+//
+// It is expected that each Metric is unique, uniqueness is calculated by combining
+// 	- name
+//	- tag key names
+type Metrics interface {
+	// Counter creates a counter with possible predefined tags
+	Counter(name string) TagsAwareCounter
+	// Gauge creates a gauge with possible predefined tags
+	Gauge(name string) TagsAwareGauge
+	// Histogram creates a histogram with possible predefined tags
+	Histogram(name string, buckets Buckets) TagsAwareHistogram
+	// Timer creates a timer with possible predefined tags
+	Timer(name string) TagsAwareTimer
+	// WithTags sets custom tags to be included if possible in every Metric
+	WithTags(tags Tags) Metrics
+}
+
+// Reporter defines Metrics reporter with Connect/Close options on demand and not on creation
 type Reporter interface {
 	Connect(ctx context.Context) error
 	Close(ctx context.Context) error
 	Metrics() Metrics
 }
 
-// ContextExtractor is a function that will extract values from the context and return them as Tags to be added
+// ContextExtractor is a function that will extract values from the context and return them as Tags
 // Make sure that this function returns fast and is "thread safe"
-type ContextExtractor func(ctx context.Context) map[string]string
-
-// Builder defines Monitor builder options
-type Builder interface {
-	SetAddress(hostPort string) Builder
-	SetPrefix(prefix string) Builder
-	SetTags(tags map[string]string) Builder
-	AddContextExtractors(extractors ...ContextExtractor) Builder
-	Build() Reporter
-}
+type ContextExtractor func(ctx context.Context) Tags

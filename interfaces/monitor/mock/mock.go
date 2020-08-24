@@ -12,6 +12,411 @@ import (
 	time "time"
 )
 
+// MockTagsAwareCounter is a mock of TagsAwareCounter interface
+type MockTagsAwareCounter struct {
+	ctrl     *gomock.Controller
+	recorder *MockTagsAwareCounterMockRecorder
+}
+
+// MockTagsAwareCounterMockRecorder is the mock recorder for MockTagsAwareCounter
+type MockTagsAwareCounterMockRecorder struct {
+	mock *MockTagsAwareCounter
+}
+
+// NewMockTagsAwareCounter creates a new mock instance
+func NewMockTagsAwareCounter(ctrl *gomock.Controller) *MockTagsAwareCounter {
+	mock := &MockTagsAwareCounter{ctrl: ctrl}
+	mock.recorder = &MockTagsAwareCounterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockTagsAwareCounter) EXPECT() *MockTagsAwareCounterMockRecorder {
+	return m.recorder
+}
+
+// Inc mocks base method
+func (m *MockTagsAwareCounter) Inc() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Inc")
+}
+
+// Inc indicates an expected call of Inc
+func (mr *MockTagsAwareCounterMockRecorder) Inc() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Inc", reflect.TypeOf((*MockTagsAwareCounter)(nil).Inc))
+}
+
+// Add mocks base method
+func (m *MockTagsAwareCounter) Add(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Add", v)
+}
+
+// Add indicates an expected call of Add
+func (mr *MockTagsAwareCounterMockRecorder) Add(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockTagsAwareCounter)(nil).Add), v)
+}
+
+// WithTags mocks base method
+func (m *MockTagsAwareCounter) WithTags(tags monitor.Tags) monitor.TagsAwareCounter {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithTags", tags)
+	ret0, _ := ret[0].(monitor.TagsAwareCounter)
+	return ret0
+}
+
+// WithTags indicates an expected call of WithTags
+func (mr *MockTagsAwareCounterMockRecorder) WithTags(tags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithTags", reflect.TypeOf((*MockTagsAwareCounter)(nil).WithTags), tags)
+}
+
+// WithContext mocks base method
+func (m *MockTagsAwareCounter) WithContext(ctx context.Context) monitor.TagsAwareCounter {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithContext", ctx)
+	ret0, _ := ret[0].(monitor.TagsAwareCounter)
+	return ret0
+}
+
+// WithContext indicates an expected call of WithContext
+func (mr *MockTagsAwareCounterMockRecorder) WithContext(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithContext", reflect.TypeOf((*MockTagsAwareCounter)(nil).WithContext), ctx)
+}
+
+// MockCounter is a mock of Counter interface
+type MockCounter struct {
+	ctrl     *gomock.Controller
+	recorder *MockCounterMockRecorder
+}
+
+// MockCounterMockRecorder is the mock recorder for MockCounter
+type MockCounterMockRecorder struct {
+	mock *MockCounter
+}
+
+// NewMockCounter creates a new mock instance
+func NewMockCounter(ctrl *gomock.Controller) *MockCounter {
+	mock := &MockCounter{ctrl: ctrl}
+	mock.recorder = &MockCounterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockCounter) EXPECT() *MockCounterMockRecorder {
+	return m.recorder
+}
+
+// Inc mocks base method
+func (m *MockCounter) Inc() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Inc")
+}
+
+// Inc indicates an expected call of Inc
+func (mr *MockCounterMockRecorder) Inc() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Inc", reflect.TypeOf((*MockCounter)(nil).Inc))
+}
+
+// Add mocks base method
+func (m *MockCounter) Add(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Add", v)
+}
+
+// Add indicates an expected call of Add
+func (mr *MockCounterMockRecorder) Add(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockCounter)(nil).Add), v)
+}
+
+// MockTagsAwareGauge is a mock of TagsAwareGauge interface
+type MockTagsAwareGauge struct {
+	ctrl     *gomock.Controller
+	recorder *MockTagsAwareGaugeMockRecorder
+}
+
+// MockTagsAwareGaugeMockRecorder is the mock recorder for MockTagsAwareGauge
+type MockTagsAwareGaugeMockRecorder struct {
+	mock *MockTagsAwareGauge
+}
+
+// NewMockTagsAwareGauge creates a new mock instance
+func NewMockTagsAwareGauge(ctrl *gomock.Controller) *MockTagsAwareGauge {
+	mock := &MockTagsAwareGauge{ctrl: ctrl}
+	mock.recorder = &MockTagsAwareGaugeMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockTagsAwareGauge) EXPECT() *MockTagsAwareGaugeMockRecorder {
+	return m.recorder
+}
+
+// Set mocks base method
+func (m *MockTagsAwareGauge) Set(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Set", v)
+}
+
+// Set indicates an expected call of Set
+func (mr *MockTagsAwareGaugeMockRecorder) Set(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockTagsAwareGauge)(nil).Set), v)
+}
+
+// Add mocks base method
+func (m *MockTagsAwareGauge) Add(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Add", v)
+}
+
+// Add indicates an expected call of Add
+func (mr *MockTagsAwareGaugeMockRecorder) Add(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockTagsAwareGauge)(nil).Add), v)
+}
+
+// WithTags mocks base method
+func (m *MockTagsAwareGauge) WithTags(tags monitor.Tags) monitor.TagsAwareGauge {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithTags", tags)
+	ret0, _ := ret[0].(monitor.TagsAwareGauge)
+	return ret0
+}
+
+// WithTags indicates an expected call of WithTags
+func (mr *MockTagsAwareGaugeMockRecorder) WithTags(tags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithTags", reflect.TypeOf((*MockTagsAwareGauge)(nil).WithTags), tags)
+}
+
+// WithContext mocks base method
+func (m *MockTagsAwareGauge) WithContext(ctx context.Context) monitor.TagsAwareGauge {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithContext", ctx)
+	ret0, _ := ret[0].(monitor.TagsAwareGauge)
+	return ret0
+}
+
+// WithContext indicates an expected call of WithContext
+func (mr *MockTagsAwareGaugeMockRecorder) WithContext(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithContext", reflect.TypeOf((*MockTagsAwareGauge)(nil).WithContext), ctx)
+}
+
+// MockGauge is a mock of Gauge interface
+type MockGauge struct {
+	ctrl     *gomock.Controller
+	recorder *MockGaugeMockRecorder
+}
+
+// MockGaugeMockRecorder is the mock recorder for MockGauge
+type MockGaugeMockRecorder struct {
+	mock *MockGauge
+}
+
+// NewMockGauge creates a new mock instance
+func NewMockGauge(ctrl *gomock.Controller) *MockGauge {
+	mock := &MockGauge{ctrl: ctrl}
+	mock.recorder = &MockGaugeMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockGauge) EXPECT() *MockGaugeMockRecorder {
+	return m.recorder
+}
+
+// Set mocks base method
+func (m *MockGauge) Set(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Set", v)
+}
+
+// Set indicates an expected call of Set
+func (mr *MockGaugeMockRecorder) Set(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockGauge)(nil).Set), v)
+}
+
+// Add mocks base method
+func (m *MockGauge) Add(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Add", v)
+}
+
+// Add indicates an expected call of Add
+func (mr *MockGaugeMockRecorder) Add(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockGauge)(nil).Add), v)
+}
+
+// MockTagsAwareHistogram is a mock of TagsAwareHistogram interface
+type MockTagsAwareHistogram struct {
+	ctrl     *gomock.Controller
+	recorder *MockTagsAwareHistogramMockRecorder
+}
+
+// MockTagsAwareHistogramMockRecorder is the mock recorder for MockTagsAwareHistogram
+type MockTagsAwareHistogramMockRecorder struct {
+	mock *MockTagsAwareHistogram
+}
+
+// NewMockTagsAwareHistogram creates a new mock instance
+func NewMockTagsAwareHistogram(ctrl *gomock.Controller) *MockTagsAwareHistogram {
+	mock := &MockTagsAwareHistogram{ctrl: ctrl}
+	mock.recorder = &MockTagsAwareHistogramMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockTagsAwareHistogram) EXPECT() *MockTagsAwareHistogramMockRecorder {
+	return m.recorder
+}
+
+// Record mocks base method
+func (m *MockTagsAwareHistogram) Record(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Record", v)
+}
+
+// Record indicates an expected call of Record
+func (mr *MockTagsAwareHistogramMockRecorder) Record(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Record", reflect.TypeOf((*MockTagsAwareHistogram)(nil).Record), v)
+}
+
+// WithTags mocks base method
+func (m *MockTagsAwareHistogram) WithTags(tags monitor.Tags) monitor.TagsAwareHistogram {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithTags", tags)
+	ret0, _ := ret[0].(monitor.TagsAwareHistogram)
+	return ret0
+}
+
+// WithTags indicates an expected call of WithTags
+func (mr *MockTagsAwareHistogramMockRecorder) WithTags(tags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithTags", reflect.TypeOf((*MockTagsAwareHistogram)(nil).WithTags), tags)
+}
+
+// WithContext mocks base method
+func (m *MockTagsAwareHistogram) WithContext(ctx context.Context) monitor.TagsAwareHistogram {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithContext", ctx)
+	ret0, _ := ret[0].(monitor.TagsAwareHistogram)
+	return ret0
+}
+
+// WithContext indicates an expected call of WithContext
+func (mr *MockTagsAwareHistogramMockRecorder) WithContext(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithContext", reflect.TypeOf((*MockTagsAwareHistogram)(nil).WithContext), ctx)
+}
+
+// MockHistogram is a mock of Histogram interface
+type MockHistogram struct {
+	ctrl     *gomock.Controller
+	recorder *MockHistogramMockRecorder
+}
+
+// MockHistogramMockRecorder is the mock recorder for MockHistogram
+type MockHistogramMockRecorder struct {
+	mock *MockHistogram
+}
+
+// NewMockHistogram creates a new mock instance
+func NewMockHistogram(ctrl *gomock.Controller) *MockHistogram {
+	mock := &MockHistogram{ctrl: ctrl}
+	mock.recorder = &MockHistogramMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockHistogram) EXPECT() *MockHistogramMockRecorder {
+	return m.recorder
+}
+
+// Record mocks base method
+func (m *MockHistogram) Record(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Record", v)
+}
+
+// Record indicates an expected call of Record
+func (mr *MockHistogramMockRecorder) Record(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Record", reflect.TypeOf((*MockHistogram)(nil).Record), v)
+}
+
+// MockTagsAwareTimer is a mock of TagsAwareTimer interface
+type MockTagsAwareTimer struct {
+	ctrl     *gomock.Controller
+	recorder *MockTagsAwareTimerMockRecorder
+}
+
+// MockTagsAwareTimerMockRecorder is the mock recorder for MockTagsAwareTimer
+type MockTagsAwareTimerMockRecorder struct {
+	mock *MockTagsAwareTimer
+}
+
+// NewMockTagsAwareTimer creates a new mock instance
+func NewMockTagsAwareTimer(ctrl *gomock.Controller) *MockTagsAwareTimer {
+	mock := &MockTagsAwareTimer{ctrl: ctrl}
+	mock.recorder = &MockTagsAwareTimerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockTagsAwareTimer) EXPECT() *MockTagsAwareTimerMockRecorder {
+	return m.recorder
+}
+
+// Record mocks base method
+func (m *MockTagsAwareTimer) Record(d time.Duration) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Record", d)
+}
+
+// Record indicates an expected call of Record
+func (mr *MockTagsAwareTimerMockRecorder) Record(d interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Record", reflect.TypeOf((*MockTagsAwareTimer)(nil).Record), d)
+}
+
+// WithTags mocks base method
+func (m *MockTagsAwareTimer) WithTags(tags monitor.Tags) monitor.TagsAwareTimer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithTags", tags)
+	ret0, _ := ret[0].(monitor.TagsAwareTimer)
+	return ret0
+}
+
+// WithTags indicates an expected call of WithTags
+func (mr *MockTagsAwareTimerMockRecorder) WithTags(tags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithTags", reflect.TypeOf((*MockTagsAwareTimer)(nil).WithTags), tags)
+}
+
+// WithContext mocks base method
+func (m *MockTagsAwareTimer) WithContext(ctx context.Context) monitor.TagsAwareTimer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithContext", ctx)
+	ret0, _ := ret[0].(monitor.TagsAwareTimer)
+	return ret0
+}
+
+// WithContext indicates an expected call of WithContext
+func (mr *MockTagsAwareTimerMockRecorder) WithContext(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithContext", reflect.TypeOf((*MockTagsAwareTimer)(nil).WithContext), ctx)
+}
+
 // MockMetrics is a mock of Metrics interface
 type MockMetrics struct {
 	ctrl     *gomock.Controller
@@ -35,158 +440,74 @@ func (m *MockMetrics) EXPECT() *MockMetricsMockRecorder {
 	return m.recorder
 }
 
-// Gauge mocks base method
-func (m *MockMetrics) Gauge(ctx context.Context, name string, value float64) error {
+// Counter mocks base method
+func (m *MockMetrics) Counter(name string) monitor.TagsAwareCounter {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Gauge", ctx, name, value)
-	ret0, _ := ret[0].(error)
+	ret := m.ctrl.Call(m, "Counter", name)
+	ret0, _ := ret[0].(monitor.TagsAwareCounter)
+	return ret0
+}
+
+// Counter indicates an expected call of Counter
+func (mr *MockMetricsMockRecorder) Counter(name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Counter", reflect.TypeOf((*MockMetrics)(nil).Counter), name)
+}
+
+// Gauge mocks base method
+func (m *MockMetrics) Gauge(name string) monitor.TagsAwareGauge {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Gauge", name)
+	ret0, _ := ret[0].(monitor.TagsAwareGauge)
 	return ret0
 }
 
 // Gauge indicates an expected call of Gauge
-func (mr *MockMetricsMockRecorder) Gauge(ctx, name, value interface{}) *gomock.Call {
+func (mr *MockMetricsMockRecorder) Gauge(name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Gauge", reflect.TypeOf((*MockMetrics)(nil).Gauge), ctx, name, value)
-}
-
-// Count mocks base method
-func (m *MockMetrics) Count(ctx context.Context, name string, value int64) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Count", ctx, name, value)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Count indicates an expected call of Count
-func (mr *MockMetricsMockRecorder) Count(ctx, name, value interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Count", reflect.TypeOf((*MockMetrics)(nil).Count), ctx, name, value)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Gauge", reflect.TypeOf((*MockMetrics)(nil).Gauge), name)
 }
 
 // Histogram mocks base method
-func (m *MockMetrics) Histogram(ctx context.Context, name string, value float64) error {
+func (m *MockMetrics) Histogram(name string, buckets monitor.Buckets) monitor.TagsAwareHistogram {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Histogram", ctx, name, value)
-	ret0, _ := ret[0].(error)
+	ret := m.ctrl.Call(m, "Histogram", name, buckets)
+	ret0, _ := ret[0].(monitor.TagsAwareHistogram)
 	return ret0
 }
 
 // Histogram indicates an expected call of Histogram
-func (mr *MockMetricsMockRecorder) Histogram(ctx, name, value interface{}) *gomock.Call {
+func (mr *MockMetricsMockRecorder) Histogram(name, buckets interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Histogram", reflect.TypeOf((*MockMetrics)(nil).Histogram), ctx, name, value)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Histogram", reflect.TypeOf((*MockMetrics)(nil).Histogram), name, buckets)
 }
 
-// Distribution mocks base method
-func (m *MockMetrics) Distribution(ctx context.Context, name string, value float64) error {
+// Timer mocks base method
+func (m *MockMetrics) Timer(name string) monitor.TagsAwareTimer {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Distribution", ctx, name, value)
-	ret0, _ := ret[0].(error)
+	ret := m.ctrl.Call(m, "Timer", name)
+	ret0, _ := ret[0].(monitor.TagsAwareTimer)
 	return ret0
 }
 
-// Distribution indicates an expected call of Distribution
-func (mr *MockMetricsMockRecorder) Distribution(ctx, name, value interface{}) *gomock.Call {
+// Timer indicates an expected call of Timer
+func (mr *MockMetricsMockRecorder) Timer(name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Distribution", reflect.TypeOf((*MockMetrics)(nil).Distribution), ctx, name, value)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Timer", reflect.TypeOf((*MockMetrics)(nil).Timer), name)
 }
 
-// Decr mocks base method
-func (m *MockMetrics) Decr(ctx context.Context, name string) error {
+// WithTags mocks base method
+func (m *MockMetrics) WithTags(tags monitor.Tags) monitor.Metrics {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Decr", ctx, name)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Decr indicates an expected call of Decr
-func (mr *MockMetricsMockRecorder) Decr(ctx, name interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Decr", reflect.TypeOf((*MockMetrics)(nil).Decr), ctx, name)
-}
-
-// Incr mocks base method
-func (m *MockMetrics) Incr(ctx context.Context, name string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Incr", ctx, name)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Incr indicates an expected call of Incr
-func (mr *MockMetricsMockRecorder) Incr(ctx, name interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Incr", reflect.TypeOf((*MockMetrics)(nil).Incr), ctx, name)
-}
-
-// Set mocks base method
-func (m *MockMetrics) Set(ctx context.Context, name, value string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Set", ctx, name, value)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Set indicates an expected call of Set
-func (mr *MockMetricsMockRecorder) Set(ctx, name, value interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockMetrics)(nil).Set), ctx, name, value)
-}
-
-// Timing mocks base method
-func (m *MockMetrics) Timing(ctx context.Context, name string, value time.Duration) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Timing", ctx, name, value)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Timing indicates an expected call of Timing
-func (mr *MockMetricsMockRecorder) Timing(ctx, name, value interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Timing", reflect.TypeOf((*MockMetrics)(nil).Timing), ctx, name, value)
-}
-
-// AddTag mocks base method
-func (m *MockMetrics) AddTag(name, value string) monitor.Metrics {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddTag", name, value)
+	ret := m.ctrl.Call(m, "WithTags", tags)
 	ret0, _ := ret[0].(monitor.Metrics)
 	return ret0
 }
 
-// AddTag indicates an expected call of AddTag
-func (mr *MockMetricsMockRecorder) AddTag(name, value interface{}) *gomock.Call {
+// WithTags indicates an expected call of WithTags
+func (mr *MockMetricsMockRecorder) WithTags(tags interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddTag", reflect.TypeOf((*MockMetrics)(nil).AddTag), name, value)
-}
-
-// SetRate mocks base method
-func (m *MockMetrics) SetRate(rate float64) monitor.Metrics {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetRate", rate)
-	ret0, _ := ret[0].(monitor.Metrics)
-	return ret0
-}
-
-// SetRate indicates an expected call of SetRate
-func (mr *MockMetricsMockRecorder) SetRate(rate interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetRate", reflect.TypeOf((*MockMetrics)(nil).SetRate), rate)
-}
-
-// Implementation mocks base method
-func (m *MockMetrics) Implementation() interface{} {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Implementation")
-	ret0, _ := ret[0].(interface{})
-	return ret0
-}
-
-// Implementation indicates an expected call of Implementation
-func (mr *MockMetricsMockRecorder) Implementation() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Implementation", reflect.TypeOf((*MockMetrics)(nil).Implementation))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithTags", reflect.TypeOf((*MockMetrics)(nil).WithTags), tags)
 }
 
 // MockReporter is a mock of Reporter interface
@@ -252,101 +573,4 @@ func (m *MockReporter) Metrics() monitor.Metrics {
 func (mr *MockReporterMockRecorder) Metrics() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Metrics", reflect.TypeOf((*MockReporter)(nil).Metrics))
-}
-
-// MockBuilder is a mock of Builder interface
-type MockBuilder struct {
-	ctrl     *gomock.Controller
-	recorder *MockBuilderMockRecorder
-}
-
-// MockBuilderMockRecorder is the mock recorder for MockBuilder
-type MockBuilderMockRecorder struct {
-	mock *MockBuilder
-}
-
-// NewMockBuilder creates a new mock instance
-func NewMockBuilder(ctrl *gomock.Controller) *MockBuilder {
-	mock := &MockBuilder{ctrl: ctrl}
-	mock.recorder = &MockBuilderMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockBuilder) EXPECT() *MockBuilderMockRecorder {
-	return m.recorder
-}
-
-// SetAddress mocks base method
-func (m *MockBuilder) SetAddress(hostPort string) monitor.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetAddress", hostPort)
-	ret0, _ := ret[0].(monitor.Builder)
-	return ret0
-}
-
-// SetAddress indicates an expected call of SetAddress
-func (mr *MockBuilderMockRecorder) SetAddress(hostPort interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAddress", reflect.TypeOf((*MockBuilder)(nil).SetAddress), hostPort)
-}
-
-// SetPrefix mocks base method
-func (m *MockBuilder) SetPrefix(prefix string) monitor.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetPrefix", prefix)
-	ret0, _ := ret[0].(monitor.Builder)
-	return ret0
-}
-
-// SetPrefix indicates an expected call of SetPrefix
-func (mr *MockBuilderMockRecorder) SetPrefix(prefix interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPrefix", reflect.TypeOf((*MockBuilder)(nil).SetPrefix), prefix)
-}
-
-// SetTags mocks base method
-func (m *MockBuilder) SetTags(tags map[string]string) monitor.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTags", tags)
-	ret0, _ := ret[0].(monitor.Builder)
-	return ret0
-}
-
-// SetTags indicates an expected call of SetTags
-func (mr *MockBuilderMockRecorder) SetTags(tags interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTags", reflect.TypeOf((*MockBuilder)(nil).SetTags), tags)
-}
-
-// AddContextExtractors mocks base method
-func (m *MockBuilder) AddContextExtractors(extractors ...monitor.ContextExtractor) monitor.Builder {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{}
-	for _, a := range extractors {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "AddContextExtractors", varargs...)
-	ret0, _ := ret[0].(monitor.Builder)
-	return ret0
-}
-
-// AddContextExtractors indicates an expected call of AddContextExtractors
-func (mr *MockBuilderMockRecorder) AddContextExtractors(extractors ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddContextExtractors", reflect.TypeOf((*MockBuilder)(nil).AddContextExtractors), extractors...)
-}
-
-// Build mocks base method
-func (m *MockBuilder) Build() monitor.Reporter {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Build")
-	ret0, _ := ret[0].(monitor.Reporter)
-	return ret0
-}
-
-// Build indicates an expected call of Build
-func (mr *MockBuilderMockRecorder) Build() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockBuilder)(nil).Build))
 }

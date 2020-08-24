@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	statusTagName = "status"
+	gRPCCodeTagName = "code"
 )
 
 type gRPCMetricInterceptorsDeps struct {
@@ -29,21 +29,19 @@ func MonitorGRPCInterceptor(deps gRPCMetricInterceptorsDeps) grpc.UnaryServerInt
 		start := time.Now()
 		resp, err = handler(ctx, req)
 		if deps.Metrics != nil {
-			var metric = deps.Metrics
-			if err != nil {
-				metric = metric.AddTag(statusTagName, statusTag(err))
-			}
 			_, methodName := utils.SplitMethodAndPackage(info.FullMethod)
-			monitoringError := metric.Timing(ctx, methodName, time.Since(start)) // nothing to do with the error here
-			if monitoringError != nil {
-				deps.Logger.WithError(monitoringError).WithField("method", methodName).Info(ctx, "failed to send grpc timing metric")
-			}
+			// fetch one from registry or create new
+			timer := deps.Metrics.WithTags(monitor.Tags{
+				gRPCCodeTagName: gRPCCodeTagValue(err),
+			}).Timer(methodName)
+
+			timer.Record(time.Since(start))
 		}
 		return
 	}
 }
 
-func statusTag(err error) string {
+func gRPCCodeTagValue(err error) string {
 	s, _ := status.FromError(err)
 	return s.Code().String()
 }

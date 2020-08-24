@@ -44,8 +44,8 @@ To help you bootstrap your services with Mortar here you can find different temp
 
 ## Bricks
 
-Mortar defines different interfaces, without implementing them.
-There are a lot of great libraries that can be used to implement them.
+Mortar defines different interfaces, without implementing all of them.
+There are lot of great libraries that can be used to implement them.
 They just need to be {[(wrapped)]} first.
 
 We call them [Bricks](wiki/bricks.md).
