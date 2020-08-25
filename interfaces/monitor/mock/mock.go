@@ -402,6 +402,41 @@ func (mr *MockHistogramMockRecorder) Record(v interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Record", reflect.TypeOf((*MockHistogram)(nil).Record), v)
 }
 
+// MockTimer is a mock of Timer interface
+type MockTimer struct {
+	ctrl     *gomock.Controller
+	recorder *MockTimerMockRecorder
+}
+
+// MockTimerMockRecorder is the mock recorder for MockTimer
+type MockTimerMockRecorder struct {
+	mock *MockTimer
+}
+
+// NewMockTimer creates a new mock instance
+func NewMockTimer(ctrl *gomock.Controller) *MockTimer {
+	mock := &MockTimer{ctrl: ctrl}
+	mock.recorder = &MockTimerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockTimer) EXPECT() *MockTimerMockRecorder {
+	return m.recorder
+}
+
+// Record mocks base method
+func (m *MockTimer) Record(d time.Duration) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Record", d)
+}
+
+// Record indicates an expected call of Record
+func (mr *MockTimerMockRecorder) Record(d interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Record", reflect.TypeOf((*MockTimer)(nil).Record), d)
+}
+
 // MockTagsAwareTimer is a mock of TagsAwareTimer interface
 type MockTagsAwareTimer struct {
 	ctrl     *gomock.Controller
@@ -531,17 +566,17 @@ func (mr *MockMetricsMockRecorder) Histogram(name, desc, buckets interface{}) *g
 }
 
 // Timer mocks base method
-func (m *MockMetrics) Timer(name, desc string, buckets monitor.Buckets) monitor.TagsAwareTimer {
+func (m *MockMetrics) Timer(name, desc string) monitor.TagsAwareTimer {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Timer", name, desc, buckets)
+	ret := m.ctrl.Call(m, "Timer", name, desc)
 	ret0, _ := ret[0].(monitor.TagsAwareTimer)
 	return ret0
 }
 
 // Timer indicates an expected call of Timer
-func (mr *MockMetricsMockRecorder) Timer(name, desc, buckets interface{}) *gomock.Call {
+func (mr *MockMetricsMockRecorder) Timer(name, desc interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Timer", reflect.TypeOf((*MockMetrics)(nil).Timer), name, desc, buckets)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Timer", reflect.TypeOf((*MockMetrics)(nil).Timer), name, desc)
 }
 
 // WithTags mocks base method

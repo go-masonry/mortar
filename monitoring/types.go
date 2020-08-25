@@ -18,11 +18,15 @@ type counter struct {
 }
 
 func (c *counter) Inc() {
-	c.bricksCounter.WithTags(c.tags).Inc()
+	if counter, err := c.bricksCounter.WithTags(c.tags); c.shouldLogMetric(err) {
+		counter.Inc()
+	}
 }
 
 func (c *counter) Add(v float64) {
-	c.bricksCounter.WithTags(c.tags).Add(v)
+	if counter, err := c.bricksCounter.WithTags(c.tags); c.shouldLogMetric(err) {
+		counter.Add(v)
+	}
 }
 
 func (c *counter) WithTags(tags monitor.Tags) monitor.TagsAwareCounter {
@@ -46,22 +50,30 @@ type gauge struct {
 
 // Set sets Gauge value
 func (g *gauge) Set(v float64) {
-	g.bricksGauge.WithTags(g.tags).Set(v)
+	if gauge, err := g.bricksGauge.WithTags(g.tags); g.shouldLogMetric(err) {
+		gauge.Set(v)
+	}
 }
 
 // Add adds (or substracts if negative) from previously set value
 func (g *gauge) Add(v float64) {
-	g.bricksGauge.WithTags(g.tags).Add(v)
+	if gauge, err := g.bricksGauge.WithTags(g.tags); g.shouldLogMetric(err) {
+		gauge.Add(v)
+	}
 }
 
 // Inc adds 1
 func (g *gauge) Inc() {
-	g.bricksGauge.WithTags(g.tags).Inc()
+	if gauge, err := g.bricksGauge.WithTags(g.tags); g.shouldLogMetric(err) {
+		gauge.Inc()
+	}
 }
 
 // Dec adds -1
 func (g *gauge) Dec() {
-	g.bricksGauge.WithTags(g.tags).Dec()
+	if gauge, err := g.bricksGauge.WithTags(g.tags); g.shouldLogMetric(err) {
+		gauge.Dec()
+	}
 }
 
 func (g *gauge) WithTags(tags monitor.Tags) monitor.TagsAwareGauge {
@@ -85,7 +97,9 @@ type histogram struct {
 
 // Record value
 func (h *histogram) Record(v float64) {
-	h.bricksHistogram.WithTags(h.tags).Record(v)
+	if histogram, err := h.bricksHistogram.WithTags(h.tags); h.shouldLogMetric(err) {
+		histogram.Record(v)
+	}
 }
 
 func (h *histogram) WithTags(tags monitor.Tags) monitor.TagsAwareHistogram {
@@ -103,14 +117,16 @@ func (h *histogram) WithContext(ctx context.Context) monitor.TagsAwareHistogram 
 // *******************************************************************
 type timer struct {
 	*tagsMetric
-	bricksHistogram monitor.BricksHistogram
-	extractors      []monitor.ContextExtractor
+	bricksTimer monitor.BricksTimer
+	extractors  []monitor.ContextExtractor
 }
 
 // Record uses Histogram to record timed duration
 // Since Histogram accepts float64 we will take the d.Seconds() which returns float64
 func (t *timer) Record(d time.Duration) {
-	t.bricksHistogram.WithTags(t.tags).Record(d.Seconds())
+	if timer, err := t.bricksTimer.WithTags(t.tags); t.shouldLogMetric(err) {
+		timer.Record(d)
+	}
 }
 
 func (t *timer) WithTags(tags monitor.Tags) monitor.TagsAwareTimer {
@@ -128,8 +144,9 @@ func (t *timer) WithContext(ctx context.Context) monitor.TagsAwareTimer {
 // *******************************************************************
 type tagsMetric struct {
 	sync.Mutex
-	tags   monitor.Tags
-	copied bool
+	tags    monitor.Tags
+	onError func(error)
+	copied  bool
 }
 
 func (tm *tagsMetric) withTags(tags monitor.Tags) {
@@ -155,36 +172,43 @@ func (tm *tagsMetric) withContext(ctx context.Context, extractors []monitor.Cont
 	}
 }
 
+func (tm *tagsMetric) shouldLogMetric(err error) bool {
+	if err != nil {
+		tm.onError(err)
+	}
+	return err == nil
+}
+
 // Metric Constructors
 
-func newCounterWithTags(bricksCounter monitor.BricksCounter, predefinedTags monitor.Tags, extractors []monitor.ContextExtractor) monitor.TagsAwareCounter {
+func newCounterWithTags(bricksCounter monitor.BricksCounter, predefinedTags monitor.Tags, extractors []monitor.ContextExtractor, onError func(error)) monitor.TagsAwareCounter {
 	return &counter{
-		tagsMetric:    &tagsMetric{tags: predefinedTags},
+		tagsMetric:    &tagsMetric{tags: predefinedTags, onError: onError},
 		bricksCounter: bricksCounter,
 		extractors:    extractors,
 	}
 }
 
-func newGaugeWithTags(bricksGauge monitor.BricksGauge, predefinedTags monitor.Tags, extractors []monitor.ContextExtractor) monitor.TagsAwareGauge {
+func newGaugeWithTags(bricksGauge monitor.BricksGauge, predefinedTags monitor.Tags, extractors []monitor.ContextExtractor, onError func(error)) monitor.TagsAwareGauge {
 	return &gauge{
-		tagsMetric:  &tagsMetric{tags: predefinedTags},
+		tagsMetric:  &tagsMetric{tags: predefinedTags, onError: onError},
 		bricksGauge: bricksGauge,
 		extractors:  extractors,
 	}
 }
 
-func newHistogramWithTags(bricksHistogram monitor.BricksHistogram, predefinedTags monitor.Tags, extractors []monitor.ContextExtractor) monitor.TagsAwareHistogram {
+func newHistogramWithTags(bricksHistogram monitor.BricksHistogram, predefinedTags monitor.Tags, extractors []monitor.ContextExtractor, onError func(error)) monitor.TagsAwareHistogram {
 	return &histogram{
-		tagsMetric:      &tagsMetric{tags: predefinedTags},
+		tagsMetric:      &tagsMetric{tags: predefinedTags, onError: onError},
 		bricksHistogram: bricksHistogram,
 		extractors:      extractors,
 	}
 }
 
-func newTimerWithTags(bricksHistogram monitor.BricksHistogram, predefinedTags monitor.Tags, extractors []monitor.ContextExtractor) monitor.TagsAwareTimer {
+func newTimerWithTags(bricksTimer monitor.BricksTimer, predefinedTags monitor.Tags, extractors []monitor.ContextExtractor, onError func(error)) monitor.TagsAwareTimer {
 	return &timer{
-		tagsMetric:      &tagsMetric{tags: predefinedTags},
-		bricksHistogram: bricksHistogram,
-		extractors:      extractors,
+		tagsMetric:  &tagsMetric{tags: predefinedTags, onError: onError},
+		bricksTimer: bricksTimer,
+		extractors:  extractors,
 	}
 }

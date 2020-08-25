@@ -14,6 +14,7 @@ type externalRegistry struct {
 	counters   *sync.Map
 	gauges     *sync.Map
 	histograms *sync.Map
+	timers     *sync.Map
 }
 
 func newRegistry(externalMetrics monitor.BricksMetrics) *externalRegistry {
@@ -22,6 +23,7 @@ func newRegistry(externalMetrics monitor.BricksMetrics) *externalRegistry {
 		counters:   new(sync.Map),
 		gauges:     new(sync.Map),
 		histograms: new(sync.Map),
+		timers:     new(sync.Map),
 	}
 }
 
@@ -59,6 +61,18 @@ func (r *externalRegistry) loadOrStoreHistogram(name, desc string, buckets monit
 		r.histograms.Store(ID, bricksHistogram)
 	}
 	return bricksHistogram, err
+}
+
+func (r *externalRegistry) loadOrStoreTimer(name, desc string, keys ...string) (monitor.BricksTimer, error) {
+	ID := calcID(name, keys...)
+	if known, ok := r.timers.Load(ID); ok {
+		return known.(monitor.BricksTimer), nil
+	}
+	bricksTimer, err := r.external.Timer(name, desc, keys...)
+	if err == nil {
+		r.timers.Store(ID, bricksTimer)
+	}
+	return bricksTimer, err
 }
 
 func calcID(name string, keys ...string) (ID string) {

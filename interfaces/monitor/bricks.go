@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-//go:generate mockgen -source=interfaces.go -destination=mock/mock.go
+//go:generate mockgen -source=bricks.go -destination=mock/mock_bricks.go
 
 // ### Bricks* interface
 //
@@ -23,19 +23,25 @@ type BrickMetric interface{}
 // BricksCounter defines a counter to be implemented by external wrapper
 type BricksCounter interface {
 	BrickMetric
-	WithTags(tags map[string]string) Counter
+	WithTags(tags map[string]string) (Counter, error)
 }
 
 // BricksGauge defines a gauge to be implemented by external wrapper
 type BricksGauge interface {
 	BrickMetric
-	WithTags(tags map[string]string) Gauge
+	WithTags(tags map[string]string) (Gauge, error)
 }
 
 // BricksHistogram defines a histogram to be implemented by external wrapper
 type BricksHistogram interface {
 	BrickMetric
-	WithTags(tags map[string]string) Histogram
+	WithTags(tags map[string]string) (Histogram, error)
+}
+
+// BricksTimer defines a timer to be implemented by external wrapper
+type BricksTimer interface {
+	BrickMetric
+	WithTags(tags map[string]string) (Timer, error)
 }
 
 // BricksMetrics defines various monitoring capabilities to be implemented by external wrapper
@@ -49,6 +55,9 @@ type BricksMetrics interface {
 	// Histogram creates a histogram with predefined tag key names.
 	// This will allow to set their values right before using Histogram methods
 	Histogram(name, desc string, buckets []float64, tagKeys ...string) (BricksHistogram, error)
+	// Timer creates a timer with predefined tag key names.
+	// This will allow to set their values right before using Histogram methods
+	Timer(name, desc string, tagKeys ...string) (BricksTimer, error)
 	// Remove removes this metric from external registry, if applicable
 	Remove(metric BrickMetric) error
 }

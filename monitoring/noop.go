@@ -2,6 +2,7 @@ package monitoring
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/go-masonry/mortar/interfaces/monitor"
 )
@@ -16,8 +17,8 @@ type noopCounter struct {
 	*noop
 }
 
-func (n *noopCounter) WithTags(tags map[string]string) monitor.Counter {
-	return n
+func (n *noopCounter) WithTags(tags map[string]string) (monitor.Counter, error) {
+	return n, nil
 }
 
 func newNoopCounter(err error, onError func(error)) monitor.BricksCounter {
@@ -31,8 +32,8 @@ type noopGauge struct {
 	*noop
 }
 
-func (n *noopGauge) WithTags(tags map[string]string) monitor.Gauge {
-	return n
+func (n *noopGauge) WithTags(tags map[string]string) (monitor.Gauge, error) {
+	return n, nil
 }
 
 func newNoopGauge(err error, onError func(error)) monitor.BricksGauge {
@@ -46,12 +47,31 @@ type noopHistogram struct {
 	*noop
 }
 
-func (n *noopHistogram) WithTags(tags map[string]string) monitor.Histogram {
-	return n
+func (n *noopHistogram) WithTags(tags map[string]string) (monitor.Histogram, error) {
+	return n, nil
 }
 
 func newNoopHistogram(err error, onError func(error)) monitor.BricksHistogram {
 	return &noopHistogram{&noop{
+		err:     err,
+		onError: onError,
+	}}
+}
+
+type noopTimer struct {
+	*noop
+}
+
+func (n *noopTimer) WithTags(tags map[string]string) (monitor.Timer, error) {
+	return n, nil
+}
+
+func (n *noopTimer) Record(d time.Duration) {
+	n.noop.Record(d.Seconds())
+}
+
+func newNoopTimer(err error, onError func(error)) monitor.BricksTimer {
+	return &noopTimer{&noop{
 		err:     err,
 		onError: onError,
 	}}

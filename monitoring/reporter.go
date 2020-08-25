@@ -54,8 +54,8 @@ func (r *mortarReporter) Histogram(name string, desc string, buckets monitor.Buc
 }
 
 // Timer creates a timer with possible predefined tags
-func (r *mortarReporter) Timer(name string, desc string, buckets monitor.Buckets) monitor.TagsAwareTimer {
-	return newMetric(r.externalMetrics, r.cfg).WithTags(r.cfg.tags).Timer(name, desc, buckets)
+func (r *mortarReporter) Timer(name string, desc string) monitor.TagsAwareTimer {
+	return newMetric(r.externalMetrics, r.cfg).WithTags(r.cfg.tags).Timer(name, desc)
 }
 
 // WithTags sets custom tags to be included if possible in every Metric
