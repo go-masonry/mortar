@@ -23,7 +23,8 @@ func (s *middlewareSuite) TestLoggerGRPCInterceptor() {
 	unaryHandler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return "response", nil
 	}
-	ctxWithDeadline, _ := context.WithTimeout(context.Background(), time.Second)
+	ctxWithDeadline, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
 	_, err := s.serverInterceptor(ctxWithDeadline, nil, &grpc.UnaryServerInfo{FullMethod: "fake method"}, unaryHandler)
 	s.NoError(err)
 	s.Contains(s.loggerOutput.String(), "fake method finished")
@@ -77,7 +78,7 @@ func (s *middlewareSuite) testMonitorGRPCInterceptorBeforeTest() fx.Option {
 			mockedTimer.EXPECT().Record(gomock.AssignableToTypeOf(time.Second)) // assignable to duration
 			mockMetrics := mock_monitor.NewMockMetrics(s.ctrl)
 			mockMetrics.EXPECT().WithTags(monitor.Tags{"code": "Unknown"}).Return(mockMetrics)
-			mockMetrics.EXPECT().Timer("method", gomock.Any()).Return(mockedTimer) // method is from the above unary info
+			mockMetrics.EXPECT().Timer("method", gomock.Any(), gomock.Nil()).Return(mockedTimer) // method is from the above unary info
 			return mockMetrics
 		}),
 		fx.Populate(&s.serverInterceptor),

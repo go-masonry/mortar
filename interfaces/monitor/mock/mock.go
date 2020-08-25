@@ -531,17 +531,17 @@ func (mr *MockMetricsMockRecorder) Histogram(name, desc, buckets interface{}) *g
 }
 
 // Timer mocks base method
-func (m *MockMetrics) Timer(name, desc string) monitor.TagsAwareTimer {
+func (m *MockMetrics) Timer(name, desc string, buckets monitor.Buckets) monitor.TagsAwareTimer {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Timer", name, desc)
+	ret := m.ctrl.Call(m, "Timer", name, desc, buckets)
 	ret0, _ := ret[0].(monitor.TagsAwareTimer)
 	return ret0
 }
 
 // Timer indicates an expected call of Timer
-func (mr *MockMetricsMockRecorder) Timer(name, desc interface{}) *gomock.Call {
+func (mr *MockMetricsMockRecorder) Timer(name, desc, buckets interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Timer", reflect.TypeOf((*MockMetrics)(nil).Timer), name, desc)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Timer", reflect.TypeOf((*MockMetrics)(nil).Timer), name, desc, buckets)
 }
 
 // WithTags mocks base method

@@ -34,7 +34,7 @@ func MonitorGRPCInterceptor(deps gRPCMetricInterceptorsDeps) grpc.UnaryServerInt
 			// fetch one from registry or create new
 			timer := deps.Metrics.WithTags(monitor.Tags{
 				gRPCCodeTagName: gRPCCodeTagValue(err),
-			}).Timer(methodName, fmt.Sprintf("time api calls for %s", info.FullMethod))
+			}).Timer(methodName, fmt.Sprintf("time api calls for %s", info.FullMethod), nil)
 
 			timer.Record(time.Since(start))
 		}

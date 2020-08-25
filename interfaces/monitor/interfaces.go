@@ -62,6 +62,8 @@ type Histogram interface {
 
 // TagsAwareTimer defines a timer with the ability to override tags value either explicitly or from context (by extractors)
 type TagsAwareTimer interface {
+	// Record uses Histogram to record timed duration
+	// Since Histogram accepts float64 we will take the d.Seconds() which returns float64
 	Record(d time.Duration)
 	WithTags(tags Tags) TagsAwareTimer
 	WithContext(ctx context.Context) TagsAwareTimer
@@ -80,7 +82,7 @@ type Metrics interface {
 	// Histogram creates a histogram with possible predefined tags
 	Histogram(name, desc string, buckets Buckets) TagsAwareHistogram
 	// Timer creates a timer with possible predefined tags
-	Timer(name, desc string) TagsAwareTimer
+	Timer(name, desc string, buckets Buckets) TagsAwareTimer
 	// WithTags sets custom tags to be included if possible in every Metric
 	WithTags(tags Tags) Metrics
 }
