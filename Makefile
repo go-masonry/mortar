@@ -15,9 +15,9 @@ generate: deps
 
 go-fmt:
 	@echo -n Checking format...
-	@test $(shell goimports -l ./ | grep -v mock.go | wc -l) = 0 \
+	@test $(shell goimports -l ./ | grep -v mock | wc -l) = 0 \
 		|| { echo; echo "some files are not properly formatted";\
-		echo $(shell goimports -l ./ | grep -v mock.go);\
+		echo $(shell goimports -l ./ | grep -v mock);\
 		exit 1;}\
 
 	@echo " everything formatted properly"	
