@@ -1,8 +1,15 @@
 package monitoring
 
 import (
+	"context"
+
 	"github.com/go-masonry/mortar/interfaces/monitor"
 )
+
+type mortarReporter struct {
+	externalReporter monitor.BricksReporter
+	cfg              *monitorConfig
+}
 
 // NewMortarReporter creates a new mortar monitoring reporter which is a wrapper to support
 // 	- ContextExtractors
@@ -12,6 +19,18 @@ import (
 // 	- Canary release https://martinfowler.com/bliki/CanaryRelease.html identifier
 // 	- Authentication Token values, but avoid using high cardinality values such as UserID
 //
-func NewMortarReporter(builder monitor.Builder, tags monitor.Tags, contextExtractors ...monitor.ContextExtractor) monitor.Reporter {
+func newMortarReporter(builder monitor.Builder, cfg *monitorConfig) monitor.Reporter {
 	panic("implement me")
+}
+
+func (r *mortarReporter) Connect(ctx context.Context) error {
+	return r.externalReporter.Connect(ctx)
+}
+
+func (r *mortarReporter) Close(ctx context.Context) error {
+	return r.externalReporter.Close(ctx)
+}
+
+func (r *mortarReporter) Metrics() monitor.Metrics {
+	panic("not implemented") // TODO: Implement
 }

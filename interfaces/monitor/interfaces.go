@@ -68,13 +68,13 @@ type TagsAwareTimer interface {
 //	- tag key names
 type Metrics interface {
 	// Counter creates a counter with possible predefined tags
-	Counter(name string) TagsAwareCounter
+	Counter(name, desc string) TagsAwareCounter
 	// Gauge creates a gauge with possible predefined tags
-	Gauge(name string) TagsAwareGauge
+	Gauge(name, desc string) TagsAwareGauge
 	// Histogram creates a histogram with possible predefined tags
-	Histogram(name string, buckets Buckets) TagsAwareHistogram
+	Histogram(name, desc string, buckets Buckets) TagsAwareHistogram
 	// Timer creates a timer with possible predefined tags
-	Timer(name string) TagsAwareTimer
+	Timer(name, desc string) TagsAwareTimer
 	// WithTags sets custom tags to be included if possible in every Metric
 	WithTags(tags Tags) Metrics
 }

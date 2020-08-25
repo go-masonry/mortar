@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-masonry/mortar/interfaces/log"
@@ -33,7 +34,7 @@ func MonitorGRPCInterceptor(deps gRPCMetricInterceptorsDeps) grpc.UnaryServerInt
 			// fetch one from registry or create new
 			timer := deps.Metrics.WithTags(monitor.Tags{
 				gRPCCodeTagName: gRPCCodeTagValue(err),
-			}).Timer(methodName)
+			}).Timer(methodName, fmt.Sprintf("time api calls for %s", info.FullMethod))
 
 			timer.Record(time.Since(start))
 		}

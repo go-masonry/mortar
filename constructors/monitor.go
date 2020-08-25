@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/interfaces/monitor"
 	"github.com/go-masonry/mortar/monitoring"
 	"github.com/go-masonry/mortar/mortar"
@@ -20,6 +21,7 @@ type monitorDeps struct {
 
 	LifeCycle         fx.Lifecycle
 	Config            cfg.Config
+	Logger            log.Logger
 	MonitorBuilder    monitor.Builder
 	ContextExtractors []monitor.ContextExtractor `group:"monitorContextExtractors"`
 }
@@ -31,8 +33,10 @@ type monitorDeps struct {
 //
 func DefaultMonitor(deps monitorDeps) monitor.Metrics {
 	tags := deps.Config.Get(mortar.MonitorTagsKey).StringMapString() // can be empty
+	reporter := monitoring.Builder().SetTags(tags).AddExtractors(deps.ContextExtractors...).DoOnError(func(err error) {
+		deps.Logger.WithError(err).Warn(nil, "monitoring error")
+	}).Build(deps.MonitorBuilder)
 
-	reporter := monitoring.NewMortarReporter(deps.MonitorBuilder, tags, deps.ContextExtractors...)
 	deps.LifeCycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			return reporter.Connect(ctx)

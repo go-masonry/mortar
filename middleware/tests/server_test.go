@@ -77,7 +77,7 @@ func (s *middlewareSuite) testMonitorGRPCInterceptorBeforeTest() fx.Option {
 			mockedTimer.EXPECT().Record(gomock.AssignableToTypeOf(time.Second)) // assignable to duration
 			mockMetrics := mock_monitor.NewMockMetrics(s.ctrl)
 			mockMetrics.EXPECT().WithTags(monitor.Tags{"code": "Unknown"}).Return(mockMetrics)
-			mockMetrics.EXPECT().Timer("method").Return(mockedTimer) // method is from the above unary info
+			mockMetrics.EXPECT().Timer("method", gomock.Any()).Return(mockedTimer) // method is from the above unary info
 			return mockMetrics
 		}),
 		fx.Populate(&s.serverInterceptor),
