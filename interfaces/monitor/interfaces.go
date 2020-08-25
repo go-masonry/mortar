@@ -37,6 +37,12 @@ type TagsAwareGauge interface {
 type Gauge interface {
 	// Set sets Gauge value
 	Set(v float64)
+	// Add adds (or substracts if negative) from previously set value
+	Add(v float64)
+	// Inc adds 1
+	Inc()
+	// Dec adds -1
+	Dec()
 }
 
 // TagsAwareHistogram defines a histogram with the ability to override tags value either explicitly or from context (by extractors)

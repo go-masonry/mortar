@@ -169,6 +169,42 @@ func (mr *MockTagsAwareGaugeMockRecorder) Set(v interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockTagsAwareGauge)(nil).Set), v)
 }
 
+// Add mocks base method
+func (m *MockTagsAwareGauge) Add(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Add", v)
+}
+
+// Add indicates an expected call of Add
+func (mr *MockTagsAwareGaugeMockRecorder) Add(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockTagsAwareGauge)(nil).Add), v)
+}
+
+// Inc mocks base method
+func (m *MockTagsAwareGauge) Inc() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Inc")
+}
+
+// Inc indicates an expected call of Inc
+func (mr *MockTagsAwareGaugeMockRecorder) Inc() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Inc", reflect.TypeOf((*MockTagsAwareGauge)(nil).Inc))
+}
+
+// Dec mocks base method
+func (m *MockTagsAwareGauge) Dec() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Dec")
+}
+
+// Dec indicates an expected call of Dec
+func (mr *MockTagsAwareGaugeMockRecorder) Dec() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Dec", reflect.TypeOf((*MockTagsAwareGauge)(nil).Dec))
+}
+
 // WithTags mocks base method
 func (m *MockTagsAwareGauge) WithTags(tags monitor.Tags) monitor.TagsAwareGauge {
 	m.ctrl.T.Helper()
@@ -230,6 +266,42 @@ func (m *MockGauge) Set(v float64) {
 func (mr *MockGaugeMockRecorder) Set(v interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockGauge)(nil).Set), v)
+}
+
+// Add mocks base method
+func (m *MockGauge) Add(v float64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Add", v)
+}
+
+// Add indicates an expected call of Add
+func (mr *MockGaugeMockRecorder) Add(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockGauge)(nil).Add), v)
+}
+
+// Inc mocks base method
+func (m *MockGauge) Inc() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Inc")
+}
+
+// Inc indicates an expected call of Inc
+func (mr *MockGaugeMockRecorder) Inc() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Inc", reflect.TypeOf((*MockGauge)(nil).Inc))
+}
+
+// Dec mocks base method
+func (m *MockGauge) Dec() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Dec")
+}
+
+// Dec indicates an expected call of Dec
+func (mr *MockGaugeMockRecorder) Dec() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Dec", reflect.TypeOf((*MockGauge)(nil).Dec))
 }
 
 // MockTagsAwareHistogram is a mock of TagsAwareHistogram interface
