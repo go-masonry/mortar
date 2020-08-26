@@ -25,7 +25,7 @@ func newMetric(externalMetrics monitor.BricksMetrics, cfg *monitorConfig) monito
 func (mm *mortarMetric) Counter(name, desc string) monitor.TagsAwareCounter {
 	bricksCounter, err := mm.registry.loadOrStoreCounter(name, desc, mm.extractTagKeys()...)
 	if err != nil {
-		mm.cfg.onError(fmt.Errorf("error registering [%s:%s] metric with %v tags, %w", name, desc, mm.extractTagKeys(), err))
+		mm.cfg.onError(fmt.Errorf("error registering counter [%s:%s] metric with %v tags, %w", name, desc, mm.extractTagKeys(), err))
 		bricksCounter = newNoopCounter(name, desc, err, mm.cfg.onError)
 	}
 
@@ -36,7 +36,7 @@ func (mm *mortarMetric) Counter(name, desc string) monitor.TagsAwareCounter {
 func (mm *mortarMetric) Gauge(name, desc string) monitor.TagsAwareGauge {
 	bricksGauge, err := mm.registry.loadOrStoreGauge(name, desc, mm.extractTagKeys()...)
 	if err != nil {
-		mm.cfg.onError(fmt.Errorf("error registering [%s:%s] metric with %v tags, %w", name, desc, mm.extractTagKeys(), err))
+		mm.cfg.onError(fmt.Errorf("error registering gauge [%s:%s] metric with %v tags, %w", name, desc, mm.extractTagKeys(), err))
 		bricksGauge = newNoopGauge(name, desc, err, mm.cfg.onError)
 	}
 
@@ -47,7 +47,7 @@ func (mm *mortarMetric) Gauge(name, desc string) monitor.TagsAwareGauge {
 func (mm *mortarMetric) Histogram(name, desc string, buckets monitor.Buckets) monitor.TagsAwareHistogram {
 	bricksHistogram, err := mm.registry.loadOrStoreHistogram(name, desc, buckets, mm.extractTagKeys()...)
 	if err != nil {
-		mm.cfg.onError(fmt.Errorf("error registering [%s:%s] metric with %v tags, %w", name, desc, mm.extractTagKeys(), err))
+		mm.cfg.onError(fmt.Errorf("error registering histogram [%s:%s] metric with %v tags, %w", name, desc, mm.extractTagKeys(), err))
 		bricksHistogram = newNoopHistogram(name, desc, err, mm.cfg.onError)
 	}
 
@@ -58,7 +58,7 @@ func (mm *mortarMetric) Histogram(name, desc string, buckets monitor.Buckets) mo
 func (mm *mortarMetric) Timer(name, desc string) monitor.TagsAwareTimer {
 	bricksTimer, err := mm.registry.loadOrStoreTimer(name, desc, mm.extractTagKeys()...)
 	if err != nil {
-		mm.cfg.onError(fmt.Errorf("error registering [%s:%s] metric with %v tags, %w", name, desc, mm.extractTagKeys(), err))
+		mm.cfg.onError(fmt.Errorf("error registering timer [%s:%s] metric with %v tags, %w", name, desc, mm.extractTagKeys(), err))
 		bricksTimer = newNoopTimer(name, desc, err, mm.cfg.onError)
 	}
 
