@@ -9,6 +9,7 @@ import (
 )
 
 type externalRegistry struct {
+	sync.Mutex
 	external monitor.BricksMetrics
 	// TODO perhaps change this to self evicting cache that will remove metrics if unused for a long time to save space
 	counters   *sync.Map
@@ -32,6 +33,8 @@ func (r *externalRegistry) loadOrStoreCounter(name, desc string, keys ...string)
 	if known, ok := r.counters.Load(ID); ok {
 		return known.(monitor.BricksCounter), nil
 	}
+	r.Lock()
+	defer r.Unlock()
 	bricksCounter, err := r.external.Counter(name, desc, keys...)
 	if err == nil {
 		r.counters.Store(ID, bricksCounter)
@@ -44,6 +47,8 @@ func (r *externalRegistry) loadOrStoreGauge(name, desc string, keys ...string) (
 	if known, ok := r.gauges.Load(ID); ok {
 		return known.(monitor.BricksGauge), nil
 	}
+	r.Lock()
+	defer r.Unlock()
 	bricksGauge, err := r.external.Gauge(name, desc, keys...)
 	if err == nil {
 		r.gauges.Store(ID, bricksGauge)
@@ -56,6 +61,8 @@ func (r *externalRegistry) loadOrStoreHistogram(name, desc string, buckets monit
 	if known, ok := r.histograms.Load(ID); ok {
 		return known.(monitor.BricksHistogram), nil
 	}
+	r.Lock()
+	defer r.Unlock()
 	bricksHistogram, err := r.external.Histogram(name, desc, buckets, keys...)
 	if err == nil {
 		r.histograms.Store(ID, bricksHistogram)
@@ -68,6 +75,8 @@ func (r *externalRegistry) loadOrStoreTimer(name, desc string, keys ...string) (
 	if known, ok := r.timers.Load(ID); ok {
 		return known.(monitor.BricksTimer), nil
 	}
+	r.Lock()
+	r.Unlock()
 	bricksTimer, err := r.external.Timer(name, desc, keys...)
 	if err == nil {
 		r.timers.Store(ID, bricksTimer)
