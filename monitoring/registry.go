@@ -37,7 +37,7 @@ func (r *externalRegistry) loadOrStoreCounter(name, desc string, keys ...string)
 	defer r.Unlock()
 	bricksCounter, err := r.external.Counter(name, desc, keys...)
 	if err == nil {
-		r.counters.Store(ID, bricksCounter)
+		r.counters.LoadOrStore(ID, bricksCounter)
 	}
 	return bricksCounter, err
 }
@@ -51,7 +51,7 @@ func (r *externalRegistry) loadOrStoreGauge(name, desc string, keys ...string) (
 	defer r.Unlock()
 	bricksGauge, err := r.external.Gauge(name, desc, keys...)
 	if err == nil {
-		r.gauges.Store(ID, bricksGauge)
+		r.gauges.LoadOrStore(ID, bricksGauge)
 	}
 	return bricksGauge, err
 }
@@ -65,7 +65,7 @@ func (r *externalRegistry) loadOrStoreHistogram(name, desc string, buckets monit
 	defer r.Unlock()
 	bricksHistogram, err := r.external.Histogram(name, desc, buckets, keys...)
 	if err == nil {
-		r.histograms.Store(ID, bricksHistogram)
+		r.histograms.LoadOrStore(ID, bricksHistogram)
 	}
 	return bricksHistogram, err
 }
@@ -79,7 +79,7 @@ func (r *externalRegistry) loadOrStoreTimer(name, desc string, keys ...string) (
 	r.Unlock()
 	bricksTimer, err := r.external.Timer(name, desc, keys...)
 	if err == nil {
-		r.timers.Store(ID, bricksTimer)
+		r.timers.LoadOrStore(ID, bricksTimer)
 	}
 	return bricksTimer, err
 }

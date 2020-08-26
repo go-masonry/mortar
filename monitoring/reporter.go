@@ -9,6 +9,7 @@ import (
 type mortarReporter struct {
 	externalMetrics monitor.BricksMetrics
 	cfg             *monitorConfig
+	registry        *externalRegistry
 }
 
 // NewMortarReporter creates a new mortar monitoring reporter which is a wrapper to support
@@ -20,9 +21,11 @@ type mortarReporter struct {
 // 	- Authentication Token values, but avoid using high cardinality values such as UserID
 //
 func newMortarReporter(cfg *monitorConfig) monitor.Reporter {
+	externalMetrics := cfg.reporter.Metrics()
 	return &mortarReporter{
-		externalMetrics: cfg.reporter.Metrics(),
+		externalMetrics: externalMetrics,
 		cfg:             cfg,
+		registry:        newRegistry(externalMetrics),
 	}
 }
 
@@ -40,27 +43,27 @@ func (r *mortarReporter) Metrics() monitor.Metrics {
 
 // Counter creates a counter with possible predefined tags
 func (r *mortarReporter) Counter(name string, desc string) monitor.TagsAwareCounter {
-	return newMetric(r.externalMetrics, r.cfg).WithTags(r.cfg.tags).Counter(name, desc)
+	return newMetric(r.registry, r.cfg).WithTags(r.cfg.tags).Counter(name, desc)
 }
 
 // Gauge creates a gauge with possible predefined tags
 func (r *mortarReporter) Gauge(name string, desc string) monitor.TagsAwareGauge {
-	return newMetric(r.externalMetrics, r.cfg).WithTags(r.cfg.tags).Gauge(name, desc)
+	return newMetric(r.registry, r.cfg).WithTags(r.cfg.tags).Gauge(name, desc)
 }
 
 // Histogram creates a histogram with possible predefined tags
 func (r *mortarReporter) Histogram(name string, desc string, buckets monitor.Buckets) monitor.TagsAwareHistogram {
-	return newMetric(r.externalMetrics, r.cfg).WithTags(r.cfg.tags).Histogram(name, desc, buckets)
+	return newMetric(r.registry, r.cfg).WithTags(r.cfg.tags).Histogram(name, desc, buckets)
 }
 
 // Timer creates a timer with possible predefined tags
 func (r *mortarReporter) Timer(name string, desc string) monitor.TagsAwareTimer {
-	return newMetric(r.externalMetrics, r.cfg).WithTags(r.cfg.tags).Timer(name, desc)
+	return newMetric(r.registry, r.cfg).WithTags(r.cfg.tags).Timer(name, desc)
 }
 
 // WithTags sets custom tags to be included if possible in every Metric
 func (r *mortarReporter) WithTags(tags monitor.Tags) monitor.Metrics {
-	return newMetric(r.externalMetrics, r.cfg).
+	return newMetric(r.registry, r.cfg).
 		WithTags(r.cfg.tags). // first apply default tags
 		WithTags(tags)        // then apply custom ones
 }

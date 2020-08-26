@@ -27,7 +27,7 @@ func (m *reporterSuite) TestTimer() {
 
 func (m *reporterSuite) TestTimerFailures() {
 	var errorCalledCounter = 0
-	m.metrics = newMetric(m.bricksMetricsMocked, &monitorConfig{onError: func(error) {
+	m.metrics = newMetric(m.registry, &monitorConfig{onError: func(error) {
 		errorCalledCounter++
 	}})
 	// Failed to create Timer

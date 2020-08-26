@@ -19,6 +19,7 @@ type reporterSuite struct {
 
 	reporter monitor.Reporter
 	metrics  monitor.Metrics
+	registry *externalRegistry
 }
 
 func TestMetrics(t *testing.T) {
@@ -42,6 +43,7 @@ func (m *reporterSuite) SetupTest() {
 		},
 	})
 	m.metrics = m.reporter.Metrics()
+	m.registry = newRegistry(m.bricksMetricsMocked)
 }
 
 func (m *reporterSuite) TearDownTest() {

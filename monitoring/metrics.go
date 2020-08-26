@@ -13,9 +13,9 @@ type mortarMetric struct {
 	cfg      *monitorConfig
 }
 
-func newMetric(externalMetrics monitor.BricksMetrics, cfg *monitorConfig) monitor.Metrics {
+func newMetric(registry *externalRegistry, cfg *monitorConfig) monitor.Metrics {
 	return &mortarMetric{
-		registry:   newRegistry(externalMetrics),
+		registry:   registry,
 		cfg:        cfg,
 		tagsMetric: &tagsMetric{tags: cfg.tags},
 	}

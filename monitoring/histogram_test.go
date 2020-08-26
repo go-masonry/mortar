@@ -26,7 +26,7 @@ func (m *reporterSuite) TestHistogram() {
 
 func (m *reporterSuite) TestHistogramFailures() {
 	var errorCalledCounter = 0
-	m.metrics = newMetric(m.bricksMetricsMocked, &monitorConfig{onError: func(error) {
+	m.metrics = newMetric(m.registry, &monitorConfig{onError: func(error) {
 		errorCalledCounter++
 	}})
 	// Failed to create Histogram
