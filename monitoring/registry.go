@@ -78,15 +78,19 @@ func (r *externalRegistry) loadOrStoreTimer(name, desc string, keys ...string) (
 func calcID(name string, keys ...string) (ID string) {
 	if len(keys) > 0 {
 		var stringsSet = make(map[string]struct{}, len(keys))
-		var filteredKeys = make([]string, 0, len(keys)) // preallocate slice
+		var parts = make([]string, 0, len(keys)+1) // preallocate slice with extra space
 		for _, key := range keys {
 			if _, ok := stringsSet[key]; !ok {
 				stringsSet[key] = struct{}{}
-				filteredKeys = append(filteredKeys, key)
+				parts = append(parts, key)
 			}
 		}
-		sort.Strings(filteredKeys)
-		return name + "_" + strings.Join(filteredKeys, "_")
+		sort.Strings(parts)
+		// avoid allocation and prepend name
+		parts = append(parts, "")  // add empty string to the end -> len++
+		copy(parts[1:], parts[0:]) // shift
+		parts[0] = name            // name is the first string now
+		return strings.Join(parts, "_")
 	}
 	return name
 }

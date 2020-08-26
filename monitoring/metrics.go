@@ -1,30 +1,9 @@
 package monitoring
 
 import (
-	"time"
+	"sort"
 
 	"github.com/go-masonry/mortar/interfaces/monitor"
-)
-
-var (
-	ms = time.Millisecond.Seconds()
-
-	// defaultHistogramBucketsForTimer is a default histogram buckets, used mostly for Timer.
-	//
-	// They are mapped after https://github.com/prometheus/client_golang/blob/master/prometheus/histogram.go#L62
-	defaultHistogramBucketsForTimer monitor.Buckets = []float64{
-		5 * ms,
-		10 * ms,
-		25 * ms,
-		50 * ms,
-		100 * ms,
-		250 * ms,
-		500 * ms,
-		1000 * ms,
-		2500 * ms,
-		5000 * ms,
-		10000 * ms,
-	}
 )
 
 type mortarMetric struct {
@@ -33,9 +12,9 @@ type mortarMetric struct {
 	cfg      *monitorConfig
 }
 
-func newMetric(externalMonitor monitor.BricksMetrics, cfg *monitorConfig) monitor.Metrics {
+func newMetric(externalMetrics monitor.BricksMetrics, cfg *monitorConfig) monitor.Metrics {
 	return &mortarMetric{
-		registry:   newRegistry(externalMonitor),
+		registry:   newRegistry(externalMetrics),
 		cfg:        cfg,
 		tagsMetric: &tagsMetric{tags: cfg.tags},
 	}
@@ -94,6 +73,9 @@ func (mm *mortarMetric) WithTags(tags monitor.Tags) monitor.Metrics {
 func (mm *mortarMetric) extractTagKeys() (keys []string) {
 	for k := range mm.tags {
 		keys = append(keys, k)
+	}
+	if len(keys) > 0 {
+		sort.Strings(keys)
 	}
 	return
 }

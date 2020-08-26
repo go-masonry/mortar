@@ -39,7 +39,11 @@ test:
 	@echo "Testing ..."
 	@go test -count=1 -coverpkg=${LISTPKG:,=} -coverprofile=coverage.out -failfast ./...
 
-test-with-report: test cover-report
+monitor-race-test:
+	@echo "Monitoring race test..."
+	@go test -race ./monitoring/...
+
+test-with-report: test monitor-race-test cover-report
 
 code-up-to-date: generate go-fmt go-lint
 

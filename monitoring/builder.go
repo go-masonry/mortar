@@ -39,7 +39,9 @@ func Builder() WrapperBuilder {
 
 func (b *wrapperBuilder) SetTags(tags monitor.Tags) WrapperBuilder {
 	b.ll.PushBack(func(cfg *monitorConfig) {
-		cfg.tags = tags
+		if tags != nil {
+			cfg.tags = tags // make sure tags are always empty, not nil
+		}
 	})
 	return b
 }
@@ -68,6 +70,9 @@ func (b *wrapperBuilder) Build(bricksBuilder monitor.Builder) monitor.Reporter {
 		cfg.onError = func(err error) {
 			log.Printf("WARNING: monitoring error, %v", err)
 		}
+	}
+	if cfg.tags == nil {
+		cfg.tags = monitor.Tags{}
 	}
 	cfg.reporter = bricksBuilder.Build()
 	return newMortarReporter(cfg)

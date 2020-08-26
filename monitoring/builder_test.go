@@ -51,4 +51,5 @@ func TestBuilderDefaults(t *testing.T) {
 	reporter := Builder().Build(mockBuilder).(*mortarReporter)
 
 	assert.NotNil(t, reporter.cfg.onError)
+	assert.NotNil(t, reporter.cfg.tags)
 }
