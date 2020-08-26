@@ -21,10 +21,12 @@ func (n *noopCounter) WithTags(tags map[string]string) (monitor.Counter, error) 
 	return n, nil
 }
 
-func newNoopCounter(err error, onError func(error)) monitor.BricksCounter {
+func newNoopCounter(name, desc string, err error, onError func(error)) monitor.BricksCounter {
 	return &noopCounter{&noop{
 		err:     err,
 		onError: onError,
+		name:    name,
+		desc:    desc,
 	}}
 }
 
@@ -36,10 +38,12 @@ func (n *noopGauge) WithTags(tags map[string]string) (monitor.Gauge, error) {
 	return n, nil
 }
 
-func newNoopGauge(err error, onError func(error)) monitor.BricksGauge {
+func newNoopGauge(name, desc string, err error, onError func(error)) monitor.BricksGauge {
 	return &noopGauge{&noop{
 		err:     err,
 		onError: onError,
+		name:    name,
+		desc:    desc,
 	}}
 }
 
@@ -51,10 +55,12 @@ func (n *noopHistogram) WithTags(tags map[string]string) (monitor.Histogram, err
 	return n, nil
 }
 
-func newNoopHistogram(err error, onError func(error)) monitor.BricksHistogram {
+func newNoopHistogram(name, desc string, err error, onError func(error)) monitor.BricksHistogram {
 	return &noopHistogram{&noop{
 		err:     err,
 		onError: onError,
+		name:    name,
+		desc:    desc,
 	}}
 }
 
@@ -70,10 +76,12 @@ func (n *noopTimer) Record(d time.Duration) {
 	n.noop.Record(d.Seconds())
 }
 
-func newNoopTimer(err error, onError func(error)) monitor.BricksTimer {
+func newNoopTimer(name, desc string, err error, onError func(error)) monitor.BricksTimer {
 	return &noopTimer{&noop{
 		err:     err,
 		onError: onError,
+		name:    name,
+		desc:    desc,
 	}}
 }
 

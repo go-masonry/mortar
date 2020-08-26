@@ -25,7 +25,7 @@ func (mm *mortarMetric) Counter(name, desc string) monitor.TagsAwareCounter {
 	bricksCounter, err := mm.registry.loadOrStoreCounter(name, desc, mm.extractTagKeys()...)
 	if err != nil {
 		mm.cfg.onError(err)
-		bricksCounter = newNoopCounter(err, mm.cfg.onError)
+		bricksCounter = newNoopCounter(name, desc, err, mm.cfg.onError)
 	}
 
 	return newCounterWithTags(bricksCounter, mm.tags, mm.cfg.extractors, mm.cfg.onError)
@@ -36,7 +36,7 @@ func (mm *mortarMetric) Gauge(name, desc string) monitor.TagsAwareGauge {
 	bricksGauge, err := mm.registry.loadOrStoreGauge(name, desc, mm.extractTagKeys()...)
 	if err != nil {
 		mm.cfg.onError(err)
-		bricksGauge = newNoopGauge(err, mm.cfg.onError)
+		bricksGauge = newNoopGauge(name, desc, err, mm.cfg.onError)
 	}
 
 	return newGaugeWithTags(bricksGauge, mm.tags, mm.cfg.extractors, mm.cfg.onError)
@@ -47,7 +47,7 @@ func (mm *mortarMetric) Histogram(name, desc string, buckets monitor.Buckets) mo
 	bricksHistogram, err := mm.registry.loadOrStoreHistogram(name, desc, buckets, mm.extractTagKeys()...)
 	if err != nil {
 		mm.cfg.onError(err)
-		bricksHistogram = newNoopHistogram(err, mm.cfg.onError)
+		bricksHistogram = newNoopHistogram(name, desc, err, mm.cfg.onError)
 	}
 
 	return newHistogramWithTags(bricksHistogram, mm.tags, mm.cfg.extractors, mm.cfg.onError)
@@ -58,7 +58,7 @@ func (mm *mortarMetric) Timer(name, desc string) monitor.TagsAwareTimer {
 	bricksTimer, err := mm.registry.loadOrStoreTimer(name, desc, mm.extractTagKeys()...)
 	if err != nil {
 		mm.cfg.onError(err)
-		bricksTimer = newNoopTimer(err, mm.cfg.onError)
+		bricksTimer = newNoopTimer(name, desc, err, mm.cfg.onError)
 	}
 
 	return newTimerWithTags(bricksTimer, mm.tags, mm.cfg.extractors, mm.cfg.onError)
