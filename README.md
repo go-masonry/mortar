@@ -24,7 +24,8 @@ While it comes with predefined defaults Mortar gives you total control to fully 
 
 ## Documentation
 
-Mortar is not a drop-in replacement. It will probably change the way you code and build services.
+Mortar is not a drop-in replacement.
+
 It's important to read its documentation first, starting with the step by step [Tutorial](https://github.com/go-masonry/tutorial) which is also a bit-of-everything example.
 
 ### Core Concepts
@@ -60,7 +61,7 @@ We call them [Bricks](wiki/bricks.md).
 
 ### Monitoring/Metrics
 
-- [datadog](https://github.com/go-masonry/bdatadog)
+- [prometheus](https://github.com/go-masonry/bprometheus)
 
 ### Tracing
 
