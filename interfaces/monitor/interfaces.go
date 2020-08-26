@@ -79,14 +79,21 @@ type TagsAwareTimer interface {
 // It is expected that each Metric is unique, uniqueness is calculated by combining
 // 	- name
 //	- tag key names
+//
+// Everytime you call to obtain one of the metrics, you will receive an instance.
+// Mortar have an internal cache, hence we are not creating a new metric everytime, unless another set of tags is provided using WithTags.
+// Metric returned from one the methods of this Interface (Metrics) will always have default tag values (if provided)
+//
+// However if you decide to cache it, your instance will always have it's tags overwritten if WithTags/WithContext called on the instance.
+// To "reset" to default them simply "create" a new one with the same set of tags keys.
 type Metrics interface {
-	// Counter creates a counter with possible predefined tags
+	// Counter creates or loads a counter with possible predefined tags
 	Counter(name, desc string) TagsAwareCounter
-	// Gauge creates a gauge with possible predefined tags
+	// Gauge creates or loads a gauge with possible predefined tags
 	Gauge(name, desc string) TagsAwareGauge
-	// Histogram creates a histogram with possible predefined tags
+	// Histogram creates or loads a histogram with possible predefined tags
 	Histogram(name, desc string, buckets Buckets) TagsAwareHistogram
-	// Timer creates a timer with possible predefined tags
+	// Timer creates or loads a timer with possible predefined tags
 	Timer(name, desc string) TagsAwareTimer
 	// WithTags sets custom tags to be included if possible in every Metric
 	WithTags(tags Tags) Metrics
