@@ -1,6 +1,7 @@
 package monitoring
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/go-masonry/mortar/interfaces/monitor"
@@ -24,7 +25,7 @@ func newMetric(externalMetrics monitor.BricksMetrics, cfg *monitorConfig) monito
 func (mm *mortarMetric) Counter(name, desc string) monitor.TagsAwareCounter {
 	bricksCounter, err := mm.registry.loadOrStoreCounter(name, desc, mm.extractTagKeys()...)
 	if err != nil {
-		mm.cfg.onError(err)
+		mm.cfg.onError(fmt.Errorf("error registering %s:%s metric, %w", name, desc, err))
 		bricksCounter = newNoopCounter(name, desc, err, mm.cfg.onError)
 	}
 
@@ -35,7 +36,7 @@ func (mm *mortarMetric) Counter(name, desc string) monitor.TagsAwareCounter {
 func (mm *mortarMetric) Gauge(name, desc string) monitor.TagsAwareGauge {
 	bricksGauge, err := mm.registry.loadOrStoreGauge(name, desc, mm.extractTagKeys()...)
 	if err != nil {
-		mm.cfg.onError(err)
+		mm.cfg.onError(fmt.Errorf("error registering %s:%s metric, %w", name, desc, err))
 		bricksGauge = newNoopGauge(name, desc, err, mm.cfg.onError)
 	}
 
@@ -46,7 +47,7 @@ func (mm *mortarMetric) Gauge(name, desc string) monitor.TagsAwareGauge {
 func (mm *mortarMetric) Histogram(name, desc string, buckets monitor.Buckets) monitor.TagsAwareHistogram {
 	bricksHistogram, err := mm.registry.loadOrStoreHistogram(name, desc, buckets, mm.extractTagKeys()...)
 	if err != nil {
-		mm.cfg.onError(err)
+		mm.cfg.onError(fmt.Errorf("error registering %s:%s metric, %w", name, desc, err))
 		bricksHistogram = newNoopHistogram(name, desc, err, mm.cfg.onError)
 	}
 
@@ -57,7 +58,7 @@ func (mm *mortarMetric) Histogram(name, desc string, buckets monitor.Buckets) mo
 func (mm *mortarMetric) Timer(name, desc string) monitor.TagsAwareTimer {
 	bricksTimer, err := mm.registry.loadOrStoreTimer(name, desc, mm.extractTagKeys()...)
 	if err != nil {
-		mm.cfg.onError(err)
+		mm.cfg.onError(fmt.Errorf("error registering %s:%s metric, %w", name, desc, err))
 		bricksTimer = newNoopTimer(name, desc, err, mm.cfg.onError)
 	}
 
