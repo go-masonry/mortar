@@ -85,3 +85,13 @@ func (m *reporterSuite) TestWithCustomTags() {
 	counterMock.EXPECT().Inc()
 	counter.Inc()
 }
+
+func (m *reporterSuite) TestMakeSureRegistryIsSingleton() {
+	bricksCounterMock := mock_monitor.NewMockBricksCounter(m.ctrl)
+	m.bricksMetricsMocked.EXPECT().Counter("unique", "unique counter", []string{"one", "three"}).Return(bricksCounterMock, nil)
+	firstCounter := m.metrics.Counter("unique", "unique counter")
+	for i := 0; i < 100; i++ {
+		counter := m.metrics.Counter("unique", "unique counter")
+		m.Equal(firstCounter, counter)
+	}
+}
