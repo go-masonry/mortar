@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/go-masonry/mortar/interfaces/log"
@@ -15,6 +16,7 @@ import (
 
 const (
 	gRPCCodeTagName = "code"
+	grpcNamePrefix  = "grpc_"
 )
 
 type gRPCMetricInterceptorsDeps struct {
@@ -34,7 +36,7 @@ func MonitorGRPCInterceptor(deps gRPCMetricInterceptorsDeps) grpc.UnaryServerInt
 			// fetch one from registry or create new
 			timer := deps.Metrics.WithTags(monitor.Tags{
 				gRPCCodeTagName: gRPCCodeTagValue(err),
-			}).Timer(methodName, fmt.Sprintf("time api calls for %s", info.FullMethod))
+			}).Timer(grpcNamePrefix+methodName, fmt.Sprintf("time api calls for %s", info.FullMethod))
 
 			timer.Record(time.Since(start))
 		}
@@ -44,5 +46,5 @@ func MonitorGRPCInterceptor(deps gRPCMetricInterceptorsDeps) grpc.UnaryServerInt
 
 func gRPCCodeTagValue(err error) string {
 	s, _ := status.FromError(err)
-	return s.Code().String()
+	return strconv.Itoa(int(s.Code()))
 }
