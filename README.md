@@ -35,13 +35,13 @@ It's important to read its documentation first, starting with the step by step [
 - [Dependency Injection](wiki/di.md)
 - [Multiple Web Servers](wiki/multiweb.md)
 
-### Everything else
+### Everything else (Work in progress)
 
 To understand better some of the internals (without browsing the code) have a look [here](wiki/features.md)
 
 ## Scaffolds
 
-To help you bootstrap your services with Mortar here you can find different templates.
+To help you bootstrap your services with Mortar [here](https://github.com/go-masonry/scaffolds) you can find different templates.
 
 ## Bricks
 
