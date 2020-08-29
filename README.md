@@ -22,7 +22,7 @@ While it comes with predefined defaults Mortar gives you total control to fully 
 - Swap/Update dependencies/libraries easily
 - Test friendly
 
-## Documentation
+## [Documentation](https://github.com/go-masonry/tutorial)
 
 Mortar is not a drop-in replacement.
 
