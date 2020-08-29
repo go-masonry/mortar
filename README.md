@@ -37,10 +37,6 @@ It's important to read its documentation first, starting with the step by step [
 - [Dependency Injection](wiki/di.md)
 - [Multiple Web Servers](wiki/multiweb.md)
 
-### Everything else (Work in progress)
-
-To understand better some of the internals (without browsing the code) have a look [here](wiki/features.md)
-
 ## Scaffolds
 
 To help you bootstrap your services with Mortar [here](https://github.com/go-masonry/scaffolds) you can find different templates.
@@ -68,3 +64,7 @@ We call them [Bricks](wiki/bricks.md).
 ### Tracing
 
 - [jaeger](https://github.com/go-masonry/bjaeger)  
+
+## Everything else (Work in progress)
+
+To understand better some of the internals (without browsing the code) have a look [here](wiki/features.md)
