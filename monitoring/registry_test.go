@@ -55,4 +55,6 @@ func TestRegistryHistogramCache(t *testing.T) {
 func TestIDGen(t *testing.T) {
 	ID := calcID("name", "first", "second")
 	assert.Equal(t, "name_first_second", ID)
+	sameID := calcID("name", "second", "first")
+	assert.Equal(t, ID, sameID)
 }
