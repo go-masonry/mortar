@@ -2,6 +2,7 @@
 
 ![Go](https://github.com/go-masonry/mortar/workflows/Go/badge.svg)
 [![codecov](https://codecov.io/gh/go-masonry/mortar/branch/master/graph/badge.svg)](https://codecov.io/gh/go-masonry/mortar)
+[![PkgGoDev](https://pkg.go.dev/badge/go-masonry/mortar)](https://pkg.go.dev/go-masonry/mortar)
 
 <p align="center">
     <img src=wiki/logo.svg align="center" height=256>
