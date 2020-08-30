@@ -55,7 +55,7 @@ func (g *gauge) Set(v float64) {
 	}
 }
 
-// Add adds (or substracts if negative) from previously set value
+// Add adds (or subtracts if negative) from previously set value
 func (g *gauge) Add(v float64) {
 	if gauge, err := g.bricksGauge.WithTags(g.tags); g.shouldLogMetric(err) {
 		gauge.Add(v)

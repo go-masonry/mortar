@@ -12,7 +12,7 @@ import (
 // 	- Prometheus
 //	- Datadog
 //
-// This allows a better seperation of responsibility and also adds clarity.
+// This allows a better separation of responsibility and also adds clarity.
 //
 // Within mortar we want to be able extract tag values from context, but the implementation shouldn't be
 // aware of this. The only thing it needs to implement is a support for monitor.Tags

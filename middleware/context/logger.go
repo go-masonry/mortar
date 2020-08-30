@@ -19,7 +19,7 @@ type loggerContextExtractorDeps struct {
 }
 
 // LoggerGRPCIncomingContextExtractor creates a context extractor for logger
-// This is usefull if you want to add different fields from gRPC incoming metadata.MD
+// This is useful if you want to add different fields from gRPC incoming metadata.MD
 func LoggerGRPCIncomingContextExtractor(deps loggerContextExtractorDeps) log.ContextExtractor {
 	var includedHeaders []string
 	if headers := deps.Config.Get(mortar.MiddlewareLoggerHeaders); headers.IsSet() {
