@@ -3,8 +3,13 @@ LISTPKG:=$(shell go list ./... | grep -vE "/tests|/mock|/mortar/http/server/heal
 deps:
 	@go install github.com/golang/mock/mockgen golang.org/x/tools/cmd/goimports golang.org/x/lint/golint
 
-generate: deps
-	@echo -n Generating files and checking ...
+generate:
+	@echo -n Generating files...
+	@go generate ./...
+	@echo " done"
+	
+generate-test: deps generate
+	@echo -n Checking ...
 	@go generate ./...
 	@test $(shell git status --porcelain | wc -l) = 0 \
 		|| { echo; echo "generated files are not up to date, re-generate and commit";\
@@ -45,6 +50,20 @@ monitor-race-test:
 
 test-with-report: test monitor-race-test cover-report
 
-code-up-to-date: generate go-fmt go-lint
+code-up-to-date: generate-test go-fmt go-lint
+
+health-proto:
+	 @protoc -I. \
+			-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+			--go_out=plugins=grpc:. \
+          	--grpc-gateway_out=logtostderr=true,paths=source_relative:. ./http/server/health/health.proto
+
+service-test-proto:
+	 @protoc -I. \
+			-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+			--go_out=plugins=grpc:. \
+          	--grpc-gateway_out=logtostderr=true,paths=source_relative:. ./http/server/proto/service.proto
+
+proto: health-proto service-test-proto
 
 all: code-up-to-date test-with-report 

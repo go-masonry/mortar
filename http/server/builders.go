@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-masonry/mortar/interfaces/http/server"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 

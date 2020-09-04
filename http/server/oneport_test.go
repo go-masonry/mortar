@@ -10,7 +10,7 @@ import (
 
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/soheilhy/cmux"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"

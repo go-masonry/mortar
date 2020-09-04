@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-masonry/mortar/utils"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/opentracing/opentracing-go"
 	"go.uber.org/fx"
 	"google.golang.org/grpc/metadata"

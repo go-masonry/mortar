@@ -8,7 +8,7 @@ import (
 	context "context"
 	server "github.com/go-masonry/mortar/interfaces/http/server"
 	gomock "github.com/golang/mock/gomock"
-	runtime "github.com/grpc-ecosystem/grpc-gateway/runtime"
+	runtime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	grpc "google.golang.org/grpc"
 	net "net"
 	http "net/http"

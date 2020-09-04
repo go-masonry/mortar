@@ -11,7 +11,7 @@ import (
 	"github.com/go-masonry/mortar/http/server/health"
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	"github.com/go-masonry/mortar/interfaces/http/server"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
@@ -164,7 +164,7 @@ func TestCustomGrpcGatewayOptions(t *testing.T) {
 		AddRESTServerConfiguration().
 		ListenOn(":8889").
 		RegisterGRPCGatewayHandlers(registerGatewayHandler).
-		AddGRPCGatewayOptions(runtime.WithProtoErrorHandler(func(ctx context.Context, serveMux *runtime.ServeMux, marshaler runtime.Marshaler, writer http.ResponseWriter, request *http.Request, err error) {
+		AddGRPCGatewayOptions(runtime.WithErrorHandler(func(_ context.Context, _ *runtime.ServeMux, _ runtime.Marshaler, writer http.ResponseWriter, _ *http.Request, _ error) {
 			http.Error(writer, "bad one", http.StatusTeapot)
 		})).
 		BuildRESTPart().
@@ -188,7 +188,7 @@ func TestCustomGrpcGatewayMux(t *testing.T) {
 		AddRESTServerConfiguration().
 		ListenOn(":8889").
 		RegisterGRPCGatewayHandlers(registerGatewayHandler).
-		SetCustomGRPCGatewayMux(runtime.NewServeMux(runtime.WithProtoErrorHandler(func(ctx context.Context, serveMux *runtime.ServeMux, marshaler runtime.Marshaler, writer http.ResponseWriter, request *http.Request, err error) {
+		SetCustomGRPCGatewayMux(runtime.NewServeMux(runtime.WithErrorHandler(func(_ context.Context, _ *runtime.ServeMux, _ runtime.Marshaler, writer http.ResponseWriter, _ *http.Request, _ error) {
 			http.Error(writer, "bad one", http.StatusTeapot)
 		}))).
 		BuildRESTPart().
