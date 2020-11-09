@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	internalPatternPrefix = "/internal"
+	internalPatternPrefix = "/debug"
 )
 
 // StatsInfo some statistics information
@@ -44,7 +44,7 @@ type debugHandlersDeps struct {
 //	- running stats
 func InternalDebugHandlers(deps debugHandlersDeps) []partial.HTTPHandlerPatternPair {
 	return []partial.HTTPHandlerPatternPair{
-		{Pattern: internalPatternPrefix + "/debug/vars", Handler: deps.DebugVars()},
+		{Pattern: internalPatternPrefix + "/vars", Handler: deps.DebugVars()},
 		{Pattern: internalPatternPrefix + "/dump", Handler: deps.DumpFunc()},
 		{Pattern: internalPatternPrefix + "/stats", Handler: deps.Stats()},
 	}
