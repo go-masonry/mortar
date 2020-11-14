@@ -23,6 +23,10 @@ const (
 	FxGroupGRPCGatewayGeneratedHandlers = "grpcGatewayGeneratedHandlers"
 	// FxGroupGRPCGatewayMuxOptions defines group name
 	FxGroupGRPCGatewayMuxOptions = "grpcGatewayMuxOptions"
+	// FxGroupExternalHTTPHandlers defines group name
+	FxGroupExternalHTTPHandlers = "externalHttpHandlers"
+	// FxGroupExternalHTTPHandlerFunctions defines group name
+	FxGroupExternalHTTPHandlerFunctions = "externalHttpHandlerFunctions"
 	// FxGroupUnaryServerInterceptors defines group name
 	FxGroupUnaryServerInterceptors = "unaryServerInterceptors"
 	// FxGroupInternalHTTPHandlers defines group name
@@ -54,6 +58,8 @@ type httpServerDeps struct {
 	// External REST
 	GRPCGatewayGeneratedHandlers []serverInt.GRPCGatewayGeneratedHandlers `group:"grpcGatewayGeneratedHandlers"`
 	GRPCGatewayMuxOptions        []runtime.ServeMuxOption                 `group:"grpcGatewayMuxOptions"`
+	ExternalHTTPHandlers         []HTTPHandlerPatternPair                 `group:"externalHttpHandlers"`
+	ExternalHTTPHandlerFunctions []HTTPHandlerFuncPatternPair             `group:"externalHttpHandlerFunctions"`
 	// Internal REST
 	InternalHTTPHandlers         []HTTPHandlerPatternPair     `group:"internalHttpHandlers"`
 	InternalHTTPHandlerFunctions []HTTPHandlerFuncPatternPair `group:"internalHttpHandlerFunctions"`
@@ -85,12 +91,22 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 	}
 	// add GRPC Gateway on top and expose on external REST Port
 	externalRESTPort := deps.Config.Get(mortar.ServerRESTExternalPort)
-	if len(deps.GRPCGatewayGeneratedHandlers) > 0 && externalRESTPort.IsSet() {
-		builder = builder.AddRESTServerConfiguration().
-			ListenOn(fmt.Sprintf(":%d", externalRESTPort.Int())).
-			AddGRPCGatewayOptions(deps.GRPCGatewayMuxOptions...).
-			RegisterGRPCGatewayHandlers(deps.GRPCGatewayGeneratedHandlers...).
-			BuildRESTPart()
+	if externalRESTPort.IsSet() && (len(deps.ExternalHTTPHandlerFunctions) > 0 || len(deps.ExternalHTTPHandlers) > 0 || len(deps.GRPCGatewayGeneratedHandlers) > 0) {
+		restBuilder := builder.AddRESTServerConfiguration().
+			ListenOn(fmt.Sprintf(":%d", externalRESTPort.Int()))
+
+		for _, handlerPair := range deps.ExternalHTTPHandlers {
+			restBuilder = restBuilder.AddHandler(handlerPair.Pattern, handlerPair.Handler)
+		}
+		for _, handlerFuncPair := range deps.ExternalHTTPHandlerFunctions {
+			restBuilder = restBuilder.AddHandlerFunc(handlerFuncPair.Pattern, handlerFuncPair.HandlerFunc)
+		}
+		if len(deps.GRPCGatewayGeneratedHandlers) > 0 {
+			restBuilder = restBuilder.AddGRPCGatewayOptions(deps.GRPCGatewayMuxOptions...).
+				RegisterGRPCGatewayHandlers(deps.GRPCGatewayGeneratedHandlers...)
+		}
+		builder = restBuilder.BuildRESTPart()
+
 	}
 	return builder
 }

@@ -22,6 +22,12 @@ const (
 	// https://grpc-ecosystem.github.io/grpc-gateway/docs/customizingyourgateway.html
 	GRPCGatewayMuxOptions = partial.FxGroupGRPCGatewayMuxOptions
 
+	// ExternalHTTPHandlers - External Http Handlers group, add your custom external HTTP Handlers
+	ExternalHTTPHandlers = partial.FxGroupExternalHTTPHandlers
+
+	// ExternalHTTPHandlerFunctions - External Http Handlers function group, add your custom external HTTP Handler Functions
+	ExternalHTTPHandlerFunctions = partial.FxGroupExternalHTTPHandlerFunctions
+
 	// UnaryServerInterceptors - GRPC Unary Server Interceptors group. Register different gRPC server interceptors
 	UnaryServerInterceptors = partial.FxGroupUnaryServerInterceptors
 
