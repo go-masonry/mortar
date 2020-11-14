@@ -88,7 +88,7 @@ counter.Inc()
 
 ### Additional Features
 
-There are a some features not listed here, please check the Tutorial for more.
+There are some features not listed here, please check the Tutorial for more.
 
 > If you want to skip reading just jump to this [part](https://github.com/go-masonry/tutorial/tree/master/05-middleware) in the Tutorial.
 
