@@ -61,7 +61,7 @@ While it comes with predefined defaults Mortar gives you total control to fully 
             ProtoMinor:    1,
             ContentLength: 11,
             Body:          ioutil.NopCloser(strings.NewReader("car painted")),
-        }
+        }, nil
     }
     ```
 
