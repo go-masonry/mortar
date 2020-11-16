@@ -38,7 +38,7 @@ When you done, read the [documentation](https://github.com/go-masonry/tutorial) 
 * Log/Dump requests and/or responses when http request fails.
 
     ```golang
-    return func(req *http.Request, handler client.HTTPpHandler) (resp *http.Response, err error) {
+    return func(req *http.Request, handler client.HTTPHandler) (resp *http.Response, err error) {
         var reqBytes, respBytes []byte
         // If the response is Bad Request, log both Request and Response
         reqBytes, _ = httputil.DumpRequestOut(req, true) // it can be nil and it's ok
@@ -57,7 +57,7 @@ When you done, read the [documentation](https://github.com/go-masonry/tutorial) 
 * Alter requests and/or responses (useful in [Tests](https://github.com/go-masonry/mortar-demo/blob/master/workshop/app/controllers/workshop_test.go#L162))
 
     ```golang
-    func(*http.Request, clientInt.HTTPpHandler) (*http.Response, error) {
+    func(*http.Request, clientInt.HTTPHandler) (*http.Response, error) {
         // special case, don't go anywhere just return the response
         return &http.Response{
             Status:        "200 OK",

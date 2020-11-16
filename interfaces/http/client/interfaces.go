@@ -13,12 +13,12 @@ import (
 // http.Client
 //********************************************************************************
 
-// HTTPpHandler is just an alias to http.RoundTriper.RoundTrip function
-type HTTPpHandler func(*http.Request) (*http.Response, error)
+// HTTPHandler is just an alias to http.RoundTriper.RoundTrip function
+type HTTPHandler func(*http.Request) (*http.Response, error)
 
 // HTTPClientInterceptor is a user defined function that can alter a request before it's sent
 // and/or alter a response before it's returned to the caller
-type HTTPClientInterceptor func(*http.Request, HTTPpHandler) (*http.Response, error)
+type HTTPClientInterceptor func(*http.Request, HTTPHandler) (*http.Response, error)
 
 // HTTPClientBuilder is a builder interface to build http.Client with interceptors
 type HTTPClientBuilder interface {

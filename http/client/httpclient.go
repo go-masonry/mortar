@@ -78,13 +78,13 @@ func (crt *customRoundTripper) RoundTrip(req *http.Request) (*http.Response, err
 
 func uniteInterceptors(interceptors []client.HTTPClientInterceptor) client.HTTPClientInterceptor {
 	if len(interceptors) == 0 {
-		return func(req *http.Request, handler client.HTTPpHandler) (*http.Response, error) {
+		return func(req *http.Request, handler client.HTTPHandler) (*http.Response, error) {
 			// That's why we needed an alias to http.RoundTripper.RoundTrip
 			return handler(req)
 		}
 	}
 
-	return func(req *http.Request, handler client.HTTPpHandler) (*http.Response, error) {
+	return func(req *http.Request, handler client.HTTPHandler) (*http.Response, error) {
 		tailHandler := func(innerReq *http.Request) (*http.Response, error) {
 			unitedInterceptor := uniteInterceptors(interceptors[1:])
 			return unitedInterceptor(req, handler)
