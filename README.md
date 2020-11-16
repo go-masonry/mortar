@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/go-masonry/mortar/branch/master/graph/badge.svg)](https://codecov.io/gh/go-masonry/mortar)
 [![PkgGoDev](https://pkg.go.dev/badge/mod/github.com/go-masonry/mortar)](https://pkg.go.dev/mod/github.com/go-masonry/mortar)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-masonry/mortar)](https://goreportcard.com/report/github.com/go-masonry/mortar)
+[![Gitter](https://badges.gitter.im/go-masonry/community.svg)](https://gitter.im/go-masonry/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 <p align="center">
     <img src=wiki/logo.svg align="center" height=256>
