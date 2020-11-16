@@ -39,7 +39,7 @@ func TestWithInterceptor(t *testing.T) {
 	require.Equal(t, "Pike", family)
 }
 
-func testInterceptor(req *http.Request, handler client.HTTPpHandler) (resp *http.Response, err error) {
+func testInterceptor(req *http.Request, handler client.HTTPHandler) (resp *http.Response, err error) {
 	req.Header.Set("name", "Robert")
 	if resp, err = handler(req); err == nil {
 		resp.Header.Set("family", "Pike")
