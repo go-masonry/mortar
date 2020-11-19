@@ -4,7 +4,6 @@
 [![codecov](https://codecov.io/gh/go-masonry/mortar/branch/master/graph/badge.svg)](https://codecov.io/gh/go-masonry/mortar)
 [![PkgGoDev](https://pkg.go.dev/badge/mod/github.com/go-masonry/mortar)](https://pkg.go.dev/mod/github.com/go-masonry/mortar)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-masonry/mortar)](https://goreportcard.com/report/github.com/go-masonry/mortar)
-[![Gitter](https://badges.gitter.im/go-masonry/community.svg)](https://gitter.im/go-masonry/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 <p align="center">
     <img src=wiki/logo.svg align="center" height=256>
@@ -74,7 +73,7 @@ When you done, read the [documentation](https://github.com/go-masonry/tutorial) 
 
 ### Monitoring/Metrics support
 
-Export to either Prometheus/Datadog/statsd/etc, it's your choice. Mortar only provides the Interface and also caches the metrics so you don't have to.
+Export to either Prometheus/Datadog/statsd/etc, it's your choice. Mortar only provides the Interface and also **caches** the metrics so you don't have to.
 
 ```golang
 counter := w.deps.Metrics.WithTags(monitor.Tags{
@@ -85,15 +84,26 @@ counter := w.deps.Metrics.WithTags(monitor.Tags{
 counter.Inc()
 ```
 
+> `counter` is actually a *singleton*, uniqueness calculated [here](monitoring/registry.go#L87)
+
 ![grafana](wiki/grafana.png)
 
 ### Additional Features
+
+* `/debug/pprof` and other useful [handlers](handlers)
+* Use `config_test.yml` during [tests](https://github.com/go-masonry/mortar-demo/blob/master/workshop/app/controllers/workshop_test.go#L151) to **override** values in `config.yml`, it saves time.
 
 There are some features not listed here, please check the Tutorial for more.
 
 > If you want to skip reading just jump to this [part](https://github.com/go-masonry/tutorial/tree/master/05-middleware) in the Tutorial.
 
 ## [Documentation](https://github.com/go-masonry/tutorial)
+
+* **D**ependency **I**njection using [uber.fx](https://github.com/uber-go/fx), read more [here](wiki/di.md) on how mortar uses it.
+* [Configuration](wiki/config.md), you can skip this part if you familiar with [viper](https://github.com/spf13/viper) or similar.
+* [Middleware concept](wiki/middleware.md) why it's important to pass `context.Context` as a first parameter for almost any Public Function.
+* Mortar have 3 listeners (`gRPC`, `External/Public REST`, `Internal/Private REST`) read why [here](wiki/multiweb.md), by the way you can have only [one](http/server/oneport_test.go).
+* [Consider Builders along side with Options](wiki/builder.md) and why it's very convenient when you need to provide partially configured libraries.
 
 Mortar is not a drop-in replacement.
 
