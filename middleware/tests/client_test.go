@@ -3,9 +3,14 @@ package tests
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
+	"github.com/go-masonry/mortar/interfaces/log"
+	"github.com/go-masonry/mortar/logger/naive"
 	"github.com/go-masonry/mortar/middleware/interceptors/client"
 	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
@@ -44,5 +49,36 @@ func (s *middlewareSuite) testClientInterceptorHeaderCopierBeforeTest() fx.Optio
 	return fx.Options(
 		fx.Provide(client.CopyGRPCHeadersClientInterceptor),
 		fx.Populate(&s.clientInterceptor),
+	)
+}
+
+func (s *middlewareSuite) TestDumpRESTClientInterceptor() {
+	fakeHandler := func(req *http.Request) (*http.Response, error) {
+		return &http.Response{
+			Status:        "200 OK",
+			StatusCode:    200,
+			Proto:         "HTTP/1.1",
+			ProtoMajor:    1,
+			ProtoMinor:    1,
+			ContentLength: 3,
+			Body:          ioutil.NopCloser(strings.NewReader("foo")),
+		}, nil
+	}
+	req, _ := http.NewRequest(http.MethodGet, "http://somewhere/path", nil)
+	res, err := s.restClientInterceptor(req, fakeHandler)
+	s.NoError(err)
+	defer res.Body.Close()
+	s.Contains(s.loggerOutput.String(), "Request:\nGET /path HTTP/1.1\r\nHost: somewhere") // req path
+	s.Contains(s.loggerOutput.String(), "foo")                                             // response body
+	s.Equal(http.StatusOK, res.StatusCode)
+}
+
+func (s *middlewareSuite) testDumpRESTClientInterceptorBeforeTest() fx.Option {
+	return fx.Options(
+		fx.Provide(client.DumpRESTClientInterceptor),
+		fx.Provide(func() log.Logger {
+			return naive.Builder().SetWriter(&s.loggerOutput).SetLevel(log.DebugLevel).Build()
+		}),
+		fx.Populate(&s.restClientInterceptor),
 	)
 }
