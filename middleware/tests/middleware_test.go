@@ -59,6 +59,8 @@ func (s *middlewareSuite) BeforeTest(suiteName, testName string) {
 		extraOptions = s.testTracerRESTClientInterceptorBeforeTest()
 	case "TestGRPCTracingUnaryServerInterceptor":
 		extraOptions = s.testGRPCTracingUnaryServerInterceptorBeforeTest()
+	case "TestDumpRESTClientInterceptor":
+		extraOptions = s.testDumpRESTClientInterceptorBeforeTest()
 	default:
 		s.T().Fatalf("no pre test logic found for %s", testName)
 	}
