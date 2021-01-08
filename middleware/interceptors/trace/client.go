@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"net/http/httputil"
 
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	"github.com/go-masonry/mortar/interfaces/http/client"
-	"github.com/go-masonry/mortar/mortar"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	"google.golang.org/grpc"
@@ -24,7 +24,7 @@ func TracerGRPCClientInterceptor(deps tracingDeps) grpc.UnaryClientInterceptor {
 		span, ctx = deps.newClientSpanForGRPC(ctx, method)
 		defer span.Finish()
 		// log request if needed
-		if deps.Config.Get(mortar.MiddlewareClientGRPCTraceIncludeRequest).Bool() {
+		if deps.Config.Get(confkeys.GRPCClientTraceIncludeRequest).Bool() {
 			addBodyToSpan(span, "request", req)
 		}
 		err := invoker(ctx, method, req, reply, cc, opts...)
@@ -32,7 +32,7 @@ func TracerGRPCClientInterceptor(deps tracingDeps) grpc.UnaryClientInterceptor {
 			ext.LogError(span, err)
 		} else {
 			// log response if needed
-			if deps.Config.Get(mortar.MiddlewareClientGRPCTraceIncludeResponse).Bool() {
+			if deps.Config.Get(confkeys.GRPCClientTraceIncludeResponse).Bool() {
 				addBodyToSpan(span, "response", reply)
 			}
 		}
@@ -55,7 +55,7 @@ func TracerRESTClientInterceptor(deps tracingDeps) client.HTTPClientInterceptor 
 			ext.LogError(span, err)
 		} else {
 			ext.HTTPStatusCode.Set(span, uint16(resp.StatusCode))
-			if deps.Config.Get(mortar.MiddlewareClientRESTTraceIncludeResponse).Bool() {
+			if deps.Config.Get(confkeys.HTTPClientTraceIncludeResponse).Bool() {
 				if respDump, dumpErr := httputil.DumpResponse(resp, true); dumpErr == nil {
 					addBodyToSpan(span, "response", respDump)
 				} else {
@@ -83,7 +83,7 @@ func (d tracingDeps) newClientSpanForREST(req *http.Request) (opentracing.Span, 
 		ctx = req.Context()
 	}
 	span, clientContext := opentracing.StartSpanFromContextWithTracer(ctx, d.Tracer, req.URL.Path, ext.SpanKindRPCClient, restTag)
-	if d.Config.Get(mortar.MiddlewareClientRESTTraceIncludeRequest).Bool() {
+	if d.Config.Get(confkeys.HTTPClientTraceIncludeRequest).Bool() {
 		if reqDump, dumpErr := httputil.DumpRequestOut(req, true); dumpErr == nil {
 			addBodyToSpan(span, "request", reqDump)
 		} else {

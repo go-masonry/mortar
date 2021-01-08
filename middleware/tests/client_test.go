@@ -8,11 +8,11 @@ import (
 	"strings"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/logger/naive"
 	"github.com/go-masonry/mortar/middleware/interceptors/client"
-	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -39,7 +39,7 @@ func (s *middlewareSuite) TestClientInterceptorHeaderCopier() {
 }
 
 func (s *middlewareSuite) testClientInterceptorHeaderCopierBeforeTest() fx.Option {
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareServerGRPCCopyHeadersPrefixes).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.ForwardIncomingGRPCMetadataHeadersList).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().StringSlice().Return([]string{
 			"one", "two",

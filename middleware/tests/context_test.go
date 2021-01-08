@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	contextMiddleware "github.com/go-masonry/mortar/middleware/context"
-	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
 	"google.golang.org/grpc/metadata"
 )
@@ -23,7 +23,7 @@ func (s *middlewareSuite) TestLoggerGRPCIncomingContextExtractor() {
 }
 
 func (s *middlewareSuite) testLoggerGRPCIncomingContextExtractorBeforeTest() fx.Option {
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareLoggerHeaders).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.LoggerIncomingGRPCMetadataHeadersExtractor).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().IsSet().Return(true)
 		value.EXPECT().StringSlice().Return([]string{

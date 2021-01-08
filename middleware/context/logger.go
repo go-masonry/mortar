@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	"github.com/go-masonry/mortar/interfaces/log"
-	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
 	"google.golang.org/grpc/metadata"
 )
@@ -19,10 +19,10 @@ type loggerContextExtractorDeps struct {
 }
 
 // LoggerGRPCIncomingContextExtractor creates a context extractor for logger
-// This is useful if you want to add different fields from gRPC incoming metadata.MD
+// This is useful if you want to add different fields from gRPC incoming metadata.MD to a log entry
 func LoggerGRPCIncomingContextExtractor(deps loggerContextExtractorDeps) log.ContextExtractor {
 	var includedHeaders []string
-	if headers := deps.Config.Get(mortar.MiddlewareLoggerHeaders); headers.IsSet() {
+	if headers := deps.Config.Get(confkeys.LoggerIncomingGRPCMetadataHeadersExtractor); headers.IsSet() {
 		for _, header := range headers.StringSlice() {
 			includedHeaders = append(includedHeaders, strings.ToLower(header))
 		}
