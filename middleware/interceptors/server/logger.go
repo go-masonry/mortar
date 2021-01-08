@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	"github.com/go-masonry/mortar/interfaces/log"
-	"github.com/go-masonry/mortar/mortar"
 	"github.com/go-masonry/mortar/utils"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
@@ -24,7 +24,7 @@ func LoggerGRPCInterceptor(deps loggerInterceptorDeps) grpc.UnaryServerIntercept
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		start := time.Now()
 		resp, err = handler(ctx, req)
-		if logLevel := deps.Config.Get(mortar.ServerGRPCLogLevel); logLevel.IsSet() {
+		if logLevel := deps.Config.Get(confkeys.MiddlewareLogLevel); logLevel.IsSet() {
 			level := log.ParseLevel(logLevel.String())
 			entry := deps.Logger.
 				WithError(err).
@@ -34,12 +34,8 @@ func LoggerGRPCInterceptor(deps loggerInterceptorDeps) grpc.UnaryServerIntercept
 			if d, ok := ctx.Deadline(); ok {
 				entry = entry.WithField("deadline", d)
 			}
-			if deps.Config.Get(mortar.MiddlewareServerGRPCLogIncludeRequest).Bool() { // if absent will return false anyway
-				entry = addBodyToLogger(entry, "request", req)
-			}
-			if deps.Config.Get(mortar.MiddlewareServerGRPCLogIncludeResponse).Bool() {
-				entry = addBodyToLogger(entry, "response", resp)
-			}
+			entry = addBodyToLogger(entry, "request", req)
+			entry = addBodyToLogger(entry, "response", resp)
 			entry.Custom(ctx, level, 0, "%s finished", info.FullMethod)
 		}
 		return

@@ -9,10 +9,10 @@ import (
 	"github.com/go-masonry/mortar/logger/naive"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/middleware/interceptors/trace"
-	"github.com/go-masonry/mortar/mortar"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/mocktracer"
 	"go.uber.org/fx"
@@ -39,12 +39,12 @@ func (s *middlewareSuite) TestTracerGRPCClientInterceptor() {
 }
 
 func (s *middlewareSuite) testTracerGRPCClientInterceptorBeforeTest() fx.Option {
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareClientGRPCTraceIncludeRequest).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.GRPCClientTraceIncludeRequest).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().Bool().Return(true)
 		return value
 	})
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareClientGRPCTraceIncludeResponse).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.GRPCClientTraceIncludeResponse).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().Bool().Return(true)
 		return value
@@ -85,12 +85,12 @@ func (s *middlewareSuite) TestTracerRESTClientInterceptor() {
 }
 
 func (s *middlewareSuite) testTracerRESTClientInterceptorBeforeTest() fx.Option {
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareClientRESTTraceIncludeResponse).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.HTTPClientTraceIncludeResponse).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().Bool().Return(true)
 		return value
 	})
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareClientRESTTraceIncludeRequest).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.HTTPClientTraceIncludeRequest).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().Bool().Return(true)
 		return value
@@ -123,12 +123,12 @@ func (s *middlewareSuite) TestGRPCTracingUnaryServerInterceptor() {
 }
 
 func (s *middlewareSuite) testGRPCTracingUnaryServerInterceptorBeforeTest() fx.Option {
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareServerGRPCTraceIncludeRequest).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.GRPCServerTraceIncludeRequest).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().Bool().Return(true)
 		return value
 	})
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareServerGRPCTraceIncludeResponse).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.GRPCServerTraceIncludeResponse).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().Bool().Return(true)
 		return value

@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-masonry/mortar/constructors/partial"
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/mortar"
 	"github.com/go-masonry/mortar/utils"
@@ -97,7 +98,7 @@ func (s *selfHandlerDeps) obfuscateIfNeeded(key string, value interface{}) strin
 	default:
 		valueAsString = fmt.Sprintf("%v", v)
 	}
-	hideKeys := s.Config.Get(mortar.HandlersSelfObfuscateConfigKeys).StringSlice() // if none exist slice will be empty
+	hideKeys := s.Config.Get(confkeys.ConfigHandlerObfuscateKeys).StringSlice() // if none exist slice will be empty
 	for _, hidePart := range hideKeys {
 		if strings.Contains(strings.ToLower(key), strings.ToLower(hidePart)) {
 			return utils.Obfuscate(valueAsString, obfuscationEdgeLength)

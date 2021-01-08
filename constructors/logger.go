@@ -8,8 +8,10 @@ import (
 	"github.com/go-masonry/mortar/logger/naive"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	logInt "github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/mortar"
+
 	"go.uber.org/fx"
 )
 
@@ -33,7 +35,7 @@ type loggerDeps struct {
 // DefaultLogger is a constructor that will create a logger with some default values on top of provided ones
 func DefaultLogger(deps loggerDeps) logInt.Logger {
 	var logLevel = logInt.InfoLevel
-	if levelValue := deps.Config.Get(mortar.LoggerLevelKey); levelValue.IsSet() {
+	if levelValue := deps.Config.Get(confkeys.LogLevel); levelValue.IsSet() {
 		logLevel = logInt.ParseLevel(levelValue.String())
 	}
 
@@ -44,14 +46,14 @@ func DefaultLogger(deps loggerDeps) logInt.Logger {
 func (d loggerDeps) selfStaticFieldsContextExtractor(_ context.Context) map[string]interface{} {
 	output := make(map[string]interface{})
 	info := mortar.GetBuildInformation()
-	appName := d.Config.Get(mortar.Name).String()
-	if len(appName) > 0 && d.Config.Get(mortar.LoggerStaticName).Bool() {
+	appName := d.Config.Get(confkeys.ApplicationName).String()
+	if len(appName) > 0 && d.Config.Get(confkeys.LogIncludeName).Bool() {
 		output[application] = appName
 	}
-	if len(info.Hostname) > 0 && d.Config.Get(mortar.LoggerStaticHost).Bool() {
+	if len(info.Hostname) > 0 && d.Config.Get(confkeys.LogIncludeHost).Bool() {
 		output[hostname] = info.Hostname
 	}
-	if len(info.GitCommit) > 0 && d.Config.Get(mortar.LoggerStaticGit).Bool() {
+	if len(info.GitCommit) > 0 && d.Config.Get(confkeys.LogIncludeGitSHA).Bool() {
 		output[gitCommit] = info.GitCommit
 	}
 	return output

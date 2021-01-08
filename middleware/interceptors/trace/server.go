@@ -3,7 +3,7 @@ package trace
 import (
 	"context"
 
-	"github.com/go-masonry/mortar/mortar"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	"google.golang.org/grpc"
@@ -20,7 +20,7 @@ func GRPCTracingUnaryServerInterceptor(deps tracingDeps) grpc.UnaryServerInterce
 		defer span.Finish()
 
 		// log request if needed
-		if deps.Config.Get(mortar.MiddlewareServerGRPCTraceIncludeRequest).Bool() {
+		if deps.Config.Get(confkeys.GRPCServerTraceIncludeRequest).Bool() {
 			addBodyToSpan(span, "request", req)
 		}
 		// call handler
@@ -29,7 +29,7 @@ func GRPCTracingUnaryServerInterceptor(deps tracingDeps) grpc.UnaryServerInterce
 			ext.LogError(span, err)
 		} else {
 			// log response if needed
-			if deps.Config.Get(mortar.MiddlewareServerGRPCTraceIncludeResponse).Bool() {
+			if deps.Config.Get(confkeys.GRPCServerTraceIncludeResponse).Bool() {
 				addBodyToSpan(span, "response", resp)
 			}
 		}

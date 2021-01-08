@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/go-masonry/mortar/interfaces/log"
 	mock_log "github.com/go-masonry/mortar/interfaces/log/mock"
-	"github.com/go-masonry/mortar/mortar"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"
@@ -61,21 +61,21 @@ func (s *partialSuite) SetupTest() {
 	s.cfgMock = mock_cfg.NewMockConfig(s.ctrl)
 	s.logMock = mock_log.NewMockLogger(s.ctrl)
 	// grpc port
-	s.cfgMock.EXPECT().Get(mortar.ServerGRPCPort).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.ExternalGRPCPort).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().IsSet().Return(true)
 		value.EXPECT().Int().Return(1234)
 		return value
 	})
 	// external rest port
-	s.cfgMock.EXPECT().Get(mortar.ServerRESTExternalPort).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.ExternalRESTPort).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().IsSet().Return(true)
 		value.EXPECT().Int().Return(1235)
 		return value
 	})
 	// internal rest port
-	s.cfgMock.EXPECT().Get(mortar.ServerRESTInternalPort).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.InternalRESTPort).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().IsSet().Return(true)
 		value.EXPECT().Int().Return(1236)

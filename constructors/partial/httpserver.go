@@ -7,9 +7,9 @@ import (
 	"github.com/go-masonry/mortar/http/server"
 	"github.com/go-masonry/mortar/http/server/health"
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/go-masonry/mortar/interfaces/log"
-	"github.com/go-masonry/mortar/mortar"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
@@ -73,7 +73,7 @@ type httpServerDeps struct {
 func HTTPServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
 	builder := server.Builder().SetLogger(deps.Logger.Debug)
 	// GRPC port
-	if grpcPort := deps.Config.Get(mortar.ServerGRPCPort); grpcPort.IsSet() {
+	if grpcPort := deps.Config.Get(confkeys.ExternalGRPCPort); grpcPort.IsSet() {
 		builder = builder.ListenOn(fmt.Sprintf(":%d", grpcPort.Int()))
 	}
 	// GRPC server interceptors
@@ -90,7 +90,7 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 		builder = builder.RegisterGRPCAPIs(deps.GRPCServerAPIs...) // register grpc APIs
 	}
 	// add GRPC Gateway on top and expose on external REST Port
-	externalRESTPort := deps.Config.Get(mortar.ServerRESTExternalPort)
+	externalRESTPort := deps.Config.Get(confkeys.ExternalRESTPort)
 	if externalRESTPort.IsSet() && (len(deps.ExternalHTTPHandlerFunctions) > 0 || len(deps.ExternalHTTPHandlers) > 0 || len(deps.GRPCGatewayGeneratedHandlers) > 0) {
 		restBuilder := builder.AddRESTServerConfiguration().
 			ListenOn(fmt.Sprintf(":%d", externalRESTPort.Int()))
@@ -114,7 +114,7 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuilder) serverInt.GRPCWebServiceBuilder {
 	builder = builder.RegisterGRPCAPIs(health.RegisterInternalHealthService) // add internal GRPC health endpoint
 	// Internal
-	internalPort := deps.Config.Get(mortar.ServerRESTInternalPort)
+	internalPort := deps.Config.Get(confkeys.InternalRESTPort)
 	includeInternalREST := internalPort.IsSet() && (len(deps.InternalHTTPHandlerFunctions) > 0 || len(deps.InternalHTTPHandlers) > 0)
 	if includeInternalREST {
 		restBuilder := builder.

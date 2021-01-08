@@ -9,12 +9,12 @@ import (
 	"github.com/golang/mock/gomock"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/interfaces/monitor"
 	mock_monitor "github.com/go-masonry/mortar/interfaces/monitor/mock"
 	"github.com/go-masonry/mortar/middleware/interceptors/server"
-	"github.com/go-masonry/mortar/mortar"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 )
@@ -31,22 +31,10 @@ func (s *middlewareSuite) TestLoggerGRPCInterceptor() {
 }
 
 func (s *middlewareSuite) testLoggerGRPCInterceptorBeforeTest() fx.Option {
-	s.cfgMock.EXPECT().Get(mortar.ServerGRPCLogLevel).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogLevel).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().IsSet().Return(true)
 		value.EXPECT().String().Return("debug")
-		return value
-	})
-
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareServerGRPCLogIncludeRequest).DoAndReturn(func(key string) cfg.Value {
-		value := mock_cfg.NewMockValue(s.ctrl)
-		value.EXPECT().Bool().Return(true)
-		return value
-	})
-
-	s.cfgMock.EXPECT().Get(mortar.MiddlewareServerGRPCLogIncludeResponse).DoAndReturn(func(key string) cfg.Value {
-		value := mock_cfg.NewMockValue(s.ctrl)
-		value.EXPECT().Bool().Return(true)
 		return value
 	})
 
