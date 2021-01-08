@@ -1,5 +1,5 @@
 /*
-Package `confkeys` defines all the configuration key alias that configure all the bundled features of mortar.
+Package confkeys defines all the configuration key alias that configure all the bundled features of mortar.
 Mortar expects that a `config.yaml` or similar will be loaded as Configuration and exposed via `interfaces/cfg/Config` interface.
 Mortar will access embedded keys using a `.` (dot) notation.
 
