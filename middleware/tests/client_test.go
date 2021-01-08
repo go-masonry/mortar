@@ -37,6 +37,34 @@ func (s *middlewareSuite) TestClientInterceptorHeaderCopier() {
 	err := s.clientInterceptor(ctxWithIncoming, "", nil, nil, nil, invoker)
 	s.NoError(err)
 }
+func (s *middlewareSuite) TestHTTPClientInterceptorHeaderCopier() {
+	md := metadata.MD{
+		"one-of-a-kind": []string{"1", "2"},
+		"another-kind":  []string{"not extracted"},
+	}
+	ctxWithIncoming := metadata.NewIncomingContext(context.Background(), md)
+	fakeHandler := func(req *http.Request) (*http.Response, error) {
+		if !(s.NotEmpty(req.Header, "not exist/empty 'one-of-a-kind' header") &&
+			s.Contains(req.Header, "One-Of-A-Kind") &&
+			s.NotContains(req.Header, "another-kind") &&
+			s.ElementsMatch([]string{"1", "2"}, req.Header.Values("one-of-a-kind"))) {
+			return nil, fmt.Errorf("assertions failed")
+		}
+		return &http.Response{
+			Status:        "200 OK",
+			StatusCode:    200,
+			Proto:         "HTTP/1.1",
+			ProtoMajor:    1,
+			ProtoMinor:    1,
+			ContentLength: 3,
+			Body:          ioutil.NopCloser(strings.NewReader("foo")),
+		}, nil
+	}
+	req, _ := http.NewRequest(http.MethodGet, "http://somewhere/path", nil)
+	req = req.WithContext(ctxWithIncoming)
+	_, err := s.restClientInterceptor(req, fakeHandler)
+	s.NoError(err)
+}
 
 func (s *middlewareSuite) testClientInterceptorHeaderCopierBeforeTest() fx.Option {
 	s.cfgMock.EXPECT().Get(confkeys.ForwardIncomingGRPCMetadataHeadersList).DoAndReturn(func(key string) cfg.Value {
@@ -48,7 +76,9 @@ func (s *middlewareSuite) testClientInterceptorHeaderCopierBeforeTest() fx.Optio
 	})
 	return fx.Options(
 		fx.Provide(client.CopyGRPCHeadersClientInterceptor),
+		fx.Provide(client.CopyGRPCHeadersHTTPClientInterceptor),
 		fx.Populate(&s.clientInterceptor),
+		fx.Populate(&s.restClientInterceptor),
 	)
 }
 

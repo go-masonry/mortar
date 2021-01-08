@@ -47,7 +47,7 @@ func (s *middlewareSuite) BeforeTest(suiteName, testName string) {
 	switch testName {
 	case "TestLoggerGRPCIncomingContextExtractor":
 		extraOptions = s.testLoggerGRPCIncomingContextExtractorBeforeTest()
-	case "TestClientInterceptorHeaderCopier":
+	case "TestClientInterceptorHeaderCopier", "TestHTTPClientInterceptorHeaderCopier":
 		extraOptions = s.testClientInterceptorHeaderCopierBeforeTest()
 	case "TestLoggerGRPCInterceptor":
 		extraOptions = s.testLoggerGRPCInterceptorBeforeTest()
