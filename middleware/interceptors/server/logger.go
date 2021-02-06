@@ -30,13 +30,13 @@ func LoggerGRPCInterceptor(deps loggerInterceptorDeps) grpc.UnaryServerIntercept
 				WithError(err).
 				WithField("api", info.FullMethod).
 				WithField("start", start).
-				WithField("duration", time.Since(start))
+				WithField("duration", time.Since(start).String())
 			if d, ok := ctx.Deadline(); ok {
 				entry = entry.WithField("deadline", d)
 			}
 			entry = addBodyToLogger(entry, "request", req)
 			entry = addBodyToLogger(entry, "response", resp)
-			entry.Custom(ctx, level, 0, "%s finished", info.FullMethod)
+			entry.Custom(ctx, level, 0, "gRPC call finished")
 		}
 		return
 	}
