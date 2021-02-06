@@ -52,6 +52,7 @@ func (deps webServiceDependencies) pingService(ctx context.Context, service serv
 		for _, info := range ports {
 			deps.Logger.Debug(ctx, "Service is accepting %s calls on %s", info.Type, info.Address)
 		}
+		deps.Logger.Debug(ctx, "Service is up")
 	}
 	return
 }
