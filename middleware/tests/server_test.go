@@ -27,7 +27,7 @@ func (s *middlewareSuite) TestLoggerGRPCInterceptor() {
 	defer cancel()
 	_, err := s.serverInterceptor(ctxWithDeadline, nil, &grpc.UnaryServerInfo{FullMethod: "fake method"}, unaryHandler)
 	s.NoError(err)
-	s.Contains(s.loggerOutput.String(), "fake method finished")
+	s.Contains(s.loggerOutput.String(), "gRPC call finished")
 }
 
 func (s *middlewareSuite) testLoggerGRPCInterceptorBeforeTest() fx.Option {
