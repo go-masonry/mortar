@@ -1,0 +1,111 @@
+package utils
+
+import (
+	"bytes"
+	"context"
+	"net/http"
+
+	"github.com/golang/protobuf/proto"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/encoding/protojson"
+)
+
+// ErrorMapper is a map function that maps HTTP Status Code into its gRPC counter part.
+type ErrorMapper func(statusCode int) *status.Status
+
+// ProtobufHTTPClient is a helper util in situations where you want to call a REST API, but you have all the definitions as Protobuf.
+type ProtobufHTTPClient interface {
+	Do(ctx context.Context, method, url string, in proto.Message, out interface{}) error
+}
+
+// DefaultProtobufHTTPClient uses default http Client, error mapper and marshaller
+var DefaultProtobufHTTPClient = CreateProtobufHTTPClient(nil, nil, nil)
+
+// CreateProtobufHTTPClient Creates a custom Protobuf aware HTTP client
+func CreateProtobufHTTPClient(client *http.Client, errorMapper ErrorMapper, marshaller runtime.Marshaler) ProtobufHTTPClient {
+	if client == nil {
+		client = http.DefaultClient
+	}
+	if errorMapper == nil {
+		errorMapper = defaultErrorMapper
+	}
+	if marshaller == nil {
+		marshaller = &runtime.JSONPb{
+			MarshalOptions: protojson.MarshalOptions{
+				EmitUnpopulated: true,
+			},
+			UnmarshalOptions: protojson.UnmarshalOptions{
+				DiscardUnknown: true,
+			},
+		}
+	}
+	return &protobufHTTPClientImpl{
+		client:      client,
+		errorMapper: errorMapper,
+		marshaller:  marshaller,
+	}
+}
+
+type protobufHTTPClientImpl struct {
+	client      *http.Client
+	errorMapper ErrorMapper
+	marshaller  runtime.Marshaler
+}
+
+// ProtoToHTTPRequest is a helper to convert proto Message into an HTTP Request
+func (impl *protobufHTTPClientImpl) Do(ctx context.Context, method, url string, in proto.Message, out interface{}) error {
+	var reqAsBytes []byte
+	var response *http.Response
+	var request *http.Request
+	var err error
+	reqAsBytes, err = impl.marshaller.Marshal(in)
+	if err != nil {
+		return status.Errorf(codes.Unknown, "error while marshaling request, %s", err)
+	}
+	buffer := bytes.NewBuffer(reqAsBytes)
+	request, err = http.NewRequestWithContext(ctx, http.MethodPost, url, buffer)
+	if err != nil {
+		return status.Errorf(codes.Unknown, "error while creating an http request, %s", err)
+	}
+	response, err = impl.client.Do(request)
+	if err != nil {
+		return status.Errorf(codes.Internal, "error executing http call, %s", err)
+	}
+	defer response.Body.Close()
+	if grpcStatus := impl.errorMapper(response.StatusCode); grpcStatus != nil && grpcStatus.Code() != codes.OK {
+		return grpcStatus.Err()
+	}
+	if decodeError := impl.marshaller.NewDecoder(response.Body).Decode(out); decodeError != nil {
+		return status.Errorf(codes.Unknown, "error unmarshaling response, %s", decodeError)
+	}
+	return nil
+}
+
+func defaultErrorMapper(httpStatus int) *status.Status {
+	switch httpStatus {
+	case http.StatusOK, http.StatusCreated, http.StatusAccepted:
+		return status.New(codes.OK, http.StatusText(httpStatus))
+	case http.StatusBadRequest:
+		return status.New(codes.InvalidArgument, http.StatusText(httpStatus))
+	case http.StatusMethodNotAllowed:
+		return status.New(codes.Unimplemented, http.StatusText(httpStatus))
+	case http.StatusNotFound:
+		return status.New(codes.NotFound, http.StatusText(httpStatus))
+	case http.StatusConflict:
+		return status.New(codes.AlreadyExists, http.StatusText(httpStatus))
+	case http.StatusUnauthorized:
+		return status.New(codes.Unauthenticated, http.StatusText(httpStatus))
+	case http.StatusTooManyRequests:
+		return status.New(codes.ResourceExhausted, http.StatusText(httpStatus))
+	case http.StatusNotImplemented:
+		return status.New(codes.Unimplemented, http.StatusText(httpStatus))
+	case http.StatusInternalServerError:
+		return status.New(codes.Internal, http.StatusText(httpStatus))
+	case http.StatusServiceUnavailable:
+		return status.New(codes.Unavailable, http.StatusText(httpStatus))
+	default:
+		return status.New(codes.Unknown, http.StatusText(httpStatus))
+	}
+}
