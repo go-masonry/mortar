@@ -17,21 +17,21 @@ While it comes with predefined defaults Mortar gives you total control to fully 
 
 Clone this [demo](http://github.com/go-masonry/mortar-demo) repository and play around.
 
-When you done, read the [documentation](https://go-masonry.github.io) or create your own service with some templates found [here](https://github.com/go-masonry/scaffolds).
+When you done, read the [documentation](https://go-masonry.github.io) or create your own service with this template [here](https://github.com/go-masonry/mortar-template).
 
 ## Features
 
 ### Telemetry (Everything connected)
 
-* Logs have Tracing Information `traceId`=*6ff7e7e38d1e86f* **across services**
+* Logs have Tracing Information `traceId=6ff7e7e38d1e86f` **across services**
     ![logs](wiki/logs.png)
 
-* Also visible in Jaeger `traceId`=*6ff7e7e38d1e86f* if it's sampled.
+* Also visible in Jaeger `traceId=6ff7e7e38d1e86f` if it's sampled.
     ![jaeger](wiki/jaeger.png)
 
 ### Support for `*http.Client` Interceptors, so you can
 
-* Add request and response info to Trace `traceId`=*6ff7e7e38d1e86f*
+* Add request and response info to Trace `traceId=6ff7e7e38d1e86f`
 
     ![jaeger_http](wiki/jaeger_http.png)
 
@@ -88,21 +88,21 @@ counter.Inc()
 
 ![grafana](wiki/grafana.png)
 
+For more information about Mortar Monitoring read [here](https://go-masonry.github.io/middleware/telemetry/monitoring/).
+
 ### Additional Features
 
 * `/debug/pprof` and other useful [handlers](handlers)
 * Use `config_test.yml` during [tests](https://github.com/go-masonry/mortar-demo/blob/master/workshop/app/controllers/workshop_test.go#L151) to **override** values in `config.yml`, it saves time.
 
-There are some features not listed here, please check the Tutorial for more.
+There are some features not listed here, please check the [Documentation](https://go-masonry.github.io) for more.
 
-> If you want to skip reading just jump to this [part](https://github.com/go-masonry/tutorial/tree/master/05-middleware) in the Tutorial.
-
-## Tutorial
+## Documentation
 
 Mortar is not a drop-in replacement.
 
-It's important to read its [Documentation](https://go-masonry.github.io) first, starting with the step by step [Tutorial](https://github.com/go-masonry/tutorial) which is also a bit-of-everything example.
+It's important to read its [Documentation](https://go-masonry.github.io) first.
 
-## Scaffolds
+## Service Template
 
-To help you bootstrap your services with Mortar [here](https://github.com/go-masonry/scaffolds) you can find different templates.
+To help you bootstrap your services with Mortar [here](https://github.com/go-masonry/mortar-template) you can find a template.
