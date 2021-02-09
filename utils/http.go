@@ -5,11 +5,11 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 )
 
 // ErrorMapper is a map function that maps HTTP Status Code into its gRPC counter part.
