@@ -16,6 +16,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func TestDefaultProtobufHTTPClient(t *testing.T) {
@@ -93,4 +94,46 @@ func TestDefaultProtobufHTTPClientErrorMapping(t *testing.T) {
 		sts := err.(interface{ GRPCStatus() *status.Status })
 		assert.Equal(t, grpcCode.String(), sts.GRPCStatus().Code().String(), sts.GRPCStatus().Message())
 	}
+}
+
+func TestDefaultProtobufHTTPClientsEmptyBodyError(t *testing.T) {
+	client := client.HTTPClientBuilder().AddInterceptors(func(_ *http.Request, _ clientInterface.HTTPHandler) (*http.Response, error) {
+		return &http.Response{
+			Status:        http.StatusText(http.StatusAccepted),
+			StatusCode:    http.StatusAccepted,
+			Proto:         "HTTP/1.1",
+			ProtoMajor:    1,
+			ProtoMinor:    1,
+			ContentLength: 5,
+			Body:          ioutil.NopCloser(strings.NewReader("")),
+		}, nil
+	}).Build()
+	protoClient := CreateProtobufHTTPClient(client, nil, nil)
+	var in *demopackage.PingRequest = &demopackage.PingRequest{
+		In: "packet",
+	}
+	var empty *emptypb.Empty
+	err := protoClient.Do(context.Background(), http.MethodPost, "http://unreachable", in, &empty)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "[EOF]")
+}
+
+func TestDefaultProtobufHTTPClientIgnoreResponseEvenOnEmptyBody(t *testing.T) {
+	client := client.HTTPClientBuilder().AddInterceptors(func(_ *http.Request, _ clientInterface.HTTPHandler) (*http.Response, error) {
+		return &http.Response{
+			Status:        http.StatusText(http.StatusAccepted),
+			StatusCode:    http.StatusAccepted,
+			Proto:         "HTTP/1.1",
+			ProtoMajor:    1,
+			ProtoMinor:    1,
+			ContentLength: 5,
+			Body:          ioutil.NopCloser(strings.NewReader("")),
+		}, nil
+	}).Build()
+	protoClient := CreateProtobufHTTPClient(client, nil, nil)
+	var in *demopackage.PingRequest = &demopackage.PingRequest{
+		In: "packet",
+	}
+	err := protoClient.Do(context.Background(), http.MethodPost, "http://unreachable", in, nil)
+	assert.NoError(t, err)
 }
