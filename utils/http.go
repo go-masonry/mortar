@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"net/http"
+	"reflect"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc/codes"
@@ -17,6 +18,17 @@ type ErrorMapper func(statusCode int) *status.Status
 
 // ProtobufHTTPClient is a helper util in situations where you want to call a REST API, but you have all the definitions as Protobuf.
 type ProtobufHTTPClient interface {
+	// Example:
+	//	var response *pbpkg.ResponseMessage
+	//	var request = &pbpkg.RequestMessage{Name: "test"}
+	//	err := Do(ctx, http.MethodPost, "http://host/path", request, &response)
+	//
+	// Error returned will be of type `(*status.Status).Err()` meaning it will be a gRPC type error.
+	//
+	// Note:
+	//	// you can pass `nil` as the last parameter if you don't want to unmarshal HTTP response body.
+	//	// or you know it's going to be empty == EOF
+	//	err := Do(ctx, http.MethodPost, "http://host/path", request, nil)
 	Do(ctx context.Context, method, url string, in proto.Message, out interface{}) error
 }
 
@@ -77,8 +89,12 @@ func (impl *protobufHTTPClientImpl) Do(ctx context.Context, method, url string, 
 	if grpcStatus := impl.errorMapper(response.StatusCode); grpcStatus != nil && grpcStatus.Code() != codes.OK {
 		return grpcStatus.Err()
 	}
-	if decodeError := impl.marshaller.NewDecoder(response.Body).Decode(out); decodeError != nil {
-		return status.Errorf(codes.Unknown, "error unmarshaling response, %s", decodeError)
+	// no need to unmarshal the body if it's a "nil interface"
+	// https://golang.org/doc/faq#nil_error
+	if reflect.TypeOf(out) != nil {
+		if decodeError := impl.marshaller.NewDecoder(response.Body).Decode(out); decodeError != nil {
+			return status.Errorf(codes.Unknown, "error unmarshaling response, [%s]", decodeError)
+		}
 	}
 	return nil
 }
