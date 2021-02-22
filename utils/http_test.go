@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
@@ -136,4 +137,18 @@ func TestDefaultProtobufHTTPClientIgnoreResponseEvenOnEmptyBody(t *testing.T) {
 	}
 	err := protoClient.Do(context.Background(), http.MethodPost, "http://unreachable", in, nil)
 	assert.NoError(t, err)
+}
+
+func TestDefaultProtobufHTTPClientInputAsEmptyBody(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		body, err := ioutil.ReadAll(req.Body)
+		require.NoError(t, err)
+		require.EqualValuesf(t, "{}", string(body), "Body: %s", body)
+		http.Error(w, "empty is just fine", http.StatusBadRequest)
+	}))
+	client := client.HTTPClientBuilder().WithPreconfiguredClient(server.Client()).Build()
+	protoClient := CreateProtobufHTTPClient(client, nil, nil)
+	var in *emptypb.Empty = &emptypb.Empty{}
+	err := protoClient.Do(context.Background(), http.MethodGet, server.URL, in, nil)
+	assert.EqualError(t, err, "rpc error: code = InvalidArgument desc = Bad Request")
 }

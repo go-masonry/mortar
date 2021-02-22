@@ -39,6 +39,7 @@ go-lint:
 cover-report:
 	@go tool cover -html=coverage.out -o coverage.html
 	@go tool cover -func=coverage.out -o coverage-summary.txt
+	@tail -n1 coverage-summary.txt
 
 test:
 	@echo "Testing ..."
