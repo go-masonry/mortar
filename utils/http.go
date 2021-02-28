@@ -77,7 +77,7 @@ func (impl *protobufHTTPClientImpl) Do(ctx context.Context, method, url string, 
 		return status.Errorf(codes.Unknown, "error while marshaling request, %s", err)
 	}
 	buffer := bytes.NewBuffer(reqAsBytes)
-	request, err = http.NewRequestWithContext(ctx, http.MethodPost, url, buffer)
+	request, err = http.NewRequestWithContext(ctx, method, url, buffer)
 	if err != nil {
 		return status.Errorf(codes.Unknown, "error while creating an http request, %s", err)
 	}
