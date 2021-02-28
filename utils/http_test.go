@@ -17,6 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -29,24 +30,54 @@ func TestDefaultProtobufHTTPClient(t *testing.T) {
 	}
 }
 
-func TestDefaultProtobufHTTPClientHappy(t *testing.T) {
-	client := client.HTTPClientBuilder().AddInterceptors(PongTransportInterceptor).Build()
-	protoClient := CreateProtobufHTTPClient(client, nil, nil)
+func TestDefaultProtobufHTTPClientMethodPostHappy(t *testing.T) {
 	var in *demopackage.PingRequest = &demopackage.PingRequest{
 		In: "packet",
 	}
+	method := http.MethodPost
+	testDefaultProtobufHTTPClientHappy(t, method, PongTransportWithRequestBodyInterceptor(method), in)
+}
+
+func TestDefaultProtobufHTTPClientMethodGetHappy(t *testing.T) {
+	method := http.MethodGet
+	testDefaultProtobufHTTPClientHappy(t, method, PongTransportWithoutRequestBodyInterceptor(method), nil)
+}
+
+func testDefaultProtobufHTTPClientHappy(t *testing.T, method string, interceptor func(req *http.Request, handler clientInterface.HTTPHandler) (*http.Response, error), in proto.Message) {
+	client := client.HTTPClientBuilder().AddInterceptors(interceptor).Build()
+	protoClient := CreateProtobufHTTPClient(client, nil, nil)
 	var out *demopackage.PongResponse
-	err := protoClient.Do(context.Background(), http.MethodPost, "http://unreachable", in, &out)
+	err := protoClient.Do(context.Background(), method, "http://unreachable", in, &out)
 	assert.NoError(t, err)
 	assert.Equal(t, "packet", out.GetOut())
 }
 
-func PongTransportInterceptor(req *http.Request, handler clientInterface.HTTPHandler) (*http.Response, error) {
-	var bodyMap map[string]interface{}
-	err := json.NewDecoder(req.Body).Decode(&bodyMap)
-	if err != nil {
-		return nil, err
+func PongTransportWithRequestBodyInterceptor(method string) clientInterface.HTTPClientInterceptor {
+	return func(req *http.Request, handler clientInterface.HTTPHandler) (*http.Response, error) {
+		if method != req.Method {
+			return nil, fmt.Errorf("unexpected method: %s", req.Method)
+		}
+
+		var bodyMap map[string]interface{}
+		err := json.NewDecoder(req.Body).Decode(&bodyMap)
+		if err != nil {
+			return nil, err
+		}
+		return createHTTPResponse(fmt.Sprintf(`{"out": "%s"}`, bodyMap["in"])), nil
 	}
+}
+
+func PongTransportWithoutRequestBodyInterceptor(method string) clientInterface.HTTPClientInterceptor {
+	return func(req *http.Request, handler clientInterface.HTTPHandler) (*http.Response, error) {
+		if method != req.Method {
+			return nil, fmt.Errorf("unexpected method: %s", req.Method)
+		}
+
+		return createHTTPResponse(`{"out": "packet"}`), nil
+	}
+}
+
+func createHTTPResponse(httpBody string) *http.Response {
 	return &http.Response{
 		Status:        "200 OK",
 		StatusCode:    200,
@@ -54,8 +85,8 @@ func PongTransportInterceptor(req *http.Request, handler clientInterface.HTTPHan
 		ProtoMajor:    1,
 		ProtoMinor:    1,
 		ContentLength: 17,
-		Body:          ioutil.NopCloser(strings.NewReader(fmt.Sprintf(`{"out": "%s"}`, bodyMap["in"]))),
-	}, nil
+		Body:          ioutil.NopCloser(strings.NewReader(httpBody)),
+	}
 }
 
 func TestDefaultProtobufHTTPClientErrorMapping(t *testing.T) {
