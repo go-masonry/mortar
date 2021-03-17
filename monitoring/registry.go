@@ -76,7 +76,7 @@ func (r *externalRegistry) loadOrStoreTimer(name, desc string, keys ...string) (
 		return known.(monitor.BricksTimer), nil
 	}
 	r.Lock()
-	r.Unlock()
+	defer r.Unlock()
 	bricksTimer, err := r.external.Timer(name, desc, keys...)
 	if err == nil {
 		r.timers.LoadOrStore(ID, bricksTimer)
