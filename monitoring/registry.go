@@ -39,13 +39,14 @@ func (r *externalRegistry) loadOrStoreCounter(name, desc string, keys ...string)
 	r.cm.Lock()
 	defer r.cm.Unlock()
 	bricksCounter, err = r.external.Counter(name, desc, keys...)
-	// it is possible that the underlying implementation also have duplication tests,also let's see if we have a creation race
-	if known, ok := r.counters.Load(ID); ok { // it's already there (was created by other go routine)
-		bricksCounter, err = known.(monitor.BricksCounter), nil
-		return
-	}
 	if err == nil {
-		r.counters.LoadOrStore(ID, bricksCounter)
+		cacheValue, _ := r.counters.LoadOrStore(ID, bricksCounter) // if a previous duplicate is already there (was created by other go routine)
+		bricksCounter = cacheValue.(monitor.BricksCounter)
+	} else {
+		if known, ok := r.counters.Load(ID); ok { // perhaps it's already there (was created by other go routine) and the underlying impl have a dup check
+			bricksCounter, err = known.(monitor.BricksCounter), nil
+			return
+		}
 	}
 	return
 }
@@ -58,13 +59,14 @@ func (r *externalRegistry) loadOrStoreGauge(name, desc string, keys ...string) (
 	r.gm.Lock()
 	defer r.gm.Unlock()
 	bricksGauge, err = r.external.Gauge(name, desc, keys...)
-	// it is possible that the underlying implementation also have duplication tests,also let's see if we have a creation race
-	if known, ok := r.gauges.Load(ID); ok { // it's already there (was created by other go routine)
-		bricksGauge, err = known.(monitor.BricksGauge), nil
-		return
-	}
 	if err == nil {
-		r.gauges.LoadOrStore(ID, bricksGauge)
+		cacheValue, _ := r.gauges.LoadOrStore(ID, bricksGauge) // if a previous duplicate is already there (was created by other go routine)
+		bricksGauge = cacheValue.(monitor.BricksGauge)
+	} else {
+		if known, ok := r.gauges.Load(ID); ok { // perhaps it's already there (was created by other go routine) and the underlying impl have a dup check
+			bricksGauge, err = known.(monitor.BricksGauge), nil
+			return
+		}
 	}
 	return
 }
@@ -77,13 +79,14 @@ func (r *externalRegistry) loadOrStoreHistogram(name, desc string, buckets monit
 	r.hm.Lock()
 	defer r.hm.Unlock()
 	bricksHistogram, err = r.external.Histogram(name, desc, buckets, keys...)
-	// it is possible that the underlying implementation also have duplication tests,also let's see if we have a creation race
-	if known, ok := r.histograms.Load(ID); ok { // it's already there (was created by other go routine)
-		bricksHistogram, err = known.(monitor.BricksHistogram), nil
-		return
-	}
 	if err == nil {
-		r.histograms.LoadOrStore(ID, bricksHistogram)
+		cacheValue, _ := r.histograms.LoadOrStore(ID, bricksHistogram) // if a previous duplicate is already there (was created by other go routine)
+		bricksHistogram = cacheValue.(monitor.BricksHistogram)
+	} else {
+		if known, ok := r.histograms.Load(ID); ok { // perhaps it's already there (was created by other go routine) and the underlying impl have a dup check
+			bricksHistogram, err = known.(monitor.BricksHistogram), nil
+			return
+		}
 	}
 	return
 }
@@ -96,13 +99,14 @@ func (r *externalRegistry) loadOrStoreTimer(name, desc string, keys ...string) (
 	r.tm.Lock()
 	defer r.tm.Unlock()
 	bricksTimer, err = r.external.Timer(name, desc, keys...)
-	// it is possible that the underlying implementation also have duplication tests,also let's see if we have a creation race
-	if known, ok := r.timers.Load(ID); ok { // it's already there (was created by other go routine)
-		bricksTimer, err = known.(monitor.BricksTimer), nil
-		return
-	}
 	if err == nil {
-		r.timers.LoadOrStore(ID, bricksTimer)
+		cacheValue, _ := r.timers.LoadOrStore(ID, bricksTimer) // if a previous duplicate is already there (was created by other go routine)
+		bricksTimer = cacheValue.(monitor.BricksTimer)
+	} else {
+		if known, ok := r.timers.Load(ID); ok { // perhaps it's already there (was created by other go routine) and the underlying impl have a dup check
+			bricksTimer, err = known.(monitor.BricksTimer), nil
+			return
+		}
 	}
 	return
 }

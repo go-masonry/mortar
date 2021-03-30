@@ -119,7 +119,7 @@ func TestConcurrentTimerCreation(t *testing.T) {
 			mu.Lock()
 			defer mu.Unlock()
 			if created {
-				return nil, fmt.Errorf("already exists")
+				return nil, fmt.Errorf("already exists: %s", name)
 			}
 			created = true
 			return brickTimerMock, nil
