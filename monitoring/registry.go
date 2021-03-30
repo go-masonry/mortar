@@ -9,7 +9,10 @@ import (
 )
 
 type externalRegistry struct {
-	sync.Mutex
+	cm       sync.RWMutex
+	gm       sync.RWMutex
+	tm       sync.RWMutex
+	hm       sync.RWMutex
 	external monitor.BricksMetrics
 	// TODO perhaps change this to self evicting cache that will remove metrics if unused for a long time to save space
 	counters   *sync.Map
@@ -28,60 +31,80 @@ func newRegistry(externalMetrics monitor.BricksMetrics) *externalRegistry {
 	}
 }
 
-func (r *externalRegistry) loadOrStoreCounter(name, desc string, keys ...string) (monitor.BricksCounter, error) {
+func (r *externalRegistry) loadOrStoreCounter(name, desc string, keys ...string) (bricksCounter monitor.BricksCounter, err error) {
 	ID := calcID(name, keys...)
 	if known, ok := r.counters.Load(ID); ok {
 		return known.(monitor.BricksCounter), nil
 	}
-	r.Lock()
-	defer r.Unlock()
-	bricksCounter, err := r.external.Counter(name, desc, keys...)
+	r.cm.Lock()
+	defer r.cm.Unlock()
+	bricksCounter, err = r.external.Counter(name, desc, keys...)
+	// it is possible that the underlying implementation also have duplication tests,also let's see if we have a creation race
+	if known, ok := r.counters.Load(ID); ok { // it's already there (was created by other go routine)
+		bricksCounter, err = known.(monitor.BricksCounter), nil
+		return
+	}
 	if err == nil {
 		r.counters.LoadOrStore(ID, bricksCounter)
 	}
-	return bricksCounter, err
+	return
 }
 
-func (r *externalRegistry) loadOrStoreGauge(name, desc string, keys ...string) (monitor.BricksGauge, error) {
+func (r *externalRegistry) loadOrStoreGauge(name, desc string, keys ...string) (bricksGauge monitor.BricksGauge, err error) {
 	ID := calcID(name, keys...)
 	if known, ok := r.gauges.Load(ID); ok {
 		return known.(monitor.BricksGauge), nil
 	}
-	r.Lock()
-	defer r.Unlock()
-	bricksGauge, err := r.external.Gauge(name, desc, keys...)
+	r.gm.Lock()
+	defer r.gm.Unlock()
+	bricksGauge, err = r.external.Gauge(name, desc, keys...)
+	// it is possible that the underlying implementation also have duplication tests,also let's see if we have a creation race
+	if known, ok := r.gauges.Load(ID); ok { // it's already there (was created by other go routine)
+		bricksGauge, err = known.(monitor.BricksGauge), nil
+		return
+	}
 	if err == nil {
 		r.gauges.LoadOrStore(ID, bricksGauge)
 	}
-	return bricksGauge, err
+	return
 }
 
-func (r *externalRegistry) loadOrStoreHistogram(name, desc string, buckets monitor.Buckets, keys ...string) (monitor.BricksHistogram, error) {
+func (r *externalRegistry) loadOrStoreHistogram(name, desc string, buckets monitor.Buckets, keys ...string) (bricksHistogram monitor.BricksHistogram, err error) {
 	ID := calcID(name, keys...)
 	if known, ok := r.histograms.Load(ID); ok {
 		return known.(monitor.BricksHistogram), nil
 	}
-	r.Lock()
-	defer r.Unlock()
-	bricksHistogram, err := r.external.Histogram(name, desc, buckets, keys...)
+	r.hm.Lock()
+	defer r.hm.Unlock()
+	bricksHistogram, err = r.external.Histogram(name, desc, buckets, keys...)
+	// it is possible that the underlying implementation also have duplication tests,also let's see if we have a creation race
+	if known, ok := r.histograms.Load(ID); ok { // it's already there (was created by other go routine)
+		bricksHistogram, err = known.(monitor.BricksHistogram), nil
+		return
+	}
 	if err == nil {
 		r.histograms.LoadOrStore(ID, bricksHistogram)
 	}
-	return bricksHistogram, err
+	return
 }
 
-func (r *externalRegistry) loadOrStoreTimer(name, desc string, keys ...string) (monitor.BricksTimer, error) {
+func (r *externalRegistry) loadOrStoreTimer(name, desc string, keys ...string) (bricksTimer monitor.BricksTimer, err error) {
 	ID := calcID(name, keys...)
 	if known, ok := r.timers.Load(ID); ok {
 		return known.(monitor.BricksTimer), nil
 	}
-	r.Lock()
-	defer r.Unlock()
-	bricksTimer, err := r.external.Timer(name, desc, keys...)
+	r.tm.Lock()
+	defer r.tm.Unlock()
+	bricksTimer, err = r.external.Timer(name, desc, keys...)
+	// it is possible that the underlying implementation also have duplication tests,also let's see if we have a creation race
+	if known, ok := r.timers.Load(ID); ok { // it's already there (was created by other go routine)
+		bricksTimer, err = known.(monitor.BricksTimer), nil
+		return
+	}
 	if err == nil {
 		r.timers.LoadOrStore(ID, bricksTimer)
 	}
-	return bricksTimer, err
+	return
 }
 
 func calcID(name string, keys ...string) (ID string) {
