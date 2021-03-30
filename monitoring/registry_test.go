@@ -64,6 +64,33 @@ func TestIDGen(t *testing.T) {
 	assert.Equal(t, ID, sameID)
 }
 
+func TestRegistryReturnsError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	externalMock := mock_monitor.NewMockBricksMetrics(ctrl)
+	registry := newRegistry(externalMock)
+	externalMock.EXPECT().Histogram(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("constant error")).Times(2)
+	_, err1 := registry.loadOrStoreHistogram("name", "desc", nil, "one", "two")
+	_, err2 := registry.loadOrStoreHistogram("name", "desc", nil, "one", "two")
+	assert.EqualError(t, err1, "constant error")
+	assert.EqualError(t, err2, "constant error")
+	externalMock.EXPECT().Timer(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("constant error")).Times(2)
+	_, err1 = registry.loadOrStoreTimer("name", "desc", "one", "two")
+	_, err2 = registry.loadOrStoreTimer("name", "desc", "one", "two")
+	assert.EqualError(t, err1, "constant error")
+	assert.EqualError(t, err2, "constant error")
+	externalMock.EXPECT().Counter(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("constant error")).Times(2)
+	_, err1 = registry.loadOrStoreCounter("name", "desc", "one", "two")
+	_, err2 = registry.loadOrStoreCounter("name", "desc", "one", "two")
+	assert.EqualError(t, err1, "constant error")
+	assert.EqualError(t, err2, "constant error")
+	externalMock.EXPECT().Gauge(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("constant error")).Times(2)
+	_, err1 = registry.loadOrStoreGauge("name", "desc", "one", "two")
+	_, err2 = registry.loadOrStoreGauge("name", "desc", "one", "two")
+	assert.EqualError(t, err1, "constant error")
+	assert.EqualError(t, err2, "constant error")
+}
+
 func TestConcurrentGaugeCreation(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
