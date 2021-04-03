@@ -6,49 +6,36 @@ package mock_log
 
 import (
 	context "context"
+	reflect "reflect"
+
 	log "github.com/go-masonry/mortar/interfaces/log"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
-// MockLoggerConfiguration is a mock of LoggerConfiguration interface
+// MockLoggerConfiguration is a mock of LoggerConfiguration interface.
 type MockLoggerConfiguration struct {
 	ctrl     *gomock.Controller
 	recorder *MockLoggerConfigurationMockRecorder
 }
 
-// MockLoggerConfigurationMockRecorder is the mock recorder for MockLoggerConfiguration
+// MockLoggerConfigurationMockRecorder is the mock recorder for MockLoggerConfiguration.
 type MockLoggerConfigurationMockRecorder struct {
 	mock *MockLoggerConfiguration
 }
 
-// NewMockLoggerConfiguration creates a new mock instance
+// NewMockLoggerConfiguration creates a new mock instance.
 func NewMockLoggerConfiguration(ctrl *gomock.Controller) *MockLoggerConfiguration {
 	mock := &MockLoggerConfiguration{ctrl: ctrl}
 	mock.recorder = &MockLoggerConfigurationMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockLoggerConfiguration) EXPECT() *MockLoggerConfigurationMockRecorder {
 	return m.recorder
 }
 
-// Level mocks base method
-func (m *MockLoggerConfiguration) Level() log.Level {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Level")
-	ret0, _ := ret[0].(log.Level)
-	return ret0
-}
-
-// Level indicates an expected call of Level
-func (mr *MockLoggerConfigurationMockRecorder) Level() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Level", reflect.TypeOf((*MockLoggerConfiguration)(nil).Level))
-}
-
-// Implementation mocks base method
+// Implementation mocks base method.
 func (m *MockLoggerConfiguration) Implementation() interface{} {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Implementation")
@@ -56,64 +43,50 @@ func (m *MockLoggerConfiguration) Implementation() interface{} {
 	return ret0
 }
 
-// Implementation indicates an expected call of Implementation
+// Implementation indicates an expected call of Implementation.
 func (mr *MockLoggerConfigurationMockRecorder) Implementation() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Implementation", reflect.TypeOf((*MockLoggerConfiguration)(nil).Implementation))
 }
 
-// MockBuilder is a mock of Builder interface
+// Level mocks base method.
+func (m *MockLoggerConfiguration) Level() log.Level {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Level")
+	ret0, _ := ret[0].(log.Level)
+	return ret0
+}
+
+// Level indicates an expected call of Level.
+func (mr *MockLoggerConfigurationMockRecorder) Level() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Level", reflect.TypeOf((*MockLoggerConfiguration)(nil).Level))
+}
+
+// MockBuilder is a mock of Builder interface.
 type MockBuilder struct {
 	ctrl     *gomock.Controller
 	recorder *MockBuilderMockRecorder
 }
 
-// MockBuilderMockRecorder is the mock recorder for MockBuilder
+// MockBuilderMockRecorder is the mock recorder for MockBuilder.
 type MockBuilderMockRecorder struct {
 	mock *MockBuilder
 }
 
-// NewMockBuilder creates a new mock instance
+// NewMockBuilder creates a new mock instance.
 func NewMockBuilder(ctrl *gomock.Controller) *MockBuilder {
 	mock := &MockBuilder{ctrl: ctrl}
 	mock.recorder = &MockBuilderMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBuilder) EXPECT() *MockBuilderMockRecorder {
 	return m.recorder
 }
 
-// IncrementSkipFrames mocks base method
-func (m *MockBuilder) IncrementSkipFrames(addition int) log.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IncrementSkipFrames", addition)
-	ret0, _ := ret[0].(log.Builder)
-	return ret0
-}
-
-// IncrementSkipFrames indicates an expected call of IncrementSkipFrames
-func (mr *MockBuilderMockRecorder) IncrementSkipFrames(addition interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncrementSkipFrames", reflect.TypeOf((*MockBuilder)(nil).IncrementSkipFrames), addition)
-}
-
-// SetLevel mocks base method
-func (m *MockBuilder) SetLevel(level log.Level) log.Builder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetLevel", level)
-	ret0, _ := ret[0].(log.Builder)
-	return ret0
-}
-
-// SetLevel indicates an expected call of SetLevel
-func (mr *MockBuilderMockRecorder) SetLevel(level interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetLevel", reflect.TypeOf((*MockBuilder)(nil).SetLevel), level)
-}
-
-// Build mocks base method
+// Build mocks base method.
 func (m *MockBuilder) Build() log.Logger {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Build")
@@ -121,121 +94,64 @@ func (m *MockBuilder) Build() log.Logger {
 	return ret0
 }
 
-// Build indicates an expected call of Build
+// Build indicates an expected call of Build.
 func (mr *MockBuilderMockRecorder) Build() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockBuilder)(nil).Build))
 }
 
-// MockMessages is a mock of Messages interface
+// IncrementSkipFrames mocks base method.
+func (m *MockBuilder) IncrementSkipFrames(addition int) log.Builder {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IncrementSkipFrames", addition)
+	ret0, _ := ret[0].(log.Builder)
+	return ret0
+}
+
+// IncrementSkipFrames indicates an expected call of IncrementSkipFrames.
+func (mr *MockBuilderMockRecorder) IncrementSkipFrames(addition interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncrementSkipFrames", reflect.TypeOf((*MockBuilder)(nil).IncrementSkipFrames), addition)
+}
+
+// SetLevel mocks base method.
+func (m *MockBuilder) SetLevel(level log.Level) log.Builder {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetLevel", level)
+	ret0, _ := ret[0].(log.Builder)
+	return ret0
+}
+
+// SetLevel indicates an expected call of SetLevel.
+func (mr *MockBuilderMockRecorder) SetLevel(level interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetLevel", reflect.TypeOf((*MockBuilder)(nil).SetLevel), level)
+}
+
+// MockMessages is a mock of Messages interface.
 type MockMessages struct {
 	ctrl     *gomock.Controller
 	recorder *MockMessagesMockRecorder
 }
 
-// MockMessagesMockRecorder is the mock recorder for MockMessages
+// MockMessagesMockRecorder is the mock recorder for MockMessages.
 type MockMessagesMockRecorder struct {
 	mock *MockMessages
 }
 
-// NewMockMessages creates a new mock instance
+// NewMockMessages creates a new mock instance.
 func NewMockMessages(ctrl *gomock.Controller) *MockMessages {
 	mock := &MockMessages{ctrl: ctrl}
 	mock.recorder = &MockMessagesMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMessages) EXPECT() *MockMessagesMockRecorder {
 	return m.recorder
 }
 
-// Trace mocks base method
-func (m *MockMessages) Trace(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Trace", varargs...)
-}
-
-// Trace indicates an expected call of Trace
-func (mr *MockMessagesMockRecorder) Trace(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Trace", reflect.TypeOf((*MockMessages)(nil).Trace), varargs...)
-}
-
-// Debug mocks base method
-func (m *MockMessages) Debug(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Debug", varargs...)
-}
-
-// Debug indicates an expected call of Debug
-func (mr *MockMessagesMockRecorder) Debug(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Debug", reflect.TypeOf((*MockMessages)(nil).Debug), varargs...)
-}
-
-// Info mocks base method
-func (m *MockMessages) Info(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Info", varargs...)
-}
-
-// Info indicates an expected call of Info
-func (mr *MockMessagesMockRecorder) Info(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockMessages)(nil).Info), varargs...)
-}
-
-// Warn mocks base method
-func (m *MockMessages) Warn(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Warn", varargs...)
-}
-
-// Warn indicates an expected call of Warn
-func (mr *MockMessagesMockRecorder) Warn(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Warn", reflect.TypeOf((*MockMessages)(nil).Warn), varargs...)
-}
-
-// Error mocks base method
-func (m *MockMessages) Error(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Error", varargs...)
-}
-
-// Error indicates an expected call of Error
-func (mr *MockMessagesMockRecorder) Error(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockMessages)(nil).Error), varargs...)
-}
-
-// Custom mocks base method
+// Custom mocks base method.
 func (m *MockMessages) Custom(ctx context.Context, level log.Level, skipAdditionalFrames int, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, level, skipAdditionalFrames, format}
@@ -245,55 +161,15 @@ func (m *MockMessages) Custom(ctx context.Context, level log.Level, skipAddition
 	m.ctrl.Call(m, "Custom", varargs...)
 }
 
-// Custom indicates an expected call of Custom
+// Custom indicates an expected call of Custom.
 func (mr *MockMessagesMockRecorder) Custom(ctx, level, skipAdditionalFrames, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, level, skipAdditionalFrames, format}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Custom", reflect.TypeOf((*MockMessages)(nil).Custom), varargs...)
 }
 
-// MockFields is a mock of Fields interface
-type MockFields struct {
-	ctrl     *gomock.Controller
-	recorder *MockFieldsMockRecorder
-}
-
-// MockFieldsMockRecorder is the mock recorder for MockFields
-type MockFieldsMockRecorder struct {
-	mock *MockFields
-}
-
-// NewMockFields creates a new mock instance
-func NewMockFields(ctrl *gomock.Controller) *MockFields {
-	mock := &MockFields{ctrl: ctrl}
-	mock.recorder = &MockFieldsMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockFields) EXPECT() *MockFieldsMockRecorder {
-	return m.recorder
-}
-
-// Trace mocks base method
-func (m *MockFields) Trace(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Trace", varargs...)
-}
-
-// Trace indicates an expected call of Trace
-func (mr *MockFieldsMockRecorder) Trace(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Trace", reflect.TypeOf((*MockFields)(nil).Trace), varargs...)
-}
-
-// Debug mocks base method
-func (m *MockFields) Debug(ctx context.Context, format string, args ...interface{}) {
+// Debug mocks base method.
+func (m *MockMessages) Debug(ctx context.Context, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, format}
 	for _, a := range args {
@@ -302,49 +178,15 @@ func (m *MockFields) Debug(ctx context.Context, format string, args ...interface
 	m.ctrl.Call(m, "Debug", varargs...)
 }
 
-// Debug indicates an expected call of Debug
-func (mr *MockFieldsMockRecorder) Debug(ctx, format interface{}, args ...interface{}) *gomock.Call {
+// Debug indicates an expected call of Debug.
+func (mr *MockMessagesMockRecorder) Debug(ctx, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Debug", reflect.TypeOf((*MockFields)(nil).Debug), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Debug", reflect.TypeOf((*MockMessages)(nil).Debug), varargs...)
 }
 
-// Info mocks base method
-func (m *MockFields) Info(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Info", varargs...)
-}
-
-// Info indicates an expected call of Info
-func (mr *MockFieldsMockRecorder) Info(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockFields)(nil).Info), varargs...)
-}
-
-// Warn mocks base method
-func (m *MockFields) Warn(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Warn", varargs...)
-}
-
-// Warn indicates an expected call of Warn
-func (mr *MockFieldsMockRecorder) Warn(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Warn", reflect.TypeOf((*MockFields)(nil).Warn), varargs...)
-}
-
-// Error mocks base method
-func (m *MockFields) Error(ctx context.Context, format string, args ...interface{}) {
+// Error mocks base method.
+func (m *MockMessages) Error(ctx context.Context, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, format}
 	for _, a := range args {
@@ -353,14 +195,88 @@ func (m *MockFields) Error(ctx context.Context, format string, args ...interface
 	m.ctrl.Call(m, "Error", varargs...)
 }
 
-// Error indicates an expected call of Error
-func (mr *MockFieldsMockRecorder) Error(ctx, format interface{}, args ...interface{}) *gomock.Call {
+// Error indicates an expected call of Error.
+func (mr *MockMessagesMockRecorder) Error(ctx, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockFields)(nil).Error), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockMessages)(nil).Error), varargs...)
 }
 
-// Custom mocks base method
+// Info mocks base method.
+func (m *MockMessages) Info(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Info", varargs...)
+}
+
+// Info indicates an expected call of Info.
+func (mr *MockMessagesMockRecorder) Info(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockMessages)(nil).Info), varargs...)
+}
+
+// Trace mocks base method.
+func (m *MockMessages) Trace(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Trace", varargs...)
+}
+
+// Trace indicates an expected call of Trace.
+func (mr *MockMessagesMockRecorder) Trace(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Trace", reflect.TypeOf((*MockMessages)(nil).Trace), varargs...)
+}
+
+// Warn mocks base method.
+func (m *MockMessages) Warn(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Warn", varargs...)
+}
+
+// Warn indicates an expected call of Warn.
+func (mr *MockMessagesMockRecorder) Warn(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Warn", reflect.TypeOf((*MockMessages)(nil).Warn), varargs...)
+}
+
+// MockFields is a mock of Fields interface.
+type MockFields struct {
+	ctrl     *gomock.Controller
+	recorder *MockFieldsMockRecorder
+}
+
+// MockFieldsMockRecorder is the mock recorder for MockFields.
+type MockFieldsMockRecorder struct {
+	mock *MockFields
+}
+
+// NewMockFields creates a new mock instance.
+func NewMockFields(ctrl *gomock.Controller) *MockFields {
+	mock := &MockFields{ctrl: ctrl}
+	mock.recorder = &MockFieldsMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockFields) EXPECT() *MockFieldsMockRecorder {
+	return m.recorder
+}
+
+// Custom mocks base method.
 func (m *MockFields) Custom(ctx context.Context, level log.Level, skipAdditionalFrames int, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, level, skipAdditionalFrames, format}
@@ -370,83 +286,15 @@ func (m *MockFields) Custom(ctx context.Context, level log.Level, skipAdditional
 	m.ctrl.Call(m, "Custom", varargs...)
 }
 
-// Custom indicates an expected call of Custom
+// Custom indicates an expected call of Custom.
 func (mr *MockFieldsMockRecorder) Custom(ctx, level, skipAdditionalFrames, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, level, skipAdditionalFrames, format}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Custom", reflect.TypeOf((*MockFields)(nil).Custom), varargs...)
 }
 
-// WithError mocks base method
-func (m *MockFields) WithError(err error) log.Fields {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WithError", err)
-	ret0, _ := ret[0].(log.Fields)
-	return ret0
-}
-
-// WithError indicates an expected call of WithError
-func (mr *MockFieldsMockRecorder) WithError(err interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithError", reflect.TypeOf((*MockFields)(nil).WithError), err)
-}
-
-// WithField mocks base method
-func (m *MockFields) WithField(name string, value interface{}) log.Fields {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WithField", name, value)
-	ret0, _ := ret[0].(log.Fields)
-	return ret0
-}
-
-// WithField indicates an expected call of WithField
-func (mr *MockFieldsMockRecorder) WithField(name, value interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithField", reflect.TypeOf((*MockFields)(nil).WithField), name, value)
-}
-
-// MockLogger is a mock of Logger interface
-type MockLogger struct {
-	ctrl     *gomock.Controller
-	recorder *MockLoggerMockRecorder
-}
-
-// MockLoggerMockRecorder is the mock recorder for MockLogger
-type MockLoggerMockRecorder struct {
-	mock *MockLogger
-}
-
-// NewMockLogger creates a new mock instance
-func NewMockLogger(ctrl *gomock.Controller) *MockLogger {
-	mock := &MockLogger{ctrl: ctrl}
-	mock.recorder = &MockLoggerMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockLogger) EXPECT() *MockLoggerMockRecorder {
-	return m.recorder
-}
-
-// Trace mocks base method
-func (m *MockLogger) Trace(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Trace", varargs...)
-}
-
-// Trace indicates an expected call of Trace
-func (mr *MockLoggerMockRecorder) Trace(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Trace", reflect.TypeOf((*MockLogger)(nil).Trace), varargs...)
-}
-
-// Debug mocks base method
-func (m *MockLogger) Debug(ctx context.Context, format string, args ...interface{}) {
+// Debug mocks base method.
+func (m *MockFields) Debug(ctx context.Context, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, format}
 	for _, a := range args {
@@ -455,49 +303,15 @@ func (m *MockLogger) Debug(ctx context.Context, format string, args ...interface
 	m.ctrl.Call(m, "Debug", varargs...)
 }
 
-// Debug indicates an expected call of Debug
-func (mr *MockLoggerMockRecorder) Debug(ctx, format interface{}, args ...interface{}) *gomock.Call {
+// Debug indicates an expected call of Debug.
+func (mr *MockFieldsMockRecorder) Debug(ctx, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Debug", reflect.TypeOf((*MockLogger)(nil).Debug), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Debug", reflect.TypeOf((*MockFields)(nil).Debug), varargs...)
 }
 
-// Info mocks base method
-func (m *MockLogger) Info(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Info", varargs...)
-}
-
-// Info indicates an expected call of Info
-func (mr *MockLoggerMockRecorder) Info(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockLogger)(nil).Info), varargs...)
-}
-
-// Warn mocks base method
-func (m *MockLogger) Warn(ctx context.Context, format string, args ...interface{}) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, format}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Warn", varargs...)
-}
-
-// Warn indicates an expected call of Warn
-func (mr *MockLoggerMockRecorder) Warn(ctx, format interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Warn", reflect.TypeOf((*MockLogger)(nil).Warn), varargs...)
-}
-
-// Error mocks base method
-func (m *MockLogger) Error(ctx context.Context, format string, args ...interface{}) {
+// Error mocks base method.
+func (m *MockFields) Error(ctx context.Context, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, format}
 	for _, a := range args {
@@ -506,14 +320,130 @@ func (m *MockLogger) Error(ctx context.Context, format string, args ...interface
 	m.ctrl.Call(m, "Error", varargs...)
 }
 
-// Error indicates an expected call of Error
-func (mr *MockLoggerMockRecorder) Error(ctx, format interface{}, args ...interface{}) *gomock.Call {
+// Error indicates an expected call of Error.
+func (mr *MockFieldsMockRecorder) Error(ctx, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, format}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockLogger)(nil).Error), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockFields)(nil).Error), varargs...)
 }
 
-// Custom mocks base method
+// Info mocks base method.
+func (m *MockFields) Info(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Info", varargs...)
+}
+
+// Info indicates an expected call of Info.
+func (mr *MockFieldsMockRecorder) Info(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockFields)(nil).Info), varargs...)
+}
+
+// Trace mocks base method.
+func (m *MockFields) Trace(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Trace", varargs...)
+}
+
+// Trace indicates an expected call of Trace.
+func (mr *MockFieldsMockRecorder) Trace(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Trace", reflect.TypeOf((*MockFields)(nil).Trace), varargs...)
+}
+
+// Warn mocks base method.
+func (m *MockFields) Warn(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Warn", varargs...)
+}
+
+// Warn indicates an expected call of Warn.
+func (mr *MockFieldsMockRecorder) Warn(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Warn", reflect.TypeOf((*MockFields)(nil).Warn), varargs...)
+}
+
+// WithError mocks base method.
+func (m *MockFields) WithError(err error) log.Fields {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithError", err)
+	ret0, _ := ret[0].(log.Fields)
+	return ret0
+}
+
+// WithError indicates an expected call of WithError.
+func (mr *MockFieldsMockRecorder) WithError(err interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithError", reflect.TypeOf((*MockFields)(nil).WithError), err)
+}
+
+// WithField mocks base method.
+func (m *MockFields) WithField(name string, value interface{}) log.Fields {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithField", name, value)
+	ret0, _ := ret[0].(log.Fields)
+	return ret0
+}
+
+// WithField indicates an expected call of WithField.
+func (mr *MockFieldsMockRecorder) WithField(name, value interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithField", reflect.TypeOf((*MockFields)(nil).WithField), name, value)
+}
+
+// MockLogger is a mock of Logger interface.
+type MockLogger struct {
+	ctrl     *gomock.Controller
+	recorder *MockLoggerMockRecorder
+}
+
+// MockLoggerMockRecorder is the mock recorder for MockLogger.
+type MockLoggerMockRecorder struct {
+	mock *MockLogger
+}
+
+// NewMockLogger creates a new mock instance.
+func NewMockLogger(ctrl *gomock.Controller) *MockLogger {
+	mock := &MockLogger{ctrl: ctrl}
+	mock.recorder = &MockLoggerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockLogger) EXPECT() *MockLoggerMockRecorder {
+	return m.recorder
+}
+
+// Configuration mocks base method.
+func (m *MockLogger) Configuration() log.LoggerConfiguration {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Configuration")
+	ret0, _ := ret[0].(log.LoggerConfiguration)
+	return ret0
+}
+
+// Configuration indicates an expected call of Configuration.
+func (mr *MockLoggerMockRecorder) Configuration() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Configuration", reflect.TypeOf((*MockLogger)(nil).Configuration))
+}
+
+// Custom mocks base method.
 func (m *MockLogger) Custom(ctx context.Context, level log.Level, skipAdditionalFrames int, format string, args ...interface{}) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, level, skipAdditionalFrames, format}
@@ -523,14 +453,99 @@ func (m *MockLogger) Custom(ctx context.Context, level log.Level, skipAdditional
 	m.ctrl.Call(m, "Custom", varargs...)
 }
 
-// Custom indicates an expected call of Custom
+// Custom indicates an expected call of Custom.
 func (mr *MockLoggerMockRecorder) Custom(ctx, level, skipAdditionalFrames, format interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, level, skipAdditionalFrames, format}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Custom", reflect.TypeOf((*MockLogger)(nil).Custom), varargs...)
 }
 
-// WithError mocks base method
+// Debug mocks base method.
+func (m *MockLogger) Debug(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Debug", varargs...)
+}
+
+// Debug indicates an expected call of Debug.
+func (mr *MockLoggerMockRecorder) Debug(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Debug", reflect.TypeOf((*MockLogger)(nil).Debug), varargs...)
+}
+
+// Error mocks base method.
+func (m *MockLogger) Error(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Error", varargs...)
+}
+
+// Error indicates an expected call of Error.
+func (mr *MockLoggerMockRecorder) Error(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockLogger)(nil).Error), varargs...)
+}
+
+// Info mocks base method.
+func (m *MockLogger) Info(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Info", varargs...)
+}
+
+// Info indicates an expected call of Info.
+func (mr *MockLoggerMockRecorder) Info(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockLogger)(nil).Info), varargs...)
+}
+
+// Trace mocks base method.
+func (m *MockLogger) Trace(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Trace", varargs...)
+}
+
+// Trace indicates an expected call of Trace.
+func (mr *MockLoggerMockRecorder) Trace(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Trace", reflect.TypeOf((*MockLogger)(nil).Trace), varargs...)
+}
+
+// Warn mocks base method.
+func (m *MockLogger) Warn(ctx context.Context, format string, args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, format}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "Warn", varargs...)
+}
+
+// Warn indicates an expected call of Warn.
+func (mr *MockLoggerMockRecorder) Warn(ctx, format interface{}, args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, format}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Warn", reflect.TypeOf((*MockLogger)(nil).Warn), varargs...)
+}
+
+// WithError mocks base method.
 func (m *MockLogger) WithError(err error) log.Fields {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "WithError", err)
@@ -538,13 +553,13 @@ func (m *MockLogger) WithError(err error) log.Fields {
 	return ret0
 }
 
-// WithError indicates an expected call of WithError
+// WithError indicates an expected call of WithError.
 func (mr *MockLoggerMockRecorder) WithError(err interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithError", reflect.TypeOf((*MockLogger)(nil).WithError), err)
 }
 
-// WithField mocks base method
+// WithField mocks base method.
 func (m *MockLogger) WithField(name string, value interface{}) log.Fields {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "WithField", name, value)
@@ -552,22 +567,8 @@ func (m *MockLogger) WithField(name string, value interface{}) log.Fields {
 	return ret0
 }
 
-// WithField indicates an expected call of WithField
+// WithField indicates an expected call of WithField.
 func (mr *MockLoggerMockRecorder) WithField(name, value interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithField", reflect.TypeOf((*MockLogger)(nil).WithField), name, value)
-}
-
-// Configuration mocks base method
-func (m *MockLogger) Configuration() log.LoggerConfiguration {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Configuration")
-	ret0, _ := ret[0].(log.LoggerConfiguration)
-	return ret0
-}
-
-// Configuration indicates an expected call of Configuration
-func (mr *MockLoggerMockRecorder) Configuration() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Configuration", reflect.TypeOf((*MockLogger)(nil).Configuration))
 }

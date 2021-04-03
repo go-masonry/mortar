@@ -78,7 +78,6 @@ func (s *partialSuite) SetupTest() {
 	s.cfgMock.EXPECT().Get(confkeys.InternalRESTPort).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().IsSet().Return(true)
-		value.EXPECT().Int().Return(1236)
 		return value
 	})
 }
