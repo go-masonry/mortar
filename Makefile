@@ -55,15 +55,19 @@ code-up-to-date: generate-test go-fmt go-lint
 
 health-proto:
 	 @protoc -I. \
-			-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-			--go_out=plugins=grpc:. \
-          	--grpc-gateway_out=logtostderr=true,paths=source_relative:. ./http/server/health/health.proto
+	 		-I./third_party/googleapis \
+			--go-grpc_out . --go-grpc_opt paths=source_relative \
+			--go_out . --go_opt paths=source_relative  \
+			--grpc-gateway_out . --grpc-gateway_opt logtostderr=true  --grpc-gateway_opt paths=source_relative \
+          	./http/server/health/health.proto
 
 service-test-proto:
 	 @protoc -I. \
-			-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-			--go_out=plugins=grpc:. \
-          	--grpc-gateway_out=logtostderr=true,paths=source_relative:. ./http/server/proto/service.proto
+			-I./third_party/googleapis \
+			--go-grpc_out . --go-grpc_opt paths=source_relative \
+			--go_out . --go_opt paths=source_relative  \
+			--grpc-gateway_out . --grpc-gateway_opt logtostderr=true  --grpc-gateway_opt paths=source_relative \
+			./http/server/proto/service.proto
 
 proto: health-proto service-test-proto
 
