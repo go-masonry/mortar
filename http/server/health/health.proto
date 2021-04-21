@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package mortar.health.v1;
-option go_package = ".;health";
+option go_package = "http/server/health;health";
 
 import "google/api/annotations.proto";
 message HealthCheckRequest {}
