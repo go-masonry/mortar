@@ -26,8 +26,8 @@ type ProtobufHTTPClient interface {
 	// Error returned will be of type `(*status.Status).Err()` meaning it will be a gRPC type error.
 	//
 	// Note:
-	//	// you can pass `nil` as the last parameter if you don't want to unmarshal HTTP response body.
-	//	// or you know it's going to be empty == EOF
+	// you can pass `nil` as the last parameter if you don't want to unmarshal HTTP response body.
+	// or you know it's going to be empty == EOF
 	//	err := Do(ctx, http.MethodPost, "http://host/path", request, nil)
 	Do(ctx context.Context, method, url string, in proto.Message, out interface{}) error
 }
