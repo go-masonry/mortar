@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -39,9 +40,10 @@ func SelfHandlers(deps selfHandlerDeps) []partial.HTTPHandlerPatternPair {
 func (s *selfHandlerDeps) BuildInfo() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		information := mortar.GetBuildInformation(true)
+		w.Header().Set("Content-type", "application/json; charset=utf-8")
 		if err := json.NewEncoder(w).Encode(information); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			s.Logger.WithError(err).Warn(nil, "failed to serve build info")
+			s.Logger.WithError(err).Warn(context.TODO(), "failed to serve build info")
 		}
 	}
 }
@@ -54,7 +56,7 @@ func (s *selfHandlerDeps) ConfigMap() http.HandlerFunc {
 		output["environment"] = s.getEnvVariables()
 		if err := json.NewEncoder(w).Encode(output); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			s.Logger.WithError(err).Warn(nil, "failed to server config map")
+			s.Logger.WithError(err).Warn(context.TODO(), "failed to server config map")
 		}
 	}
 }
