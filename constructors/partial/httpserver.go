@@ -10,10 +10,14 @@ import (
 	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	serverInt "github.com/go-masonry/mortar/interfaces/http/server"
 	"github.com/go-masonry/mortar/interfaces/log"
+	"github.com/go-masonry/mortar/interfaces/monitor"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 )
+
+// PanicHandlerCounter is the metric name to count all recovered panics
+const PanicHandlerCounter = "panic_handler_total"
 
 // Group order is not guaranteed, if it's important then add them manually
 const (
@@ -50,8 +54,9 @@ type HTTPHandlerFuncPatternPair struct {
 type httpServerDeps struct {
 	fx.In
 
-	Config cfg.Config
-	Logger log.Logger
+	Config  cfg.Config
+	Logger  log.Logger
+	Metrics monitor.Metrics `optional:"true"`
 	// GRPC
 	GRPCServerAPIs    []serverInt.GRPCServerAPI     `group:"grpcServerAPIs"`
 	UnaryInterceptors []grpc.UnaryServerInterceptor `group:"unaryServerInterceptors"`
@@ -71,7 +76,7 @@ type httpServerDeps struct {
 // However, if you need to customize your configuration it's better to build yours from scratch
 //
 func HTTPServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
-	builder := server.Builder().SetLogger(deps.Logger.Debug)
+	builder := server.Builder().SetPanicHandler(deps.panicHandler).SetLogger(deps.Logger.Debug)
 	// GRPC port
 	if grpcPort := deps.Config.Get(confkeys.ExternalGRPCPort); grpcPort.IsSet() {
 		builder = builder.ListenOn(fmt.Sprintf(":%d", grpcPort.Int()))
@@ -130,4 +135,18 @@ func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuil
 		builder = restBuilder.BuildRESTPart()
 	}
 	return builder
+}
+
+func (deps httpServerDeps) panicHandler(r interface{}) error {
+	if deps.Metrics != nil {
+		deps.Metrics.Counter(PanicHandlerCounter, "Count gRPC panic recoveries").Inc()
+	}
+	switch t := r.(type) {
+	case string, fmt.Stringer:
+		return fmt.Errorf("panic handled, %s", t)
+	case error:
+		return fmt.Errorf("panic handled, %w", t)
+	default:
+		return fmt.Errorf("panic handled, %v", t)
+	}
 }
