@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -11,8 +12,11 @@ import (
 	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/log"
+	"github.com/go-masonry/mortar/interfaces/monitor"
+	mock_monitor "github.com/go-masonry/mortar/interfaces/monitor/mock"
 	"github.com/go-masonry/mortar/logger/naive"
 	"github.com/go-masonry/mortar/middleware/interceptors/client"
+	"github.com/golang/mock/gomock"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -110,5 +114,76 @@ func (s *middlewareSuite) testDumpRESTClientInterceptorBeforeTest() fx.Option {
 			return naive.Builder().SetWriter(&s.loggerOutput).SetLevel(log.DebugLevel).Build()
 		}),
 		fx.Populate(&s.restClientInterceptor),
+	)
+}
+
+func (s *middlewareSuite) TestRESTClientMetrics() {
+	mockTimer := mock_monitor.NewMockTagsAwareTimer(s.ctrl)
+	mockTimer.EXPECT().Record(gomock.Any()).After(
+		mockTimer.EXPECT().WithContext(gomock.Any()).Return(mockTimer),
+	)
+	s.metricsMock.EXPECT().Timer("client_calls_duration", gomock.Any()).Return(mockTimer).After(
+		s.metricsMock.EXPECT().WithTags(gomock.Any()).DoAndReturn(func(tags monitor.Tags) *mock_monitor.MockMetrics {
+			s.Equal(monitor.Tags{
+				"target":  "wonder",
+				"path":    "/land",
+				"success": "true",
+				"ctype":   "rest",
+			}, tags)
+			return s.metricsMock
+		}),
+	)
+	fakeHandler := func(req *http.Request) (*http.Response, error) {
+		return &http.Response{
+			Status:        "200 OK",
+			StatusCode:    200,
+			Proto:         "HTTP/1.1",
+			ProtoMajor:    1,
+			ProtoMinor:    1,
+			ContentLength: 3,
+			Body:          ioutil.NopCloser(strings.NewReader("foo")),
+		}, nil
+	}
+	req, _ := http.NewRequestWithContext(context.TODO(), http.MethodHead, "http://wonder:/land", nil)
+	res, err := s.restClientInterceptor(req, fakeHandler)
+	s.NoError(err)
+	defer res.Body.Close()
+}
+
+func (s *middlewareSuite) TestGRPCClientMetrics() {
+	mockTimer := mock_monitor.NewMockTagsAwareTimer(s.ctrl)
+	mockTimer.EXPECT().Record(gomock.Any()).After(
+		mockTimer.EXPECT().WithContext(gomock.Any()).Return(mockTimer),
+	)
+	s.metricsMock.EXPECT().Timer("client_calls_duration", gomock.Any()).Return(mockTimer).After(
+		s.metricsMock.EXPECT().WithTags(gomock.Any()).DoAndReturn(func(tags monitor.Tags) *mock_monitor.MockMetrics {
+			s.Equal(monitor.Tags{
+				"target":  "",
+				"path":    "/wonder.Land/Thing",
+				"success": "false",
+				"ctype":   "grpc",
+			}, tags)
+			return s.metricsMock
+		}),
+	)
+	invoker := func(_ context.Context, _ string, _, _ interface{}, cc *grpc.ClientConn, opts ...grpc.CallOption) error {
+		return errors.New("fake error")
+	}
+	err := s.clientInterceptor(context.TODO(), "/wonder.Land/Thing", nil, nil, &grpc.ClientConn{}, invoker)
+	s.Error(err)
+}
+
+func (s *middlewareSuite) testClientMetricsBeforeTest() fx.Option {
+	return fx.Options(
+		fx.Provide(func() monitor.Metrics {
+			return s.metricsMock
+		}),
+		fx.Provide(client.MonitorRESTClientCallsInterceptor),
+		fx.Provide(client.MonitorGRPCClientCallsInterceptor),
+		fx.Provide(func() log.Logger { return naive.Builder().SetWriter(&s.loggerOutput).Build() }),
+		fx.Populate(
+			&s.restClientInterceptor,
+			&s.clientInterceptor,
+		),
 	)
 }
