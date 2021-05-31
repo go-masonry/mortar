@@ -8,6 +8,7 @@ import (
 	mock_cfg "github.com/go-masonry/mortar/interfaces/cfg/mock"
 	"github.com/go-masonry/mortar/interfaces/http/client"
 	"github.com/go-masonry/mortar/interfaces/log"
+	mock_monitor "github.com/go-masonry/mortar/interfaces/monitor/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/opentracing/opentracing-go"
 	"github.com/stretchr/testify/suite"
@@ -21,6 +22,7 @@ type middlewareSuite struct {
 
 	ctrl         *gomock.Controller
 	cfgMock      *mock_cfg.MockConfig
+	metricsMock  *mock_monitor.MockMetrics
 	app          *fxtest.App
 	loggerOutput bytes.Buffer
 	// populate
@@ -35,10 +37,11 @@ func TestMiddleware(t *testing.T) {
 	suite.Run(t, new(middlewareSuite))
 }
 
+// This one runs before `BeforeTest`
 func (s *middlewareSuite) SetupTest() {
-	// This one runs before `BeforeTest`
 	s.ctrl = gomock.NewController(s.T())
 	s.cfgMock = mock_cfg.NewMockConfig(s.ctrl)
+	s.metricsMock = mock_monitor.NewMockMetrics(s.ctrl)
 	s.loggerOutput = bytes.Buffer{} // init buffer
 }
 
@@ -61,6 +64,8 @@ func (s *middlewareSuite) BeforeTest(suiteName, testName string) {
 		extraOptions = s.testGRPCTracingUnaryServerInterceptorBeforeTest()
 	case "TestDumpRESTClientInterceptor":
 		extraOptions = s.testDumpRESTClientInterceptorBeforeTest()
+	case "TestRESTClientMetrics", "TestGRPCClientMetrics":
+		extraOptions = s.testClientMetricsBeforeTest()
 	default:
 		s.T().Fatalf("no pre test logic found for %s", testName)
 	}
