@@ -38,4 +38,4 @@ jobs:
       run: |
         tail -n1 coverage-summary.txt | awk '{print "Coverage summary: " $3}'
     - name: Codecov
-      uses: codecov/codecov-action@v1.4.1
+      uses: codecov/codecov-action@v1
