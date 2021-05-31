@@ -19,7 +19,7 @@ const (
 	ClientTimerMetricDescription = "Monitor external HTTP client calls"
 	TargetTag                    = "target"
 	PathTag                      = "path"
-	ErrorTag                     = "err"
+	SuccessTag                   = "success"
 	TypeTag                      = "ctype"
 	TypeGRPC                     = "grpc"
 	TypeREST                     = "rest"
@@ -38,7 +38,7 @@ func MonitorGRPCClientCallsInterceptor(deps monitorDeps) grpc.UnaryClientInterce
 		err = invoker(ctx, method, req, reply, cc, opts...)
 
 		if deps.Metrics != nil {
-			tags := prepareTags(cc.Target(), method, TypeGRPC, fmt.Sprintf("%t", err != nil))
+			tags := prepareTags(cc.Target(), method, TypeGRPC, fmt.Sprintf("%t", err == nil))
 			deps.Metrics.
 				WithTags(tags).
 				Timer(ClientTimerMetric, ClientTimerMetricDescription).
@@ -56,7 +56,7 @@ func MonitorRESTClientCallsInterceptor(deps monitorDeps) client.HTTPClientInterc
 		resp, err = handler(req)
 
 		if deps.Metrics != nil {
-			tags := prepareTags(req.Host, req.URL.Path, TypeREST, fmt.Sprintf("%t", err != nil || resp.StatusCode >= http.StatusBadRequest))
+			tags := prepareTags(req.Host, req.URL.Path, TypeREST, fmt.Sprintf("%t", err == nil && resp.StatusCode < http.StatusBadRequest))
 			deps.Metrics.
 				WithTags(tags).
 				Timer(ClientTimerMetric, ClientTimerMetricDescription).
@@ -70,9 +70,9 @@ func MonitorRESTClientCallsInterceptor(deps monitorDeps) client.HTTPClientInterc
 func prepareTags(host, path, clientType, err string) monitor.Tags {
 	host = strings.Trim(host, ":") // remove trailing port if exists
 	return monitor.Tags{
-		TargetTag: host,
-		PathTag:   path,
-		ErrorTag:  err,
-		TypeTag:   clientType,
+		TargetTag:  host,
+		PathTag:    path,
+		SuccessTag: err,
+		TypeTag:    clientType,
 	}
 }

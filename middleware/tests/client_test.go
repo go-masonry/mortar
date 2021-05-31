@@ -125,10 +125,10 @@ func (s *middlewareSuite) TestRESTClientMetrics() {
 	s.metricsMock.EXPECT().Timer("client_calls_duration", gomock.Any()).Return(mockTimer).After(
 		s.metricsMock.EXPECT().WithTags(gomock.Any()).DoAndReturn(func(tags monitor.Tags) *mock_monitor.MockMetrics {
 			s.Equal(monitor.Tags{
-				"target": "wonder",
-				"path":   "/land",
-				"err":    "false",
-				"ctype":  "rest",
+				"target":  "wonder",
+				"path":    "/land",
+				"success": "true",
+				"ctype":   "rest",
 			}, tags)
 			return s.metricsMock
 		}),
@@ -158,10 +158,10 @@ func (s *middlewareSuite) TestGRPCClientMetrics() {
 	s.metricsMock.EXPECT().Timer("client_calls_duration", gomock.Any()).Return(mockTimer).After(
 		s.metricsMock.EXPECT().WithTags(gomock.Any()).DoAndReturn(func(tags monitor.Tags) *mock_monitor.MockMetrics {
 			s.Equal(monitor.Tags{
-				"target": "",
-				"path":   "/wonder.Land/Thing",
-				"err":    "true",
-				"ctype":  "grpc",
+				"target":  "",
+				"path":    "/wonder.Land/Thing",
+				"success": "false",
+				"ctype":   "grpc",
 			}, tags)
 			return s.metricsMock
 		}),
