@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -212,4 +213,30 @@ func TestDefaultProtobufHTTPClientNonStatusProtoJSONError(t *testing.T) {
 	var in *emptypb.Empty = &emptypb.Empty{}
 	err := protoClient.Do(context.Background(), http.MethodGet, server.URL, in, nil)
 	assert.EqualError(t, err, fmt.Sprintf("rpc error: code = InvalidArgument desc = %s\n", errorMessage))
+}
+
+type invalidReader struct{}
+
+func (r *invalidReader) Read(p []byte) (n int, err error) {
+	return 0, errors.New("")
+}
+
+func TestDefaultProtobufHTTPClientInvalidErrorResponse(t *testing.T) {
+	client := client.HTTPClientBuilder().AddInterceptors(func(_ *http.Request, _ clientInterface.HTTPHandler) (*http.Response, error) {
+		return &http.Response{
+			Status:        http.StatusText(http.StatusBadRequest),
+			StatusCode:    http.StatusBadRequest,
+			Proto:         "HTTP/1.1",
+			ProtoMajor:    1,
+			ProtoMinor:    1,
+			ContentLength: 5,
+			Body:          ioutil.NopCloser(&invalidReader{}),
+		}, nil
+	}).Build()
+	protoClient := CreateProtobufHTTPClient(client, nil, nil)
+	var in *demopackage.PingRequest = &demopackage.PingRequest{
+		In: "packet",
+	}
+	err := protoClient.Do(context.Background(), http.MethodPost, "http://unreachable", in, nil)
+	assert.EqualError(t, err, "rpc error: code = InvalidArgument desc = Bad Request")
 }
