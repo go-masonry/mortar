@@ -211,7 +211,5 @@ func TestDefaultProtobufHTTPClientNonStatusProtoJSONError(t *testing.T) {
 	protoClient := CreateProtobufHTTPClient(client, nil, nil)
 	var in *emptypb.Empty = &emptypb.Empty{}
 	err := protoClient.Do(context.Background(), http.MethodGet, server.URL, in, nil)
-	x := err.Error()
-	_ = x
 	assert.EqualError(t, err, fmt.Sprintf("rpc error: code = InvalidArgument desc = %s\n", errorMessage))
 }
