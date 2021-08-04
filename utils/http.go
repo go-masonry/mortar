@@ -3,10 +3,12 @@ package utils
 import (
 	"bytes"
 	"context"
+	"io/ioutil"
 	"net/http"
 	"reflect"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	spb "google.golang.org/genproto/googleapis/rpc/status"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -87,13 +89,25 @@ func (impl *protobufHTTPClientImpl) Do(ctx context.Context, method, url string, 
 	}
 	defer response.Body.Close()
 	if grpcStatus := impl.errorMapper(response.StatusCode); grpcStatus != nil && grpcStatus.Code() != codes.OK {
+		responseBody, err := ioutil.ReadAll(response.Body)
+		if err == nil {
+			responseBodyStatusError := make([]byte, len(responseBody))
+			copy(responseBodyStatusError, responseBody)
+			var statusError *spb.Status
+			if decodeError := impl.marshaller.NewDecoder(bytes.NewBuffer(responseBodyStatusError)).Decode(&statusError); decodeError == nil {
+				if statusError.GetCode() != int32(codes.OK) {
+					return status.ErrorProto(statusError)
+				}
+			}
+			return status.Error(grpcStatus.Code(), string(responseBody))
+		}
 		return grpcStatus.Err()
 	}
 	// no need to unmarshal the body if it's a "nil interface"
 	// https://golang.org/doc/faq#nil_error
 	if reflect.TypeOf(out) != nil {
 		if decodeError := impl.marshaller.NewDecoder(response.Body).Decode(out); decodeError != nil {
-			return status.Errorf(codes.Unknown, "error unmarshaling response, [%s]", decodeError)
+			return status.Errorf(codes.Unknown, "error unmarshalling response, [%s]", decodeError)
 		}
 	}
 	return nil
