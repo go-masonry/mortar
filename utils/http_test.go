@@ -11,8 +11,6 @@ import (
 	"strings"
 	"testing"
 
-	"google.golang.org/protobuf/encoding/protojson"
-
 	"github.com/go-masonry/mortar/http/client"
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	clientInterface "github.com/go-masonry/mortar/interfaces/http/client"
@@ -20,9 +18,16 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
+
+type invalidReader struct{}
+
+func (r *invalidReader) Read(p []byte) (n int, err error) {
+	return 0, errors.New("")
+}
 
 func TestDefaultProtobufHTTPClient(t *testing.T) {
 	defaultClient := DefaultProtobufHTTPClient
@@ -213,12 +218,6 @@ func TestDefaultProtobufHTTPClientNonStatusProtoJSONError(t *testing.T) {
 	var in *emptypb.Empty = &emptypb.Empty{}
 	err := protoClient.Do(context.Background(), http.MethodGet, server.URL, in, nil)
 	assert.EqualError(t, err, fmt.Sprintf("rpc error: code = InvalidArgument desc = %s\n", errorMessage))
-}
-
-type invalidReader struct{}
-
-func (r *invalidReader) Read(p []byte) (n int, err error) {
-	return 0, errors.New("")
 }
 
 func TestDefaultProtobufHTTPClientInvalidErrorResponse(t *testing.T) {
