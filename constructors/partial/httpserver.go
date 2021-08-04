@@ -79,7 +79,7 @@ func HTTPServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
 	builder := server.Builder().SetPanicHandler(deps.panicHandler).SetLogger(deps.Logger.Debug)
 	// GRPC port
 	if grpcPort := deps.Config.Get(confkeys.ExternalGRPCPort); grpcPort.IsSet() {
-		builder = builder.ListenOn(fmt.Sprintf(":%d", grpcPort.Int()))
+		builder = builder.ListenOn(fmt.Sprintf("localhost:%d", grpcPort.Int()))
 	}
 	// GRPC server interceptors
 	if len(deps.UnaryInterceptors) > 0 {
@@ -98,7 +98,7 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 	externalRESTPort := deps.Config.Get(confkeys.ExternalRESTPort)
 	if externalRESTPort.IsSet() && (len(deps.ExternalHTTPHandlerFunctions) > 0 || len(deps.ExternalHTTPHandlers) > 0 || len(deps.GRPCGatewayGeneratedHandlers) > 0) {
 		restBuilder := builder.AddRESTServerConfiguration().
-			ListenOn(fmt.Sprintf(":%d", externalRESTPort.Int()))
+			ListenOn(fmt.Sprintf("localhost:%d", externalRESTPort.Int()))
 
 		for _, handlerPair := range deps.ExternalHTTPHandlers {
 			restBuilder = restBuilder.AddHandler(handlerPair.Pattern, handlerPair.Handler)
@@ -124,7 +124,7 @@ func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuil
 	if includeInternalREST {
 		restBuilder := builder.
 			AddRESTServerConfiguration().
-			ListenOn(fmt.Sprintf(":%d", internalPort.Int()))
+			ListenOn(fmt.Sprintf("localhost:%d", internalPort.Int()))
 		for _, handlerPair := range deps.InternalHTTPHandlers {
 			restBuilder = restBuilder.AddHandler(handlerPair.Pattern, handlerPair.Handler)
 		}

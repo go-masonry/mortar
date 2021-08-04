@@ -68,7 +68,7 @@ func panicHandlerStreamInterceptor(panicHandler func(interface{}) error) grpc.St
 
 func createListener(network, addr string) (net.Listener, error) {
 	if len(addr) == 0 {
-		addr = ":0"
+		addr = "localhost:0"
 	}
 	return net.Listen(network, addr)
 }
