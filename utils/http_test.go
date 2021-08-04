@@ -10,6 +10,8 @@ import (
 	"strings"
 	"testing"
 
+	"google.golang.org/protobuf/encoding/protojson"
+
 	"github.com/go-masonry/mortar/http/client"
 	demopackage "github.com/go-masonry/mortar/http/server/proto"
 	clientInterface "github.com/go-masonry/mortar/interfaces/http/client"
@@ -171,15 +173,45 @@ func TestDefaultProtobufHTTPClientIgnoreResponseEvenOnEmptyBody(t *testing.T) {
 }
 
 func TestDefaultProtobufHTTPClientInputAsEmptyBody(t *testing.T) {
+	errorMessage := "empty is just fine"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		body, err := ioutil.ReadAll(req.Body)
 		require.NoError(t, err)
 		require.EqualValuesf(t, "{}", string(body), "Body: %s", body)
-		http.Error(w, "empty is just fine", http.StatusBadRequest)
+		http.Error(w, errorMessage, http.StatusBadRequest)
 	}))
 	client := client.HTTPClientBuilder().WithPreconfiguredClient(server.Client()).Build()
 	protoClient := CreateProtobufHTTPClient(client, nil, nil)
 	var in *emptypb.Empty = &emptypb.Empty{}
 	err := protoClient.Do(context.Background(), http.MethodGet, server.URL, in, nil)
-	assert.EqualError(t, err, "rpc error: code = InvalidArgument desc = Bad Request")
+	assert.EqualError(t, err, fmt.Sprintf("rpc error: code = InvalidArgument desc = %s\n", errorMessage))
+}
+
+func TestDefaultProtobufHTTPClientStatusProtoError(t *testing.T) {
+	errorMessage := "this is an error"
+	statusErr := status.New(codes.InvalidArgument, errorMessage)
+	statusErrJSON, err := protojson.Marshal(statusErr.Proto())
+	assert.NoError(t, err)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		http.Error(w, string(statusErrJSON), http.StatusBadRequest)
+	}))
+	client := client.HTTPClientBuilder().WithPreconfiguredClient(server.Client()).Build()
+	protoClient := CreateProtobufHTTPClient(client, nil, nil)
+	var in *emptypb.Empty = &emptypb.Empty{}
+	err = protoClient.Do(context.Background(), http.MethodGet, server.URL, in, nil)
+	assert.EqualError(t, err, fmt.Sprintf("rpc error: code = InvalidArgument desc = %s", errorMessage))
+}
+
+func TestDefaultProtobufHTTPClientNonStatusProtoJSONError(t *testing.T) {
+	errorMessage := `{"key1": "value1", "key2": "value2"}`
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		http.Error(w, errorMessage, http.StatusBadRequest)
+	}))
+	client := client.HTTPClientBuilder().WithPreconfiguredClient(server.Client()).Build()
+	protoClient := CreateProtobufHTTPClient(client, nil, nil)
+	var in *emptypb.Empty = &emptypb.Empty{}
+	err := protoClient.Do(context.Background(), http.MethodGet, server.URL, in, nil)
+	x := err.Error()
+	_ = x
+	assert.EqualError(t, err, fmt.Sprintf("rpc error: code = InvalidArgument desc = %s\n", errorMessage))
 }
