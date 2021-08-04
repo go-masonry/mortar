@@ -3,7 +3,6 @@ package utils
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
 	"net/http"
 	"reflect"
 
@@ -89,17 +88,16 @@ func (impl *protobufHTTPClientImpl) Do(ctx context.Context, method, url string, 
 	}
 	defer response.Body.Close()
 	if grpcStatus := impl.errorMapper(response.StatusCode); grpcStatus != nil && grpcStatus.Code() != codes.OK {
-		responseBody, err := ioutil.ReadAll(response.Body)
-		if err == nil {
-			responseBodyStatusError := make([]byte, len(responseBody))
-			copy(responseBodyStatusError, responseBody)
+		var responseBodyBuffer bytes.Buffer
+		if _, err = responseBodyBuffer.ReadFrom(response.Body); err == nil {
 			var statusError *spb.Status
-			if decodeError := impl.marshaller.NewDecoder(bytes.NewBuffer(responseBodyStatusError)).Decode(&statusError); decodeError == nil {
+			responseBodyBytes := responseBodyBuffer.Bytes()
+			if decodeError := impl.marshaller.NewDecoder(bytes.NewReader(responseBodyBytes)).Decode(&statusError); decodeError == nil {
 				if statusError.GetCode() != int32(codes.OK) {
 					return status.ErrorProto(statusError)
 				}
 			}
-			return status.Error(grpcStatus.Code(), string(responseBody))
+			return status.Error(grpcStatus.Code(), string(responseBodyBytes))
 		}
 		return grpcStatus.Err()
 	}
