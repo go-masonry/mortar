@@ -64,19 +64,19 @@ func (ms *multiListenersSuite) SetupSuite() {
 			ms.T().Logf(format, args...)
 		}).
 		// GRPC
-		ListenOn(":8888").
+		ListenOn("localhost:8888").
 		RegisterGRPCAPIs(func(srv *grpc.Server) {
 			demopackage.RegisterDemoServer(srv, new(demoImpl))
 		}).
 		// REST 1 with GRPC Gateway
 		AddRESTServerConfiguration().
-		ListenOn(":8889").
+		ListenOn("localhost:8889").
 		RegisterGRPCGatewayHandlers(func(mux *runtime.ServeMux, endpoint string) error {
 			return demopackage.RegisterDemoHandlerFromEndpoint(context.Background(), mux, endpoint, []grpc.DialOption{grpc.WithInsecure()})
 		}).BuildRESTPart().
 		// REST 2 without GRPC Gateway
 		AddRESTServerConfiguration().
-		ListenOn(":8890").
+		ListenOn("localhost:8890").
 		AddHandlerFunc("/custom/path", customHandler).
 		BuildRESTPart()
 }

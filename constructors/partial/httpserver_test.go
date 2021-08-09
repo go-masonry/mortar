@@ -60,6 +60,12 @@ func (s *partialSuite) SetupTest() {
 	s.ctrl = gomock.NewController(s.T())
 	s.cfgMock = mock_cfg.NewMockConfig(s.ctrl)
 	s.logMock = mock_log.NewMockLogger(s.ctrl)
+	// host
+	s.cfgMock.EXPECT().Get(confkeys.Host).DoAndReturn(func(key string) cfg.Value {
+		value := mock_cfg.NewMockValue(s.ctrl)
+		value.EXPECT().String().Return("localhost")
+		return value
+	})
 	// grpc port
 	s.cfgMock.EXPECT().Get(confkeys.ExternalGRPCPort).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
@@ -67,11 +73,22 @@ func (s *partialSuite) SetupTest() {
 		value.EXPECT().Int().Return(1234)
 		return value
 	})
+	// host
+	s.cfgMock.EXPECT().Get(confkeys.Host).DoAndReturn(func(key string) cfg.Value {
+		value := mock_cfg.NewMockValue(s.ctrl)
+		value.EXPECT().String().Return("localhost")
+		return value
+	})
 	// external rest port
 	s.cfgMock.EXPECT().Get(confkeys.ExternalRESTPort).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().IsSet().Return(true)
 		value.EXPECT().Int().Return(1235)
+		return value
+	})
+	// host
+	s.cfgMock.EXPECT().Get(confkeys.Host).DoAndReturn(func(key string) cfg.Value {
+		value := mock_cfg.NewMockValue(s.ctrl)
 		return value
 	})
 	// internal rest port

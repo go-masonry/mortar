@@ -51,7 +51,7 @@ func (os *onePortSuite) TestPingGRPCOnSamePort() {
 }
 
 func (os *onePortSuite) makeBuilderAndCmux() {
-	listener, err := net.Listen("tcp", ":8888")
+	listener, err := net.Listen("tcp", "localhost:8888")
 	os.Require().NoError(err)
 	os.cMux = cmux.New(listener)
 	restL := os.cMux.Match(cmux.HTTP1())

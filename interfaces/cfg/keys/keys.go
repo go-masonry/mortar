@@ -29,6 +29,11 @@ const (
 	// Webserver -> RESTful related configuration
 	rest = server + ".rest"
 
+	// Host is the host on which the webserver will serve APIs
+	//
+	// Type: string
+	Host = server + ".host"
+
 	// ExternalGRPCPort is the Port on which the webserver will serve gRPC API
 	//
 	// Type: int

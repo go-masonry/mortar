@@ -40,14 +40,14 @@ func TestDefaultListeners(t *testing.T) {
 
 func TestListenOnAddresses(t *testing.T) {
 	service, err := Builder().
-		ListenOn(":8888").
+		ListenOn("localhost:8888").
 		RegisterGRPCAPIs(registerGrpcAPI).
 		AddRESTServerConfiguration().
-		ListenOn(":8887").
+		ListenOn("localhost:8887").
 		RegisterGRPCGatewayHandlers(registerGatewayHandler).
 		BuildRESTPart().
 		AddRESTServerConfiguration().
-		ListenOn(":8889").
+		ListenOn("localhost:8889").
 		RegisterGRPCGatewayHandlers(registerGatewayHandler).
 		BuildRESTPart().
 		Build()
@@ -64,9 +64,9 @@ func TestListenOnAddresses(t *testing.T) {
 }
 
 func TestCustomListeners(t *testing.T) {
-	grpcL, _ := net.Listen("tcp", ":8888")
+	grpcL, _ := net.Listen("tcp", "localhost:8888")
 	defer grpcL.Close()
-	restL, _ := net.Listen("tcp", ":8889")
+	restL, _ := net.Listen("tcp", "localhost:8889")
 	defer restL.Close()
 	service, err := Builder().
 		SetCustomListener(grpcL).
@@ -109,11 +109,11 @@ func TestSettingCustomRESTServer(t *testing.T) {
 }
 
 func TestInternalHealthService(t *testing.T) {
-	service, err := Builder().ListenOn(":8888").RegisterGRPCAPIs(registerGrpcAPI).RegisterGRPCAPIs(health.RegisterInternalHealthService).Build()
+	service, err := Builder().ListenOn("localhost:8888").RegisterGRPCAPIs(registerGrpcAPI).RegisterGRPCAPIs(health.RegisterInternalHealthService).Build()
 	require.NoError(t, err)
 	defer service.Stop(context.Background())
 	go service.Run(context.Background())
-	conn, err := grpc.Dial(":8888", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8888", grpc.WithInsecure())
 	require.NoError(t, err)
 	defer conn.Close()
 	healthClient := health.NewHealthClient(conn)
@@ -123,7 +123,7 @@ func TestInternalHealthService(t *testing.T) {
 
 func TestCustomGrpcServerOptions(t *testing.T) {
 	service, err := Builder().
-		ListenOn(":8888").
+		ListenOn("localhost:8888").
 		AddGRPCServerOptions(grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 			return nil, status.Error(codes.OutOfRange, "out of range")
 		})).
@@ -131,7 +131,7 @@ func TestCustomGrpcServerOptions(t *testing.T) {
 	require.NoError(t, err)
 	defer service.Stop(context.Background())
 	go service.Run(context.Background())
-	conn, err := grpc.Dial(":8888", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8888", grpc.WithInsecure())
 	require.NoError(t, err)
 	defer conn.Close()
 	demoClient := demopackage.NewDemoClient(conn)
@@ -141,10 +141,10 @@ func TestCustomGrpcServerOptions(t *testing.T) {
 
 func TestAddCustomHandler(t *testing.T) {
 	service, err := Builder().
-		ListenOn(":8888").
+		ListenOn("localhost:8888").
 		RegisterGRPCAPIs(registerGrpcAPI).
 		AddRESTServerConfiguration().
-		ListenOn(":8889").
+		ListenOn("localhost:8889").
 		AddHandler("/notfound", http.NotFoundHandler()).
 		BuildRESTPart().
 		Build()
@@ -159,10 +159,10 @@ func TestAddCustomHandler(t *testing.T) {
 
 func TestCustomGrpcGatewayOptions(t *testing.T) {
 	service, err := Builder().
-		ListenOn(":8888").
+		ListenOn("localhost:8888").
 		RegisterGRPCAPIs(registerGrpcAPI).
 		AddRESTServerConfiguration().
-		ListenOn(":8889").
+		ListenOn("localhost:8889").
 		RegisterGRPCGatewayHandlers(registerGatewayHandler).
 		AddGRPCGatewayOptions(runtime.WithErrorHandler(func(_ context.Context, _ *runtime.ServeMux, _ runtime.Marshaler, writer http.ResponseWriter, _ *http.Request, _ error) {
 			http.Error(writer, "bad one", http.StatusTeapot)
@@ -183,10 +183,10 @@ func TestCustomGrpcGatewayOptions(t *testing.T) {
 
 func TestCustomGrpcGatewayMux(t *testing.T) {
 	service, err := Builder().
-		ListenOn(":8888").
+		ListenOn("localhost:8888").
 		RegisterGRPCAPIs(registerGrpcAPI).
 		AddRESTServerConfiguration().
-		ListenOn(":8889").
+		ListenOn("localhost:8889").
 		RegisterGRPCGatewayHandlers(registerGatewayHandler).
 		SetCustomGRPCGatewayMux(runtime.NewServeMux(runtime.WithErrorHandler(func(_ context.Context, _ *runtime.ServeMux, _ runtime.Marshaler, writer http.ResponseWriter, _ *http.Request, _ error) {
 			http.Error(writer, "bad one", http.StatusTeapot)
