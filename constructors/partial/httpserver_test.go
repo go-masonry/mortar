@@ -89,6 +89,7 @@ func (s *partialSuite) SetupTest() {
 	// host
 	s.cfgMock.EXPECT().Get(confkeys.Host).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
+		value.EXPECT().String().Return("localhost")
 		return value
 	})
 	// internal rest port

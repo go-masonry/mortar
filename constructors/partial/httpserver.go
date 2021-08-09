@@ -77,10 +77,10 @@ type httpServerDeps struct {
 //
 func HTTPServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
 	builder := server.Builder().SetPanicHandler(deps.panicHandler).SetLogger(deps.Logger.Debug)
-	host := deps.Config.Get(confkeys.Host)
+	host := deps.Config.Get(confkeys.Host).String()
 	// GRPC port
 	if grpcPort := deps.Config.Get(confkeys.ExternalGRPCPort); grpcPort.IsSet() {
-		builder = builder.ListenOn(fmt.Sprintf("%s:%d", host.String(), grpcPort.Int()))
+		builder = builder.ListenOn(fmt.Sprintf("%s:%d", host, grpcPort.Int()))
 	}
 	// GRPC server interceptors
 	if len(deps.UnaryInterceptors) > 0 {
@@ -96,11 +96,11 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 		builder = builder.RegisterGRPCAPIs(deps.GRPCServerAPIs...) // register grpc APIs
 	}
 	// add GRPC Gateway on top and expose on external REST Port
-	host := deps.Config.Get(confkeys.Host)
+	host := deps.Config.Get(confkeys.Host).String()
 	externalRESTPort := deps.Config.Get(confkeys.ExternalRESTPort)
 	if externalRESTPort.IsSet() && (len(deps.ExternalHTTPHandlerFunctions) > 0 || len(deps.ExternalHTTPHandlers) > 0 || len(deps.GRPCGatewayGeneratedHandlers) > 0) {
 		restBuilder := builder.AddRESTServerConfiguration().
-			ListenOn(fmt.Sprintf("%s:%d", host.String(), externalRESTPort.Int()))
+			ListenOn(fmt.Sprintf("%s:%d", host, externalRESTPort.Int()))
 
 		for _, handlerPair := range deps.ExternalHTTPHandlers {
 			restBuilder = restBuilder.AddHandler(handlerPair.Pattern, handlerPair.Handler)
@@ -121,13 +121,13 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuilder) serverInt.GRPCWebServiceBuilder {
 	builder = builder.RegisterGRPCAPIs(health.RegisterInternalHealthService) // add internal GRPC health endpoint
 	// Internal
-	host := deps.Config.Get(confkeys.Host)
+	host := deps.Config.Get(confkeys.Host).String()
 	internalPort := deps.Config.Get(confkeys.InternalRESTPort)
 	includeInternalREST := internalPort.IsSet() && (len(deps.InternalHTTPHandlerFunctions) > 0 || len(deps.InternalHTTPHandlers) > 0)
 	if includeInternalREST {
 		restBuilder := builder.
 			AddRESTServerConfiguration().
-			ListenOn(fmt.Sprintf("%s:%d", host.String(), internalPort.Int()))
+			ListenOn(fmt.Sprintf("%s:%d", host, internalPort.Int()))
 		for _, handlerPair := range deps.InternalHTTPHandlers {
 			restBuilder = restBuilder.AddHandler(handlerPair.Pattern, handlerPair.Handler)
 		}
