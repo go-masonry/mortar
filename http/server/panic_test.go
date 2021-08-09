@@ -18,14 +18,14 @@ func TestPanicHandler(t *testing.T) {
 	}
 	service, err := Builder().
 		// GRPC
-		ListenOn(":8888").
+		ListenOn("localhost:8888").
 		RegisterGRPCAPIs(func(srv *grpc.Server) {
 			demopackage.RegisterDemoServer(srv, new(panicImpl))
 		}).SetPanicHandler(panicHandler).Build()
 	require.NoError(t, err)
 	defer service.Stop(context.Background())
 	go service.Run(context.Background()) // run service
-	conn, err := grpc.Dial(":8888", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8888", grpc.WithInsecure())
 	require.NoError(t, err)
 	demoClient := demopackage.NewDemoClient(conn)
 	_, err = demoClient.Ping(context.Background(), &demopackage.PingRequest{
@@ -37,14 +37,14 @@ func TestPanicHandler(t *testing.T) {
 func TestDefaultPanicHandler(t *testing.T) {
 	service, err := Builder().
 		// GRPC
-		ListenOn(":8888").
+		ListenOn("localhost:8888").
 		RegisterGRPCAPIs(func(srv *grpc.Server) {
 			demopackage.RegisterDemoServer(srv, new(panicImpl))
 		}).Build()
 	require.NoError(t, err)
 	defer service.Stop(context.Background())
 	go service.Run(context.Background()) // run service
-	conn, err := grpc.Dial(":8888", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8888", grpc.WithInsecure())
 	require.NoError(t, err)
 	demoClient := demopackage.NewDemoClient(conn)
 	_, err = demoClient.Ping(context.Background(), &demopackage.PingRequest{
