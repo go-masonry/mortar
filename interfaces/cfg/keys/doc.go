@@ -21,6 +21,9 @@ Expected configuration structure is a map, below is a complete example in the YA
 		name: "Application Name"
 		# Web server related configuration
 		server:
+			# Host is the host on which the webserver will serve APIs
+			# Type: string
+			host: localhost
 			grpc:
 				# gRPC API External port
 				# Type: int
