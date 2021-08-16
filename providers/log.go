@@ -2,6 +2,7 @@ package providers
 
 import (
 	"github.com/go-masonry/mortar/constructors"
+	"github.com/go-masonry/mortar/logger"
 	"github.com/go-masonry/mortar/middleware/context"
 	"github.com/go-masonry/mortar/middleware/interceptors/server"
 	"github.com/go-masonry/mortar/providers/groups"
@@ -17,6 +18,16 @@ func LoggerFxOption() fx.Option {
 //
 // Consider using LoggerFxOption if you only want to invoke it.
 var DefaultLogger = constructors.DefaultLogger
+
+// FxEventLoggerOption add new Fx Event option to output fx events using structured logger
+func FxEventLoggerOption() fx.Option {
+	return fx.WithLogger(logger.CreateFxEventLogger)
+}
+
+// CreateFxEventLogger is a constuctor that creates a custom fxevent.Logger
+//
+// Consider using FxEventLoggerOption if you only want to invoke it.
+var CreateFxEventLogger = logger.CreateFxEventLogger
 
 // LoggerGRPCIncomingContextExtractorFxOption adds Logger Context Extractor using values within incoming grpc metadata.MD
 //
