@@ -8,6 +8,8 @@ import (
 	"go.uber.org/fx/fxevent"
 )
 
+// CreateFxEventLogger is a constructor to create fxevent.Logger
+// This one is used by fx itself to output its events
 func CreateFxEventLogger(log log.Logger) fxevent.Logger {
 	return &logWrapper{log}
 }
