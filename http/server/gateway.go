@@ -11,7 +11,6 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// TODO add grpc-gateway custom header mapper
 type grpcGatewayMuxOptionsDeps struct {
 	fx.In
 

@@ -3,6 +3,7 @@ package providers
 import (
 	"github.com/go-masonry/mortar/constructors"
 	"github.com/go-masonry/mortar/constructors/partial"
+	"github.com/go-masonry/mortar/middleware/grpcgateway"
 	"github.com/go-masonry/mortar/middleware/interceptors/client"
 	"github.com/go-masonry/mortar/providers/groups"
 	"go.uber.org/fx"
@@ -132,3 +133,21 @@ func MonitorRESTClientCallsInterceptorFxOption() fx.Option {
 //
 // Consider using MonitorRESTClientCallsInterceptorFxOption if you only want to provide it.
 var MonitorRESTClientCallsInterceptor = client.MonitorRESTClientCallsInterceptor
+
+// MapHTTPHeadersToClientMetadataMuxOptionFxOption adds a Grpc Gateway server mux option
+// that maps incoming HTTP Headers to gRPC Context by checking if they match a list of prefixes.
+// List of prefixes is controlled by config key: `mortar.middleware.map.httpHeaders`
+func MapHTTPHeadersToClientMetadataMuxOptionFxOption() fx.Option {
+	return fx.Provide(
+		fx.Annotated{
+			Group:  groups.GRPCGatewayMuxOptions,
+			Target: grpcgateway.MapHTTPHeadersToClientMetadataMuxOption,
+		})
+}
+
+// MapHTTPHeadersToClientMetadataMuxOption is a Grpc Gateway server mux option
+// that maps incoming HTTP Headers to gRPC Context by checking if they match a list of prefixes.
+// List of prefixes is controlled by config key: `mortar.middleware.map.httpHeaders`
+//
+// Consider using MapHTTPHeadersToClientMetadataMuxOptionFxOption if you only want to provide it.
+var MapHTTPHeadersToClientMetadataMuxOption = grpcgateway.MapHTTPHeadersToClientMetadataMuxOption

@@ -152,6 +152,13 @@ const (
 	// Type: []string
 	ForwardIncomingGRPCMetadataHeadersList = middleware + ".copy.headers"
 
+	// List of HTTP header prefixes to map from HTTP headers to gRPC context (Incoming Metadata).
+	// Useful when you have some form of correlation IDs that is passed using HTTP headers and you can access via gRPC Incomming Metadata.
+	//	['requestID', 'X-Company-']
+	//
+	// Type: []string
+	MapHTTPRequestHeadersToGRPCMetadata = middleware + ".map.httpHeaders"
+
 	// LoggerIncomingGRPCMetadataHeadersExtractor is a list of headers to be extracted from Incoming gRPC and added to every log entry
 	//
 	// Type: []string

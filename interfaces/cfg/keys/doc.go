@@ -111,6 +111,14 @@ Expected configuration structure is a map, below is a complete example in the YA
 						request: true
 						# include a gRPC response of incoming request to trace info ?
 						response: true
+			map:
+				# List of HTTP header prefixes to map from HTTP headers to gRPC context (Incoming Metadata).
+				# Useful when you have some form of correlation IDs that is passed using HTTP headers and you can access via gRPC Incomming Metadata.
+				#	['requestID', 'X-Company-']
+				#
+				# Type: []string
+				httpHeaders:
+					- "X-Special-"
 			copy:
 				# list of header prefixes to copy/forward from Incoming gRPC context to outgoing Request context/headers
 				# Type: []string
