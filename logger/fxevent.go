@@ -22,47 +22,47 @@ func (zw *logWrapper) LogEvent(event fxevent.Event) {
 		zw.
 			WithField("callee", e.FunctionName).
 			WithField("caller", e.CallerName).
-			Info(context.TODO(), "OnStart hook executing")
+			Debug(context.TODO(), "OnStart hook executing")
 	case *fxevent.OnStartExecuted:
 		logger := zw.
 			WithError(e.Err).
 			WithField("callee", e.FunctionName).
 			WithField("caller", e.CallerName)
 		if e.Err != nil {
-			logger.Info(context.TODO(), "OnStart hook failed")
+			logger.Error(context.TODO(), "OnStart hook failed")
 		} else {
 			logger.
 				WithField("runtime", e.Runtime.String()).
-				Info(context.TODO(), "OnStart hook executed")
+				Debug(context.TODO(), "OnStart hook executed")
 		}
 	case *fxevent.OnStopExecuting:
 		zw.
 			WithField("callee", e.FunctionName).
 			WithField("caller", e.CallerName).
-			Info(context.TODO(), "OnStop hook executing")
+			Debug(context.TODO(), "OnStop hook executing")
 	case *fxevent.OnStopExecuted:
 		logger := zw.
 			WithError(e.Err).
 			WithField("callee", e.FunctionName).
 			WithField("caller", e.CallerName)
 		if e.Err != nil {
-			logger.Info(context.TODO(), "OnStop hook failed")
+			logger.Error(context.TODO(), "OnStop hook failed")
 		} else {
 			logger.
 				WithField("runtime", e.Runtime.String()).
-				Info(context.TODO(), "OnStop hook executed")
+				Debug(context.TODO(), "OnStop hook executed")
 		}
 	case *fxevent.Supplied:
 		zw.
 			WithField("type", e.TypeName).
 			WithError(e.Err).
-			Info(context.TODO(), "supplied")
+			Debug(context.TODO(), "supplied")
 	case *fxevent.Provided:
 		for _, rtype := range e.OutputTypeNames {
 			zw.
 				WithField("constructor", e.ConstructorName).
 				WithField("type", rtype).
-				Info(context.TODO(), "provided")
+				Debug(context.TODO(), "provided")
 		}
 		if e.Err != nil {
 			zw.
@@ -80,12 +80,12 @@ func (zw *logWrapper) LogEvent(event fxevent.Event) {
 		if e.Err != nil {
 			logger.Error(context.TODO(), "invoke failed")
 		} else {
-			logger.Info(context.TODO(), "invoked")
+			logger.Debug(context.TODO(), "invoked")
 		}
 	case *fxevent.Stopping:
 		zw.
 			WithField("signal", strings.ToUpper(e.Signal.String())).
-			Info(context.TODO(), "received signal")
+			Debug(context.TODO(), "received signal")
 	case *fxevent.Stopped:
 		if e.Err != nil {
 			zw.WithError(e.Err).Error(context.TODO(), "stop failed")
@@ -106,7 +106,7 @@ func (zw *logWrapper) LogEvent(event fxevent.Event) {
 				WithError(e.Err).
 				Error(context.TODO(), "start failed")
 		} else {
-			zw.Info(context.TODO(), "started")
+			zw.Debug(context.TODO(), "started")
 		}
 	case *fxevent.LoggerInitialized:
 		if e.Err != nil {
@@ -116,7 +116,7 @@ func (zw *logWrapper) LogEvent(event fxevent.Event) {
 		} else {
 			zw.
 				WithField("function", e.ConstructorName).
-				Info(context.TODO(), "initialized custom fxevent.Logger")
+				Debug(context.TODO(), "initialized custom fxevent.Logger")
 		}
 	}
 }
