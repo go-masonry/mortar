@@ -83,12 +83,12 @@ Expected configuration structure is a map, below is a complete example in the YA
 			# 	trace, debug, info, warn, error
 			# Type: string
 			logLevel: "trace"
-			# exclude Incoming gRPC request from every log entry
+			# add Incoming gRPC request to every log entry
 			# Type: bool
-			logExcludeRequest: false
-			# exclude gRPC response from every log entry
+			logRequest: false
+			# add gRPC response to every log entry
 			# Type: bool
-			logExcludeResponse: false
+			logResponse: false
 			# list of headers to be extracted from Incoming gRPC and added to every log entry
 			# Type: []string
 			logHeaders:

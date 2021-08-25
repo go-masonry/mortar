@@ -38,15 +38,15 @@ func (s *middlewareSuite) testLoggerGRPCInterceptorBeforeTest() fx.Option {
 		return value
 	})
 
-	s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogExcludeRequest).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogIncludeRequest).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
-		value.EXPECT().Bool().Return(false)
+		value.EXPECT().Bool().Return(true)
 		return value
 	})
 
-	s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogExcludeResponse).DoAndReturn(func(key string) cfg.Value {
+	s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogIncludeResponse).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
-		value.EXPECT().Bool().Return(false)
+		value.EXPECT().Bool().Return(true)
 		return value
 	})
 
