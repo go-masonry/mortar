@@ -34,8 +34,14 @@ func LoggerGRPCInterceptor(deps loggerInterceptorDeps) grpc.UnaryServerIntercept
 			if d, ok := ctx.Deadline(); ok {
 				entry = entry.WithField("deadline", d)
 			}
-			entry = addBodyToLogger(entry, "request", req)
-			entry = addBodyToLogger(entry, "response", resp)
+			// log request if needed
+			if !deps.Config.Get(confkeys.MiddlewareLogExcludeRequest).Bool() {
+				entry = addBodyToLogger(entry, "request", req)
+			}
+			// log response if needed
+			if !deps.Config.Get(confkeys.MiddlewareLogExcludeResponse).Bool() {
+				entry = addBodyToLogger(entry, "response", resp)
+			}
 			entry.Custom(ctx, level, 0, "gRPC call finished")
 		}
 		return

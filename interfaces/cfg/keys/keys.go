@@ -111,6 +111,16 @@ const (
 	// Type: string
 	MiddlewareLogLevel = middleware + ".logLevel"
 
+	// MiddlewareLogExcludeRequest exclude incoming gRPC request from log
+	//
+	// Type: bool
+	MiddlewareLogExcludeRequest = middleware + ".logExcludeRequest"
+
+	// MiddlewareLogExcludeResponse exclude gRPC response of incoming request from log
+	//
+	// Type: bool
+	MiddlewareLogExcludeResponse = middleware + ".logExcludeResponse"
+
 	// trace related keys with http context
 	traceHTTP = middleware + ".trace.http"
 
