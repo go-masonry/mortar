@@ -54,6 +54,12 @@ Expected configuration structure is a map, below is a complete example in the YA
 				# enables/disables adding an application/project name in every log entry
 				# Type: bool
 				name: false
+
+			# Log service start and stop events, custom by log level
+			# Possible values:
+			#		trace, debug, info, warn, error
+			# Type: string
+			startStop: info
 		# Metrics/Monitoring related configuration
 		monitor:
 			# sets the namespace/prefix of every metric. Depends on the Metrics implementation

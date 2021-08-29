@@ -4,17 +4,26 @@ import (
 	"context"
 	"strings"
 
+	"github.com/go-masonry/mortar/interfaces/cfg"
+	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
 	"github.com/go-masonry/mortar/interfaces/log"
 	"go.uber.org/fx/fxevent"
 )
 
 // CreateFxEventLogger is a constructor to create fxevent.Logger
 // This one is used by fx itself to output its events
-func CreateFxEventLogger(log log.Logger) fxevent.Logger {
-	return &logWrapper{log}
+func CreateFxEventLogger(logger log.Logger, cfg cfg.Config) fxevent.Logger {
+	level := log.InfoLevel
+	if cfg.Get(confkeys.LogStartStop).IsSet() {
+		level = log.ParseLevel(cfg.Get(confkeys.LogStartStop).String())
+	}
+	return &logWrapper{Logger: logger, startStopLogLevel: level}
 }
 
-type logWrapper struct{ log.Logger }
+type logWrapper struct {
+	log.Logger
+	startStopLogLevel log.Level
+}
 
 func (zw *logWrapper) LogEvent(event fxevent.Event) {
 	switch e := event.(type) {
@@ -85,7 +94,7 @@ func (zw *logWrapper) LogEvent(event fxevent.Event) {
 	case *fxevent.Stopping:
 		zw.
 			WithField("signal", strings.ToUpper(e.Signal.String())).
-			Debug(context.TODO(), "received signal")
+			Custom(context.TODO(), zw.startStopLogLevel, 0, "received termination signal")
 	case *fxevent.Stopped:
 		if e.Err != nil {
 			zw.WithError(e.Err).Error(context.TODO(), "stop failed")
@@ -106,7 +115,7 @@ func (zw *logWrapper) LogEvent(event fxevent.Event) {
 				WithError(e.Err).
 				Error(context.TODO(), "start failed")
 		} else {
-			zw.Debug(context.TODO(), "started")
+			zw.Custom(context.TODO(), zw.startStopLogLevel, 0, "service started")
 		}
 	case *fxevent.LoggerInitialized:
 		if e.Err != nil {

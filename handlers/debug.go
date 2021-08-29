@@ -59,7 +59,7 @@ func (d *debugHandlersDeps) DumpFunc() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		file, err := ioutil.TempFile("", "heapdump")
 		if err != nil {
-			d.Logger.WithError(err).Info(context.TODO(), "failed to create temp file to dump heap into")
+			d.Logger.WithError(err).Warn(context.TODO(), "failed to create temp file to dump heap into")
 			http.Error(w, "internal error, failed to serve heap dump", http.StatusInternalServerError)
 			return
 		}
