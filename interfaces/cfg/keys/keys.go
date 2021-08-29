@@ -59,6 +59,11 @@ const (
 	// Type: string
 	LogLevel string = logger + ".level"
 
+	// Log service start and stop events, custom by log level
+	// Possible values:
+	//		trace, debug, info, warn, error
+	// Type: string
+	LogStartStop string = logger + ".startStop"
 	// LogIncludeGitSHA enables/disables adding a git commit SHA in every log entry
 	//
 	// Type: bool
