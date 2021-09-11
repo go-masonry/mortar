@@ -5,21 +5,61 @@
 [![PkgGoDev](https://pkg.go.dev/badge/mod/github.com/go-masonry/mortar)](https://pkg.go.dev/mod/github.com/go-masonry/mortar)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-masonry/mortar)](https://goreportcard.com/report/github.com/go-masonry/mortar)
 
-<p align="center">
-    <img src=wiki/logo.svg align="center" height=256>
-</p>
+<table>
+        <tr>
+            <th><p align="left"><img src=wiki/logo.svg align="center" height=256></p></th>
+            <th>
+                <p align="left">Mortar is a GO framework/library for building gRPC (and REST) web services. Mortar has out-of-the-box support for configuration, application metrics, logging, tracing, profiling, dependency injection and more. While it comes with predefined defaults Mortar gives you total control to fully customize it.            
+             </p>
+            </th>
+        </tr>
+</table>
 
-Mortar is a GO framework/library for building gRPC (and REST) web services.
-Mortar has out-of-the-box support for configuration, application metrics, logging, tracing, profiling, dependency injection and more.
-While it comes with predefined defaults Mortar gives you total control to fully customize it.
+- [Mortar](#mortar)
+  - [Demo](#demo)
+  - [Service Template](#service-template)
+  - [Features](#features)
+    - [Telemetry (Everything connected)](#telemetry-everything-connected)
+    - [Support for `*http.Client` Interceptors, so you can](#support-for-httpclient-interceptors-so-you-can)
+    - [Monitoring/Metrics support](#monitoringmetrics-support)
+    - [Additional Features](#additional-features)
+  - [Documentation](#documentation)
 
 ## Demo
 
-Clone this [demo](http://github.com/go-masonry/mortar-demo) repository and play around.
+Clone this [demo](http://github.com/go-masonry/mortar-demo) repository to better understand some of Mortar capabilities.
 
-When you done, read the [documentation](https://go-masonry.github.io) or create your own service with this template [here](https://github.com/go-masonry/mortar-template).
+When you done, read the [documentation](https://go-masonry.github.io) or create your own service using a GitHub repo [template](#service-template).
+
+## Service Template
+
+To help you bootstrap your services with Mortar [here](https://github.com/go-masonry/mortar-template) you can find a template.
 
 ## Features
+
+- Bundled [Grpc-Gateway](https://github.com/grpc-ecosystem/grpc-gateway) (REST Reverse-Proxy).
+- Dependency Injection using [Uber-FX](https://github.com/uber-go/fx).
+- Pimped `*http.Client` with interceptors support.
+- Abstract support for Logging, Configuration, Tracing and Monitoring libraries. Use provided wrappers or your own.
+  - [Jaeger wrapper](https://github.com/go-masonry/bjaeger) client for tracing.
+  - [Prometheus wrapper](https://github.com/go-masonry/bprometheus) client for monitoring/metrics.
+  - [Zerolog wrapper](https://github.com/go-masonry/bzerolog) for logging.
+  - [Viper wrapper](https://github.com/go-masonry/bviper) for configuration.
+- Internal HTTP [Handlers](providers/handlers.go)
+  - _Profiling_ `http://.../debug/pprof`
+  - _Debug_ `http://.../debug/*`
+  - _Loaded Configuration_ `http://.../self/config`
+  - _Build Information_ `http://.../self/build`
+  - _Health_ `http://.../health`
+- [Server/Client](providers) Interceptors both for gRPC and HTTP, you can choose which to use and/or add your own. 
+    
+    Some examples
+    - HTTP Headers can be forwarded to next hop, defined by list.
+    - HTTP Headers can be included in logs, defined by list.
+    - Made available in `ctx.Context` via gRPC incoming Metadata.
+    - Automatic monitoring and tracing (if enabled) for every RPC defined by the API.
+
+...and more.
 
 ### Telemetry (Everything connected)
 
@@ -31,9 +71,9 @@ When you done, read the [documentation](https://go-masonry.github.io) or create 
 
 ### Support for `*http.Client` Interceptors, so you can
 
-* Add request and response info to Trace `traceId=6ff7e7e38d1e86f`
+* Add request and response info to Trace
 
-    ![jaeger_http](wiki/jaeger_http.png)
+    <!-- ![jaeger_http](wiki/jaeger_http.png) -->
 
 * Log/Dump requests and/or responses when http request fails.
 
@@ -95,14 +135,10 @@ For more information about Mortar Monitoring read [here](https://go-masonry.gith
 * `/debug/pprof` and other useful [handlers](handlers)
 * Use `config_test.yml` during [tests](https://github.com/go-masonry/mortar-demo/blob/master/workshop/app/controllers/workshop_test.go#L151) to **override** values in `config.yml`, it saves time.
 
-There are some features not listed here, please check the [Documentation](https://go-masonry.github.io) for more.
+There are some features not listed here, please check the [Documentation](#documentation) for more.
 
 ## Documentation
 
 Mortar is not a drop-in replacement.
 
 It's important to read its [Documentation](https://go-masonry.github.io) first.
-
-## Service Template
-
-To help you bootstrap your services with Mortar [here](https://github.com/go-masonry/mortar-template) you can find a template.
