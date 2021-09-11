@@ -9,21 +9,11 @@
         <tr>
             <th><p align="left"><img src=wiki/logo.svg align="center" height=256></p></th>
             <th>
-                <p align="left">Mortar is a GO framework/library for building gRPC (and REST) web services. Mortar has out-of-the-box support for configuration, application metrics, logging, tracing, profiling, dependency injection and more. While it comes with predefined defaults Mortar gives you total control to fully customize it.            
+                <p align="left">Mortar is a GO framework/library for building gRPC (and REST) web services. Mortar has out-of-the-box support for configuration, application metrics, logging, tracing, profiling, dependency injection and more. While it comes with predefined defaults, Mortar gives you total control to fully customize it.            
              </p>
             </th>
         </tr>
 </table>
-
-- [Mortar](#mortar)
-  - [Demo](#demo)
-  - [Service Template](#service-template)
-  - [Features](#features)
-    - [Telemetry (Everything connected)](#telemetry-everything-connected)
-    - [Support for `*http.Client` Interceptors, so you can](#support-for-httpclient-interceptors-so-you-can)
-    - [Monitoring/Metrics support](#monitoringmetrics-support)
-    - [Additional Features](#additional-features)
-  - [Documentation](#documentation)
 
 ## Demo
 
