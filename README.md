@@ -19,11 +19,11 @@
 
 Clone this [demo](http://github.com/go-masonry/mortar-demo) repository to better understand some of Mortar capabilities.
 
-When you done, read the [documentation](https://go-masonry.github.io) or create your own service using a GitHub repo [template](#service-template).
+When you done, read the [documentation](https://go-masonry.github.io) or create your own service using pre-made GitHub [template](#service-template) repository.
 
 ## Service Template
 
-To help you bootstrap your services with Mortar [here](https://github.com/go-masonry/mortar-template) you can find a template.
+To help you bootstrap your services with Mortar [here](https://github.com/go-masonry/mortar-template) you can find a template. Read its README first.
 
 ## Features
 
