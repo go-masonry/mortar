@@ -19,7 +19,7 @@
 
 Clone this [demo](http://github.com/go-masonry/mortar-demo) repository to better understand some of Mortar capabilities.
 
-When you done, read the [documentation](https://go-masonry.github.io) or create your own service using pre-made GitHub [template](#service-template) repository.
+When you done, read the [documentation](https://go-masonry.github.io).
 
 ## Service Template
 
