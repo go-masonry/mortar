@@ -38,7 +38,7 @@ To help you bootstrap your services with Mortar [here](https://github.com/go-mas
 - Internal HTTP [Handlers](providers/handlers.go)
   - _Profiling_ `http://.../debug/pprof`
   - _Debug_ `http://.../debug/*`
-  - _Loaded Configuration_ `http://.../self/config`
+  - _Configuration_ `http://.../self/config`
   - _Build Information_ `http://.../self/build`
   - _Health_ `http://.../health`
 - [Server/Client](providers) Interceptors both for gRPC and HTTP, you can choose which to use and/or add your own. 
