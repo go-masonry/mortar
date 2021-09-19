@@ -2,11 +2,9 @@ package tests
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
-
-	"github.com/go-masonry/mortar/logger/naive"
-	"github.com/golang/mock/gomock"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
@@ -14,7 +12,9 @@ import (
 	"github.com/go-masonry/mortar/interfaces/log"
 	"github.com/go-masonry/mortar/interfaces/monitor"
 	mock_monitor "github.com/go-masonry/mortar/interfaces/monitor/mock"
+	"github.com/go-masonry/mortar/logger/naive"
 	"github.com/go-masonry/mortar/middleware/interceptors/server"
+	"github.com/golang/mock/gomock"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 )
@@ -30,13 +30,32 @@ func (s *middlewareSuite) TestLoggerGRPCInterceptor() {
 	s.Contains(s.loggerOutput.String(), "gRPC call finished")
 }
 
-func (s *middlewareSuite) testLoggerGRPCInterceptorBeforeTest() fx.Option {
+func (s *middlewareSuite) TestLoggerGRPCInterceptorWithError() {
+	unaryHandler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return nil, errors.New("")
+	}
+	ctxWithDeadline, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	_, err := s.serverInterceptor(ctxWithDeadline, nil, &grpc.UnaryServerInfo{FullMethod: "fake method"}, unaryHandler)
+	s.Error(err)
+}
+
+func (s *middlewareSuite) testLoggerGRPCInterceptorBeforeTest(hasError bool) fx.Option {
 	s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogLevel).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
 		value.EXPECT().IsSet().Return(true)
 		value.EXPECT().String().Return("debug")
 		return value
 	})
+
+	if hasError {
+		s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogErrorLevel).DoAndReturn(func(key string) cfg.Value {
+			value := mock_cfg.NewMockValue(s.ctrl)
+			value.EXPECT().IsSet().Return(true)
+			value.EXPECT().String().Return("warn")
+			return value
+		})
+	}
 
 	s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogIncludeRequest).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)

@@ -53,7 +53,9 @@ func (s *middlewareSuite) BeforeTest(suiteName, testName string) {
 	case "TestClientInterceptorHeaderCopier", "TestHTTPClientInterceptorHeaderCopier":
 		extraOptions = s.testClientInterceptorHeaderCopierBeforeTest()
 	case "TestLoggerGRPCInterceptor":
-		extraOptions = s.testLoggerGRPCInterceptorBeforeTest()
+		extraOptions = s.testLoggerGRPCInterceptorBeforeTest(false)
+	case "TestLoggerGRPCInterceptorWithError":
+		extraOptions = s.testLoggerGRPCInterceptorBeforeTest(true)
 	case "TestMonitorGRPCInterceptor":
 		extraOptions = s.testMonitorGRPCInterceptorBeforeTest()
 	case "TestTracerGRPCClientInterceptor":

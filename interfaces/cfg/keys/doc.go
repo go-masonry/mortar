@@ -89,6 +89,11 @@ Expected configuration structure is a map, below is a complete example in the YA
 			# 	trace, debug, info, warn, error
 			# Type: string
 			logLevel: "trace"
+			# set the default log level of all the bundled middleware that writes to log and has an error
+			# Possible values:
+			# 	trace, debug, info, warn, error
+			# Type: string
+			logErrorLevel: "warn"
 			# add Incoming gRPC request to every log entry
 			# Type: bool
 			logRequest: true
