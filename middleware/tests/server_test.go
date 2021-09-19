@@ -49,7 +49,7 @@ func (s *middlewareSuite) testLoggerGRPCInterceptorBeforeTest(hasError bool) fx.
 	})
 
 	if hasError {
-		s.cfgMock.EXPECT().Get(confkeys.MiddlewareLogErrorLevel).DoAndReturn(func(key string) cfg.Value {
+		s.cfgMock.EXPECT().Get(confkeys.MiddlewareOnErrorLogLevel).DoAndReturn(func(key string) cfg.Value {
 			value := mock_cfg.NewMockValue(s.ctrl)
 			value.EXPECT().IsSet().Return(true)
 			value.EXPECT().String().Return("warn")

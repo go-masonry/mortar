@@ -27,8 +27,10 @@ func LoggerGRPCInterceptor(deps loggerInterceptorDeps) grpc.UnaryServerIntercept
 		if logLevel := deps.Config.Get(confkeys.MiddlewareLogLevel); logLevel.IsSet() {
 			level := log.ParseLevel(logLevel.String())
 			if err != nil {
-				if logErrorLevel := deps.Config.Get(confkeys.MiddlewareLogErrorLevel); logErrorLevel.IsSet() {
-					level = log.ParseLevel(logErrorLevel.String())
+				if onErrorLogLevelConfigValue := deps.Config.Get(confkeys.MiddlewareOnErrorLogLevel); onErrorLogLevelConfigValue.IsSet() {
+					if onErrorLogLevel := log.ParseLevel(onErrorLogLevelConfigValue.String()); onErrorLogLevel > level {
+						level = onErrorLogLevel
+					}
 				}
 			}
 			entry := deps.Logger.

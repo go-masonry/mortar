@@ -116,12 +116,12 @@ const (
 	// Type: string
 	MiddlewareLogLevel = middleware + ".logLevel"
 
-	// MiddlewareLogErrorLevel set the default log level of all the bundled middleware that writes to log and has an error
+	// MiddlewareOnErrorLogLevel set the default log level of all the bundled middleware that writes to log and has an error
 	// Possible values:
 	//		trace, debug, info, warn, error
 	//
 	// Type: string
-	MiddlewareLogErrorLevel = middleware + ".logErrorLevel"
+	MiddlewareOnErrorLogLevel = middleware + ".onErrorLogLevel"
 
 	// MiddlewareLogIncludeRequest add incoming gRPC request to log
 	//
