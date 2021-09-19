@@ -116,7 +116,7 @@ const (
 	// Type: string
 	MiddlewareLogLevel = middleware + ".logLevel"
 
-	// MiddlewareOnErrorLogLevel set the default log level of all the bundled middleware that writes to log and has an error
+	// MiddlewareOnErrorLogLevel this allows to log using a different log level when RPC returned an error
 	// Possible values:
 	//		trace, debug, info, warn, error
 	//
