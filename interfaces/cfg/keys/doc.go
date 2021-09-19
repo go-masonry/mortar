@@ -89,6 +89,11 @@ Expected configuration structure is a map, below is a complete example in the YA
 			# 	trace, debug, info, warn, error
 			# Type: string
 			logLevel: "trace"
+			# this allows to log using a different log level when RPC returned an error
+			# Possible values:
+			# 	trace, debug, info, warn, error
+			# Type: string
+			onErrorLogLevel: "warn"
 			# add Incoming gRPC request to every log entry
 			# Type: bool
 			logRequest: true

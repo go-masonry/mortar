@@ -26,6 +26,13 @@ func LoggerGRPCInterceptor(deps loggerInterceptorDeps) grpc.UnaryServerIntercept
 		resp, err = handler(ctx, req)
 		if logLevel := deps.Config.Get(confkeys.MiddlewareLogLevel); logLevel.IsSet() {
 			level := log.ParseLevel(logLevel.String())
+			if err != nil {
+				if onErrorLogLevelConfigValue := deps.Config.Get(confkeys.MiddlewareOnErrorLogLevel); onErrorLogLevelConfigValue.IsSet() {
+					if onErrorLogLevel := log.ParseLevel(onErrorLogLevelConfigValue.String()); onErrorLogLevel > level {
+						level = onErrorLogLevel
+					}
+				}
+			}
 			entry := deps.Logger.
 				WithError(err).
 				WithField("api", info.FullMethod).

@@ -116,6 +116,13 @@ const (
 	// Type: string
 	MiddlewareLogLevel = middleware + ".logLevel"
 
+	// MiddlewareOnErrorLogLevel this allows to log using a different log level when RPC returned an error
+	// Possible values:
+	//		trace, debug, info, warn, error
+	//
+	// Type: string
+	MiddlewareOnErrorLogLevel = middleware + ".onErrorLogLevel"
+
 	// MiddlewareLogIncludeRequest add incoming gRPC request to log
 	//
 	// Type: bool
