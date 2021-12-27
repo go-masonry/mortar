@@ -28,6 +28,9 @@ const (
 	// ExternalHTTPHandlerFunctions - External Http Handlers function group, add your custom external HTTP Handler Functions
 	ExternalHTTPHandlerFunctions = partial.FxGroupExternalHTTPHandlerFunctions
 
+	// ExternalHTTPInterceptors - External Http Interceptors group, add your custom external HTTP interceptors
+	ExternalHTTPInterceptors = partial.FxGroupExternalHTTPInterceptors
+
 	// UnaryServerInterceptors - GRPC Unary Server Interceptors group. Register different gRPC server interceptors
 	UnaryServerInterceptors = partial.FxGroupUnaryServerInterceptors
 
@@ -36,6 +39,9 @@ const (
 
 	//InternalHTTPHandlerFunctions - Internal Http Handler Functions group. Similar toInternalHttpHandlers but for functions
 	InternalHTTPHandlerFunctions = partial.FxGroupInternalHTTPHandlerFunctions
+
+	// InternalHTTPInterceptors - Internal Http Interceptors group, add your custom external HTTP interceptors
+	InternalHTTPInterceptors = partial.FxGroupInternalHTTPInterceptors
 
 	// LoggerContextExtractors -  Default Logger Context extractors group. Add custom extractors to enrich your logs from context.Context
 	LoggerContextExtractors = constructors.FxGroupLoggerContextExtractors

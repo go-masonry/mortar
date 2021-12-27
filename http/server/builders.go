@@ -16,14 +16,15 @@ import (
 // ******************************************************************************************************************************************************
 
 type restConfig struct {
-	addr                string
-	server              *http.Server
-	listener            net.Listener
-	handlers            map[string]http.Handler
-	handlerFuncs        map[string]http.HandlerFunc
-	grpcGatewayMux      *runtime.ServeMux
-	grpcGatewayHandlers []server.GRPCGatewayGeneratedHandlers
-	grpcGatewayOptions  []runtime.ServeMuxOption
+	addr                    string
+	server                  *http.Server
+	listener                net.Listener
+	handlers                map[string]http.Handler
+	handlerFuncs            map[string]http.HandlerFunc
+	grpcGatewayMux          *runtime.ServeMux
+	grpcGatewayHandlers     []server.GRPCGatewayGeneratedHandlers
+	grpcGatewayOptions      []runtime.ServeMuxOption
+	grpcGatewayInterceptors []server.GRPCGatewayInterceptor
 }
 
 type restBuilder struct {
@@ -98,6 +99,13 @@ func (r *restBuilder) RegisterGRPCGatewayHandlers(handlers ...server.GRPCGateway
 func (r *restBuilder) AddGRPCGatewayOptions(options ...runtime.ServeMuxOption) server.RESTBuilder {
 	r.ll.PushBack(func(cfg *restConfig) {
 		cfg.grpcGatewayOptions = append(cfg.grpcGatewayOptions, options...)
+	})
+	return r
+}
+
+func (r *restBuilder) AddGRPCGatewayInterceptors(interceptors ...server.GRPCGatewayInterceptor) server.RESTBuilder {
+	r.ll.PushBack(func(cfg *restConfig) {
+		cfg.grpcGatewayInterceptors = append(cfg.grpcGatewayInterceptors, interceptors...)
 	})
 	return r
 }

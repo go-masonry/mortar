@@ -262,6 +262,24 @@ func (m *MockRESTBuilder) EXPECT() *MockRESTBuilderMockRecorder {
 	return m.recorder
 }
 
+// AddGRPCGatewayInterceptors mocks base method.
+func (m *MockRESTBuilder) AddGRPCGatewayInterceptors(interceptors ...server.GRPCGatewayInterceptor) server.RESTBuilder {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{}
+	for _, a := range interceptors {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "AddGRPCGatewayInterceptors", varargs...)
+	ret0, _ := ret[0].(server.RESTBuilder)
+	return ret0
+}
+
+// AddGRPCGatewayInterceptors indicates an expected call of AddGRPCGatewayInterceptors.
+func (mr *MockRESTBuilderMockRecorder) AddGRPCGatewayInterceptors(interceptors ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddGRPCGatewayInterceptors", reflect.TypeOf((*MockRESTBuilder)(nil).AddGRPCGatewayInterceptors), interceptors...)
+}
+
 // AddGRPCGatewayOptions mocks base method.
 func (m *MockRESTBuilder) AddGRPCGatewayOptions(options ...runtime.ServeMuxOption) server.RESTBuilder {
 	m.ctrl.T.Helper()
