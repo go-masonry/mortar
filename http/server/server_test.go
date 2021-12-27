@@ -205,6 +205,38 @@ func TestCustomGrpcGatewayMux(t *testing.T) {
 	assert.Equal(t, "bad one", strings.TrimSpace(string(bytes)))
 }
 
+func TestCustomGrpcGatewayInterceptor(t *testing.T) {
+	service, err := Builder().
+		ListenOn("localhost:8888").
+		RegisterGRPCAPIs(registerGrpcAPI).
+		AddRESTServerConfiguration().
+		ListenOn("localhost:8889").
+		RegisterGRPCGatewayHandlers(registerGatewayHandler).
+		AddGRPCGatewayInterceptors(func(handler http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path == "/" {
+					w.WriteHeader(http.StatusTeapot)
+					w.Write([]byte("bad one"))
+					return
+				}
+
+				handler.ServeHTTP(w, r)
+			})
+		}).
+		BuildRESTPart().
+		Build()
+	require.NoError(t, err)
+	defer service.Stop(context.Background()) // clean
+	go service.Run(context.Background())
+	resp, err := http.Get("http://localhost:8889/")
+	require.NoError(t, err)
+	defer resp.Body.Close()
+	assert.Equal(t, http.StatusTeapot, resp.StatusCode)
+	bytes, err := ioutil.ReadAll(resp.Body)
+	require.NoError(t, err)
+	assert.Equal(t, "bad one", strings.TrimSpace(string(bytes)))
+}
+
 func registerGrpcAPI(srv *grpc.Server) {
 	demopackage.RegisterDemoServer(srv, new(demopackage.UnimplementedDemoServer))
 }

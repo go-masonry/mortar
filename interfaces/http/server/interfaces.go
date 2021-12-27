@@ -54,6 +54,9 @@ type GRPCWebServiceBuilder interface {
 // GRPCGatewayGeneratedHandlers alias for gRPC-gateway endpoint registrations
 type GRPCGatewayGeneratedHandlers func(mux *runtime.ServeMux, endpoint string) error
 
+// GRPCGatewayInterceptor alias for gRPC-gateway interceptor
+type GRPCGatewayInterceptor func(handler http.Handler) http.Handler
+
 // RESTBuilder defines REST web service builder options
 type RESTBuilder interface {
 	ListenOn(addr string) RESTBuilder
@@ -64,5 +67,6 @@ type RESTBuilder interface {
 	SetCustomGRPCGatewayMux(mux *runtime.ServeMux) RESTBuilder
 	RegisterGRPCGatewayHandlers(handlers ...GRPCGatewayGeneratedHandlers) RESTBuilder
 	AddGRPCGatewayOptions(options ...runtime.ServeMuxOption) RESTBuilder
+	AddGRPCGatewayInterceptors(interceptors ...GRPCGatewayInterceptor) RESTBuilder
 	BuildRESTPart() GRPCWebServiceBuilder
 }

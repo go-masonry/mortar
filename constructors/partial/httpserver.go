@@ -31,12 +31,16 @@ const (
 	FxGroupExternalHTTPHandlers = "externalHttpHandlers"
 	// FxGroupExternalHTTPHandlerFunctions defines group name
 	FxGroupExternalHTTPHandlerFunctions = "externalHttpHandlerFunctions"
+	// FxGroupExternalHTTPInterceptors defines group name
+	FxGroupExternalHTTPInterceptors = "externalHttpInterceptors"
 	// FxGroupUnaryServerInterceptors defines group name
 	FxGroupUnaryServerInterceptors = "unaryServerInterceptors"
 	// FxGroupInternalHTTPHandlers defines group name
 	FxGroupInternalHTTPHandlers = "internalHttpHandlers"
 	// FxGroupInternalHTTPHandlerFunctions defines group name
 	FxGroupInternalHTTPHandlerFunctions = "internalHttpHandlerFunctions"
+	// FxGroupInternalHTTPInterceptors defines group name
+	FxGroupInternalHTTPInterceptors = "internalHttpInterceptors"
 )
 
 // HTTPHandlerPatternPair defines pattern -> handler pair
@@ -65,9 +69,11 @@ type httpServerDeps struct {
 	GRPCGatewayMuxOptions        []runtime.ServeMuxOption                 `group:"grpcGatewayMuxOptions"`
 	ExternalHTTPHandlers         []HTTPHandlerPatternPair                 `group:"externalHttpHandlers"`
 	ExternalHTTPHandlerFunctions []HTTPHandlerFuncPatternPair             `group:"externalHttpHandlerFunctions"`
+	ExternalHTTPInterceptors     []serverInt.GRPCGatewayInterceptor       `group:"externalHttpInterceptors"`
 	// Internal REST
-	InternalHTTPHandlers         []HTTPHandlerPatternPair     `group:"internalHttpHandlers"`
-	InternalHTTPHandlerFunctions []HTTPHandlerFuncPatternPair `group:"internalHttpHandlerFunctions"`
+	InternalHTTPHandlers         []HTTPHandlerPatternPair           `group:"internalHttpHandlers"`
+	InternalHTTPHandlerFunctions []HTTPHandlerFuncPatternPair       `group:"internalHttpHandlerFunctions"`
+	InternalHTTPInterceptors     []serverInt.GRPCGatewayInterceptor `group:"internalHttpInterceptors"`
 }
 
 // HTTPServerBuilder true to it's name, it is partially initialized builder.
@@ -108,6 +114,9 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 		for _, handlerFuncPair := range deps.ExternalHTTPHandlerFunctions {
 			restBuilder = restBuilder.AddHandlerFunc(handlerFuncPair.Pattern, handlerFuncPair.HandlerFunc)
 		}
+		if len(deps.ExternalHTTPInterceptors) > 0 {
+			restBuilder = restBuilder.AddGRPCGatewayInterceptors(deps.ExternalHTTPInterceptors...)
+		}
 		if len(deps.GRPCGatewayGeneratedHandlers) > 0 {
 			restBuilder = restBuilder.AddGRPCGatewayOptions(deps.GRPCGatewayMuxOptions...).
 				RegisterGRPCGatewayHandlers(deps.GRPCGatewayGeneratedHandlers...)
@@ -133,6 +142,9 @@ func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuil
 		}
 		for _, handlerFuncPair := range deps.InternalHTTPHandlerFunctions {
 			restBuilder = restBuilder.AddHandlerFunc(handlerFuncPair.Pattern, handlerFuncPair.HandlerFunc)
+		}
+		if len(deps.InternalHTTPInterceptors) > 0 {
+			restBuilder = restBuilder.AddGRPCGatewayInterceptors(deps.InternalHTTPInterceptors...)
 		}
 		restBuilder = restBuilder.RegisterGRPCGatewayHandlers(health.RegisterInternalGRPCGatewayHandler) // Health
 		builder = restBuilder.BuildRESTPart()

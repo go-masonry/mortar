@@ -210,7 +210,11 @@ func (ws *webService) setupREST(restConfigs []*restConfig) (err error) {
 				emptyListener = false
 			}
 			if muxHandler, ok := webSrv.Handler.(muxHandler); ok {
-				muxHandler.Handle("/", gwMux)
+				var gwHandler http.Handler = gwMux
+				for _, interceptor := range cfg.grpcGatewayInterceptors {
+					gwHandler = interceptor(gwHandler)
+				}
+				muxHandler.Handle("/", gwHandler)
 			} else {
 				return fmt.Errorf("grpc Gateway handlers can't be registered, since the provided *http.Server can't handle them")
 			}
