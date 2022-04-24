@@ -2,7 +2,6 @@ package trace
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/http/httputil"
 
@@ -90,7 +89,7 @@ func (d tracingDeps) newClientSpanForREST(req *http.Request) (opentracing.Span, 
 			d.Logger.WithError(dumpErr).Debug(ctx, "failed to dump request")
 		}
 	}
-	ext.HTTPUrl.Set(span, fmt.Sprintf("%v", req.URL))
+	ext.HTTPUrl.Set(span, req.URL.Redacted())
 	ext.HTTPMethod.Set(span, req.Method)
 	if err := d.Tracer.Inject(span.Context(), opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(req.Header)); err != nil {
 		d.Logger.WithError(err).Warn(ctx, "failed injecting trace info")
