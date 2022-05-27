@@ -42,7 +42,8 @@ func (deps webServiceDependencies) pingService(ctx context.Context, service serv
 	ports := service.Ports()
 	if grpcAddress := deps.getGRPCAddress(ports); len(grpcAddress) > 0 {
 		var conn *grpc.ClientConn
-		if conn, err = grpc.DialContext(ctx, grpcAddress, grpc.WithInsecure()); err == nil {
+		conn, err = grpc.DialContext(ctx, grpcAddress, grpc.WithInsecure())
+		if err == nil {
 			defer conn.Close()
 			healthClient := health.NewHealthClient(conn)
 			_, err = healthClient.Check(ctx, &health.HealthCheckRequest{})
@@ -56,10 +57,16 @@ func (deps webServiceDependencies) pingService(ctx context.Context, service serv
 	}
 	return
 }
+
 func (deps webServiceDependencies) getGRPCAddress(ports []server.ListenInfo) string {
 	for _, info := range ports {
 		if info.Type == server.GRPCServer {
-			return info.Address
+			switch info.Network {
+			case "unix":
+				return fmt.Sprintf("%s://%s", info.Network, info.Address)
+			default:
+				return info.Address
+			}
 		}
 	}
 	return ""

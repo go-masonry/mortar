@@ -23,6 +23,7 @@ const (
 
 // ListenInfo defines port info
 type ListenInfo struct {
+	Network string        `json:"network"`
 	Address string        `json:"address"`
 	Port    int           `json:"port"`
 	Type    WebServerType `json:"type"`

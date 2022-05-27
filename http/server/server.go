@@ -103,21 +103,18 @@ func (ws *webService) Stop(ctx context.Context) error {
 }
 
 func (ws *webService) Ports() (list []server.ListenInfo) {
-	grpcPort := extractPort(ws.grpcAddr)
-	list = append(list, server.ListenInfo{
-		Address: ws.grpcAddr,
-		Port:    grpcPort,
-		Type:    server.GRPCServer,
-	})
 	for _, pair := range ws.muxAndListeners {
-		port := extractPort(pair.l.Addr().String())
-		if port != grpcPort {
-			list = append(list, server.ListenInfo{
-				Address: pair.l.Addr().String(),
-				Port:    port,
-				Type:    server.RESTServer,
-			})
-		}
+		list = append(list, server.ListenInfo{
+			Network: pair.l.Addr().Network(),
+			Address: pair.l.Addr().String(),
+			Port:    extractPort(pair.l.Addr().String()),
+			Type: func() server.WebServerType {
+				if pair.l.Addr().String() == ws.grpcAddr {
+					return server.GRPCServer
+				}
+				return server.RESTServer
+			}(),
+		})
 	}
 	return
 }

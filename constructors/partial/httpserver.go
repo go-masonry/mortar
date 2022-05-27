@@ -21,12 +21,16 @@ const PanicHandlerCounter = "panic_handler_total"
 
 // Group order is not guaranteed, if it's important then add them manually
 const (
+	// FxGroupBuilderCallbacks defines group name
+	FxGroupBuilderCallbacks = "builderCallbacks"
 	// FxGroupGRPCServerAPIs defines group name
 	FxGroupGRPCServerAPIs = "grpcServerAPIs"
 	// FxGroupGRPCGatewayGeneratedHandlers defines group name
 	FxGroupGRPCGatewayGeneratedHandlers = "grpcGatewayGeneratedHandlers"
 	// FxGroupGRPCGatewayMuxOptions defines group name
 	FxGroupGRPCGatewayMuxOptions = "grpcGatewayMuxOptions"
+	// FxGroupExternalBuilderCallbacks defines group name
+	FxGroupExternalBuilderCallbacks = "externalBuilderCallbacks"
 	// FxGroupExternalHTTPHandlers defines group name
 	FxGroupExternalHTTPHandlers = "externalHttpHandlers"
 	// FxGroupExternalHTTPHandlerFunctions defines group name
@@ -35,6 +39,8 @@ const (
 	FxGroupExternalHTTPInterceptors = "externalHttpInterceptors"
 	// FxGroupUnaryServerInterceptors defines group name
 	FxGroupUnaryServerInterceptors = "unaryServerInterceptors"
+	// FxGroupInternalBuilderCallbacks defines group name
+	FxGroupInternalBuilderCallbacks = "internalBuilderCallbacks"
 	// FxGroupInternalHTTPHandlers defines group name
 	FxGroupInternalHTTPHandlers = "internalHttpHandlers"
 	// FxGroupInternalHTTPHandlerFunctions defines group name
@@ -55,22 +61,36 @@ type HTTPHandlerFuncPatternPair struct {
 	HandlerFunc http.HandlerFunc
 }
 
+// BuilderCallback is the callback to modify the builder or do something else
+type BuilderCallback func(serverInt.GRPCWebServiceBuilder) serverInt.GRPCWebServiceBuilder
+
+// RESTBuilderCallback is the callback to modify the builder or do something else
+type RESTBuilderCallback func(serverInt.RESTBuilder) serverInt.RESTBuilder
+
 type httpServerDeps struct {
 	fx.In
 
 	Config  cfg.Config
 	Logger  log.Logger
 	Metrics monitor.Metrics `optional:"true"`
+
+	// Builder
+	BuilderCallbacks []BuilderCallback `group:"builderCallbacks"`
+
 	// GRPC
 	GRPCServerAPIs    []serverInt.GRPCServerAPI     `group:"grpcServerAPIs"`
 	UnaryInterceptors []grpc.UnaryServerInterceptor `group:"unaryServerInterceptors"`
+
 	// External REST
 	GRPCGatewayGeneratedHandlers []serverInt.GRPCGatewayGeneratedHandlers `group:"grpcGatewayGeneratedHandlers"`
 	GRPCGatewayMuxOptions        []runtime.ServeMuxOption                 `group:"grpcGatewayMuxOptions"`
+	ExternalBuilderCallbacks     []RESTBuilderCallback                    `group:"externalBuilderCallbacks"`
 	ExternalHTTPHandlers         []HTTPHandlerPatternPair                 `group:"externalHttpHandlers"`
 	ExternalHTTPHandlerFunctions []HTTPHandlerFuncPatternPair             `group:"externalHttpHandlerFunctions"`
 	ExternalHTTPInterceptors     []serverInt.GRPCGatewayInterceptor       `group:"externalHttpInterceptors"`
+
 	// Internal REST
+	InternalBuilderCallbacks     []RESTBuilderCallback              `group:"internalBuilderCallbacks"`
 	InternalHTTPHandlers         []HTTPHandlerPatternPair           `group:"internalHttpHandlers"`
 	InternalHTTPHandlerFunctions []HTTPHandlerFuncPatternPair       `group:"internalHttpHandlerFunctions"`
 	InternalHTTPInterceptors     []serverInt.GRPCGatewayInterceptor `group:"internalHttpInterceptors"`
@@ -94,7 +114,12 @@ func HTTPServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
 		builder = builder.AddGRPCServerOptions(interceptorsOption)
 	}
 	builder = deps.buildExternalAPI(builder)
-	return deps.buildInternalAPI(builder)
+	builder = deps.buildInternalAPI(builder)
+	for _, callback := range deps.BuilderCallbacks {
+		builder = callback(builder)
+	}
+
+	return builder
 }
 
 func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuilder) serverInt.GRPCWebServiceBuilder {
@@ -108,6 +133,9 @@ func (deps httpServerDeps) buildExternalAPI(builder serverInt.GRPCWebServiceBuil
 		restBuilder := builder.AddRESTServerConfiguration().
 			ListenOn(fmt.Sprintf("%s:%d", host, externalRESTPort.Int()))
 
+		for _, callback := range deps.ExternalBuilderCallbacks {
+			restBuilder = callback(restBuilder)
+		}
 		for _, handlerPair := range deps.ExternalHTTPHandlers {
 			restBuilder = restBuilder.AddHandler(handlerPair.Pattern, handlerPair.Handler)
 		}
@@ -137,6 +165,10 @@ func (deps httpServerDeps) buildInternalAPI(builder serverInt.GRPCWebServiceBuil
 		restBuilder := builder.
 			AddRESTServerConfiguration().
 			ListenOn(fmt.Sprintf("%s:%d", host, internalPort.Int()))
+
+		for _, callback := range deps.InternalBuilderCallbacks {
+			restBuilder = callback(restBuilder)
+		}
 		for _, handlerPair := range deps.InternalHTTPHandlers {
 			restBuilder = restBuilder.AddHandler(handlerPair.Pattern, handlerPair.Handler)
 		}
