@@ -1,8 +1,13 @@
 package partial
 
 import (
+	"fmt"
+	"net"
 	"net/http"
+	"os"
+	"path"
 	"testing"
+	"time"
 
 	"github.com/go-masonry/mortar/interfaces/cfg"
 	confkeys "github.com/go-masonry/mortar/interfaces/cfg/keys"
@@ -31,35 +36,12 @@ func TestPartialServer(t *testing.T) {
 	suite.Run(t, new(partialSuite))
 }
 
-func (s *partialSuite) TestExternalHTTPGroups() {
-	var serverBuilder serverInt.GRPCWebServiceBuilder
-	testApp := fxtest.New(s.T(),
-		fx.Provide(HTTPServerBuilder),
-		fx.Provide(
-			func() cfg.Config {
-				return s.cfgMock
-			},
-			func() log.Logger {
-				return s.logMock
-			},
-		),
-		s.setupGroups(),
-		fx.Populate(&serverBuilder),
-	)
-	testApp.RequireStart()
-	defer testApp.RequireStop()
-
-	// Test will make sure that we are trying to register same path twice using FX Groups
-	s.PanicsWithValue("http: multiple registrations for /notfound", func() {
-		serverBuilder.Build()
-	})
-}
-
 func (s *partialSuite) SetupTest() {
 	// This one runs before `BeforeTest`
 	s.ctrl = gomock.NewController(s.T())
 	s.cfgMock = mock_cfg.NewMockConfig(s.ctrl)
 	s.logMock = mock_log.NewMockLogger(s.ctrl)
+
 	// host
 	s.cfgMock.EXPECT().Get(confkeys.Host).DoAndReturn(func(key string) cfg.Value {
 		value := mock_cfg.NewMockValue(s.ctrl)
@@ -100,6 +82,77 @@ func (s *partialSuite) SetupTest() {
 	})
 }
 
+func (s *partialSuite) TestExternalHTTPGroups() {
+	var serverBuilder serverInt.GRPCWebServiceBuilder
+	testApp := fxtest.New(s.T(),
+		fx.Provide(HTTPServerBuilder),
+		fx.Provide(
+			func() cfg.Config {
+				return s.cfgMock
+			},
+			func() log.Logger {
+				return s.logMock
+			},
+			fx.Annotated{
+				Group: FxGroupExternalHTTPHandlers + ",flatten",
+				Target: func() []HTTPHandlerPatternPair {
+					return []HTTPHandlerPatternPair{
+						{Pattern: "/notfound", Handler: http.NotFoundHandler()},
+					}
+				},
+			},
+		),
+		s.setupGroups(),
+		fx.Populate(&serverBuilder),
+	)
+	testApp.RequireStart()
+	defer testApp.RequireStop()
+
+	// Test will make sure that we are trying to register same path twice using FX Groups
+	s.PanicsWithValue("http: multiple registrations for /notfound", func() {
+		serverBuilder.Build()
+	})
+}
+
+func (s *partialSuite) TestCallbackGroups() {
+	tempDir := os.TempDir()
+	var serverBuilder serverInt.GRPCWebServiceBuilder
+	testApp := fxtest.New(s.T(),
+		fx.Provide(HTTPServerBuilder),
+		fx.Provide(
+			func() cfg.Config {
+				return s.cfgMock
+			},
+			func() log.Logger {
+				return s.logMock
+			},
+		),
+		s.setupGroups(),
+		s.setupCallbacks(tempDir),
+		fx.Populate(&serverBuilder),
+	)
+	testApp.RequireStart()
+	defer testApp.RequireStop()
+
+	// Test will make sure that we are trying to register same path twice using FX Groups
+	s.NotPanics(func() {
+		webService, err := serverBuilder.Build()
+		s.Nil(err)
+		ports := webService.Ports()
+		s.Len(ports, 2)
+
+		types := make([]string, len(ports))
+		for i := 0; i < len(ports); i++ {
+			s.Equal("unix", ports[i].Network)
+			s.Contains(ports[i].Address, tempDir)
+			types[i] = string(ports[i].Type)
+		}
+
+		s.Contains(types, "GRPC")
+		s.Contains(types, "REST")
+	})
+}
+
 func (s *partialSuite) setupGroups() fx.Option {
 	return fx.Provide(
 		// grpc
@@ -112,18 +165,55 @@ func (s *partialSuite) setupGroups() fx.Option {
 			},
 		},
 		fx.Annotated{
-			Group: FxGroupExternalHTTPHandlers + ",flatten",
-			Target: func() []HTTPHandlerPatternPair {
-				return []HTTPHandlerPatternPair{
-					{Pattern: "/notfound", Handler: http.NotFoundHandler()},
-				}
-			},
-		},
-		fx.Annotated{
 			Group: FxGroupExternalHTTPHandlerFunctions,
 			Target: func() HTTPHandlerFuncPatternPair {
 				return HTTPHandlerFuncPatternPair{
 					Pattern: "/notfound", HandlerFunc: http.NotFound, // the same as above should return error
+				}
+			},
+		},
+	)
+}
+
+func (s *partialSuite) setupCallbacks(tempDir string) fx.Option {
+	return fx.Provide(
+		// builder callbacks
+		fx.Annotated{
+			Group: FxGroupBuilderCallbacks,
+			Target: func() BuilderCallback {
+				return func(builder serverInt.GRPCWebServiceBuilder) serverInt.GRPCWebServiceBuilder {
+					socketFile := path.Join(tempDir, fmt.Sprintf("grpc_%d.socket", time.Now().UnixNano()))
+					ln, err := net.Listen("unix", socketFile)
+					s.Nil(err)
+					return builder.SetCustomListener(ln).
+						ListenOn("unix://" + socketFile)
+
+				}
+			},
+		},
+		fx.Annotated{
+			Group: FxGroupExternalBuilderCallbacks,
+			Target: func() RESTBuilderCallback {
+				return func(builder serverInt.RESTBuilder) serverInt.RESTBuilder {
+					socketFile := path.Join(tempDir, fmt.Sprintf("grpc_%d.socket", time.Now().UnixNano()))
+					ln, err := net.Listen("unix", socketFile)
+					s.Nil(err)
+					return builder.SetCustomListener(ln).
+						ListenOn("unix://" + socketFile)
+
+				}
+			},
+		},
+		fx.Annotated{
+			Group: FxGroupInternalBuilderCallbacks,
+			Target: func() RESTBuilderCallback {
+				return func(builder serverInt.RESTBuilder) serverInt.RESTBuilder {
+					socketFile := path.Join(tempDir, fmt.Sprintf("grpc_%d.socket", time.Now().UnixNano()))
+					ln, err := net.Listen("unix", socketFile)
+					s.Nil(err)
+					return builder.SetCustomListener(ln).
+						ListenOn("unix://" + socketFile)
+
 				}
 			},
 		},
