@@ -22,8 +22,9 @@ func DefaultJWTTokenExtractor() jwtInt.TokenExtractor {
 }
 
 // Handles use cases where 'authorization' header value is
-// 		bearer <token>
-//		basic <token>
+//
+//	bearer <token>
+//	basic <token>
 func contextExtractorAuthWithBearer(ctx context.Context) (string, error) {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		var headerValue string = strings.Join(md.Get(authorizationHeader), " ")

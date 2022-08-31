@@ -21,7 +21,7 @@ type copyHeadersDeps struct {
 
 // CopyGRPCHeadersClientInterceptor copies filtered Headers found in the Incoming metadata.MD to the Outgoing one.
 //
-// This is useful if you want to propagate them to the next service when using grpc Client
+// # This is useful if you want to propagate them to the next service when using grpc Client
 //
 // For Example: "authorization" header containing user token
 func CopyGRPCHeadersClientInterceptor(deps copyHeadersDeps) grpc.UnaryClientInterceptor {

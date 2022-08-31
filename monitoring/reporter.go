@@ -13,13 +13,12 @@ type mortarReporter struct {
 }
 
 // NewMortarReporter creates a new mortar monitoring reporter which is a wrapper to support
-// 	- ContextExtractors
-// 	- Default Tags, for example: {"version":"v1.0.1", "service":"awesome"}
+//   - ContextExtractors
+//   - Default Tags, for example: {"version":"v1.0.1", "service":"awesome"}
 //
 // Meaning, it is possible to also extract tag values from the context, this is useful when the value is set per request/call within the context.Context:
-// 	- Canary release https://martinfowler.com/bliki/CanaryRelease.html identifier
-// 	- Authentication Token values, but avoid using high cardinality values such as UserID
-//
+//   - Canary release https://martinfowler.com/bliki/CanaryRelease.html identifier
+//   - Authentication Token values, but avoid using high cardinality values such as UserID
 func newMortarReporter(cfg *monitorConfig) monitor.Reporter {
 	externalMetrics := cfg.reporter.Metrics()
 	return &mortarReporter{

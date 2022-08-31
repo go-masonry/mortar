@@ -4,6 +4,7 @@ Mortar expects that a `config.yaml` or similar will be loaded as Configuration a
 Mortar will access embedded keys using a `.` (dot) notation.
 
 Example:
+
 	Config.Get("mortar.name").String()
 
 *******************************************************************************

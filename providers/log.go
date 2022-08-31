@@ -43,7 +43,7 @@ func LoggerGRPCIncomingContextExtractorFxOption() fx.Option {
 // This Extractor will then extract selected key:value pairs from the context when writing log
 //
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using LoggerGRPCIncomingContextExtractorFxOption if you only want to provide it.
 var LoggerGRPCIncomingContextExtractor = context.LoggerGRPCIncomingContextExtractor
@@ -60,7 +60,7 @@ func LoggerGRPCInterceptorFxOption() fx.Option {
 // This Interceptor will log gRPC calls with request and response if enabled.
 //
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using LoggerGRPCInterceptorFxOption if you only want to provide it.
 var LoggerGRPCInterceptor = server.LoggerGRPCInterceptor
