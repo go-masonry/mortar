@@ -59,8 +59,9 @@ func CopyGRPCHeadersClientInterceptorFxOption() fx.Option {
 }
 
 // CopyGRPCHeadersClientInterceptor is a constructor that creates gRPC Unary Client Interceptor
+//
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using CopyGRPCHeadersClientInterceptorFxOption if you only want to provide it.
 var CopyGRPCHeadersClientInterceptor = client.CopyGRPCHeadersClientInterceptor
@@ -79,8 +80,9 @@ func CopyGRPCHeadersHTTPClientInterceptorFxOption() fx.Option {
 }
 
 // CopyGRPCHeadersHTTPClientInterceptor is a constructor that creates REST Client Interceptor
+//
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using CopyGRPCHeadersHTTPClientInterceptorFxOption if you only want to provide it.
 var CopyGRPCHeadersHTTPClientInterceptor = client.CopyGRPCHeadersHTTPClientInterceptor
@@ -96,8 +98,9 @@ func DumpRESTClientInterceptorFxOption() fx.Option {
 }
 
 // DumpRESTClientInterceptor is a constructor that creates REST Client Interceptor
+//
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using DumpRESTClientInterceptorFxOption if you only want to provide it.
 var DumpRESTClientInterceptor = client.DumpRESTClientInterceptor
@@ -112,8 +115,9 @@ func MonitorGRPCClientCallsInterceptorFxOption() fx.Option {
 }
 
 // MonitorGRPCClientCallsInterceptor is a constructor that creates Unary gRPC Client Interceptor
+//
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using MonitorGRPCClientCallsInterceptorFxOption if you only want to provide it.
 var MonitorGRPCClientCallsInterceptor = client.MonitorGRPCClientCallsInterceptor
@@ -128,8 +132,9 @@ func MonitorRESTClientCallsInterceptorFxOption() fx.Option {
 }
 
 // MonitorRESTClientCallsInterceptor is a constructor that creates REST Client Interceptor
+//
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using MonitorRESTClientCallsInterceptorFxOption if you only want to provide it.
 var MonitorRESTClientCallsInterceptor = client.MonitorRESTClientCallsInterceptor

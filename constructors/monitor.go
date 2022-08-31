@@ -29,8 +29,7 @@ type monitorDeps struct {
 // DefaultMonitor is a constructor that will create a Metrics reporter based on values from the Config Map
 // such as
 //
-// 	- Tags: we will look for default tags using mortar.MonitorTagsKey within the configuration map
-//
+//   - Tags: we will look for default tags using mortar.MonitorTagsKey within the configuration map
 func DefaultMonitor(deps monitorDeps) monitor.Metrics {
 	tags := deps.Config.Get(confkeys.MonitorTags).StringMapString() // can be empty
 	reporter := monitoring.Builder().SetTags(tags).AddExtractors(deps.ContextExtractors...).DoOnError(func(err error) {

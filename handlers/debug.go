@@ -40,9 +40,9 @@ type debugHandlersDeps struct {
 }
 
 // InternalDebugHandlers defines internal debug handlers
-//	- dump heap
-//	- expvar
-//	- running stats
+//   - dump heap
+//   - expvar
+//   - running stats
 func InternalDebugHandlers(deps debugHandlersDeps) []partial.HTTPHandlerPatternPair {
 	return []partial.HTTPHandlerPatternPair{
 		{Pattern: internalPatternPrefix + "/vars", Handler: deps.DebugVars()},

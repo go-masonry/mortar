@@ -35,7 +35,7 @@ type TagsAwareGauge interface {
 	WithContext(ctx context.Context) TagsAwareGauge
 }
 
-//Gauge is a Metric that represents a single numerical value that can arbitrarily go up and down
+// Gauge is a Metric that represents a single numerical value that can arbitrarily go up and down
 type Gauge interface {
 	// Set sets Gauge value
 	Set(v float64)
@@ -77,8 +77,8 @@ type TagsAwareTimer interface {
 // Metrics defines various monitoring capabilities
 //
 // It is expected that each Metric is unique, uniqueness is calculated by combining
-// 	- name
-//	- tag key names
+//   - name
+//   - tag key names
 //
 // Everytime you call to obtain one of the metrics, you will receive an instance.
 // Mortar have an internal cache, hence we are not creating a new metric everytime, unless another set of tags is provided using WithTags.

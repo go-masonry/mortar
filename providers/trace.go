@@ -20,7 +20,7 @@ func TracerGRPCClientInterceptorFxOption() fx.Option {
 // This interceptor will report a client span to the trace server
 //
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using TracerGRPCClientInterceptorFxOption if you only want to provide it.
 var TracerGRPCClientInterceptor = trace.TracerGRPCClientInterceptor
@@ -38,7 +38,7 @@ func TracerRESTClientInterceptorFxOption() fx.Option {
 // This interceptor will report a client span to the trace server
 //
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using TracerRESTClientInterceptorFxOption if you only want to provide it.
 var TracerRESTClientInterceptor = trace.TracerRESTClientInterceptor
@@ -55,7 +55,7 @@ func GRPCTracingUnaryServerInterceptorFxOption() fx.Option {
 // This interceptor will report a server span to the trace server
 //
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using GRPCTracingUnaryServerInterceptorFxOption if you only want to provide it.
 var GRPCTracingUnaryServerInterceptor = trace.GRPCTracingUnaryServerInterceptor
@@ -74,7 +74,7 @@ func GRPCGatewayMetadataTraceCarrierFxOption() fx.Option {
 // Make sure to understand what it does by reading server.MetadataTraceCarrierOption code and explanation
 //
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using GRPCGatewayMetadataTraceCarrierFxOption if you only want to provide it.
 var MetadataTraceCarrierOption = server.MetadataTraceCarrierOption

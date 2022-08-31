@@ -15,8 +15,9 @@ func InternalDebugHandlersFxOption() fx.Option {
 }
 
 // InternalDebugHandlers is a constructor that creates Internal Debug HTTP Handlers
+//
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using InternalDebugHandlersFxOption if you only want to provide it.
 var InternalDebugHandlers = handlers.InternalDebugHandlers
@@ -31,8 +32,9 @@ func InternalProfileHandlerFunctionsFxOption() fx.Option {
 }
 
 // InternalProfileHandlerFunctions is a constructor that creates Internal Profile HTTP Handlers
+//
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Consider using InternalProfileHandlerFunctionsFxOption if you only want to provide it.
 var InternalProfileHandlerFunctions = handlers.InternalProfileHandlerFunctions
@@ -40,8 +42,8 @@ var InternalProfileHandlerFunctions = handlers.InternalProfileHandlerFunctions
 // InternalSelfHandlersFxOption adds Internal Self Build and Config information HTTP Handlers to the graph
 //
 // Adds these endpoint on Internal web service
-//	- /self/build
-//	- /self/config
+//   - /self/build
+//   - /self/config
 func InternalSelfHandlersFxOption() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
@@ -51,12 +53,13 @@ func InternalSelfHandlersFxOption() fx.Option {
 }
 
 // SelfHandlers is a constructor that creates Internal Self HTTP Handlers
+//
 //	*Note* normally this dependency is part of a group. If you want to create it as a standalone
-// 	dependency, remember that there can be only one of this kind in the graph.
+//	dependency, remember that there can be only one of this kind in the graph.
 //
 // Adds these endpoint on Internal web service
-//	- /self/build
-//	- /self/config
+//   - /self/build
+//   - /self/config
 //
 // Consider using InternalSelfHandlersFxOption if you only want to provide it.
 var SelfHandlers = handlers.SelfHandlers

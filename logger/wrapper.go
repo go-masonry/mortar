@@ -16,9 +16,10 @@ type loggerWrapper struct {
 }
 
 // CreateMortarLogger creates a new mortar logger which is a wrapper to support
-// 	- ContextExtractors
+//   - ContextExtractors
 //
 // **Important**
+//
 //	This constructor will call builder.IncrementSkipFrames to peel additional layer of itself.
 func CreateMortarLogger(builder log.Builder, contextExtractors ...log.ContextExtractor) log.Logger {
 	logger := builder.IncrementSkipFrames(compensateMortarLoggerWrapper).Build() // add 1

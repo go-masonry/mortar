@@ -80,7 +80,6 @@ type httpServerDeps struct {
 //
 // It uses some default assumptions and configurations, which are mostly good.
 // However, if you need to customize your configuration it's better to build yours from scratch
-//
 func HTTPServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
 	builder := server.Builder().SetPanicHandler(deps.panicHandler).SetLogger(deps.Logger.Debug)
 	host := deps.Config.Get(confkeys.Host).String()
