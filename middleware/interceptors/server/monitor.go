@@ -45,6 +45,9 @@ func MonitorGRPCInterceptor(deps gRPCMetricInterceptorsDeps) grpc.UnaryServerInt
 }
 
 func gRPCCodeTagValue(err error) string {
-	s, _ := status.FromError(err)
+	s, ok := status.FromError(err)
+	if !ok {
+		s = status.FromContextError(err)
+	}
 	return strconv.Itoa(int(s.Code()))
 }
