@@ -14,13 +14,13 @@ jobs:
     steps:
 
     - name: Set up Go 1.x
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v4
       with:
-        go-version: ^1.14
+        go-version: ^1.21
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
         
     - name: Code sanity
       run: make code-up-to-date
@@ -28,7 +28,7 @@ jobs:
     - name: Test
       run: make test-with-report
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: coverage
         path: coverage*.*
@@ -38,4 +38,4 @@ jobs:
       run: |
         tail -n1 coverage-summary.txt | awk '{print "Coverage summary: " $3}'
     - name: Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
