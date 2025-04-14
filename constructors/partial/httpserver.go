@@ -35,6 +35,8 @@ const (
 	FxGroupExternalHTTPInterceptors = "externalHttpInterceptors"
 	// FxGroupUnaryServerInterceptors defines group name
 	FxGroupUnaryServerInterceptors = "unaryServerInterceptors"
+	// FxGroupUnaryServerInterceptors defines group name
+	FxGroupStreamServerInterceptors = "streamServerInterceptors"
 	// FxGroupInternalHTTPHandlers defines group name
 	FxGroupInternalHTTPHandlers = "internalHttpHandlers"
 	// FxGroupInternalHTTPHandlerFunctions defines group name
@@ -62,8 +64,9 @@ type httpServerDeps struct {
 	Logger  log.Logger
 	Metrics monitor.Metrics `optional:"true"`
 	// GRPC
-	GRPCServerAPIs    []serverInt.GRPCServerAPI     `group:"grpcServerAPIs"`
-	UnaryInterceptors []grpc.UnaryServerInterceptor `group:"unaryServerInterceptors"`
+	GRPCServerAPIs     []serverInt.GRPCServerAPI      `group:"grpcServerAPIs"`
+	UnaryInterceptors  []grpc.UnaryServerInterceptor  `group:"unaryServerInterceptors"`
+	StreamInterceptors []grpc.StreamServerInterceptor `group:"streamServerInterceptors"`
 	// External REST
 	GRPCGatewayGeneratedHandlers []serverInt.GRPCGatewayGeneratedHandlers `group:"grpcGatewayGeneratedHandlers"`
 	GRPCGatewayMuxOptions        []runtime.ServeMuxOption                 `group:"grpcGatewayMuxOptions"`
@@ -87,9 +90,14 @@ func HTTPServerBuilder(deps httpServerDeps) serverInt.GRPCWebServiceBuilder {
 	if grpcPort := deps.Config.Get(confkeys.ExternalGRPCPort); grpcPort.IsSet() {
 		builder = builder.ListenOn(fmt.Sprintf("%s:%d", host, grpcPort.Int()))
 	}
-	// GRPC server interceptors
+	// GRPC unary server interceptors
 	if len(deps.UnaryInterceptors) > 0 {
 		interceptorsOption := grpc.ChainUnaryInterceptor(deps.UnaryInterceptors...)
+		builder = builder.AddGRPCServerOptions(interceptorsOption)
+	}
+	// GRPC stream server interceptors
+	if len(deps.StreamInterceptors) > 0 {
+		interceptorsOption := grpc.ChainStreamInterceptor(deps.StreamInterceptors...)
 		builder = builder.AddGRPCServerOptions(interceptorsOption)
 	}
 	builder = deps.buildExternalAPI(builder)
