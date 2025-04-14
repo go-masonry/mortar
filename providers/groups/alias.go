@@ -34,6 +34,9 @@ const (
 	// UnaryServerInterceptors - GRPC Unary Server Interceptors group. Register different gRPC server interceptors
 	UnaryServerInterceptors = partial.FxGroupUnaryServerInterceptors
 
+	// StreamServerInterceptors - GRPC Stream Server Interceptors group. Register different gRPC server interceptors
+	StreamServerInterceptors = partial.FxGroupStreamServerInterceptors
+
 	// InternalHTTPHandlers - Internal Http Handlers group. Mortar comes with several internal handlers, you can add yours.
 	InternalHTTPHandlers = partial.FxGroupInternalHTTPHandlers
 
